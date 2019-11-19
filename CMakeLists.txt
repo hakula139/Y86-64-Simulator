@@ -1,0 +1,14 @@
+# ./CMakeLists.txt
+
+cmake_minimum_required(VERSION 2.8)
+
+project(Y86-64-Simulator)
+set(Y86-64-Simulator_VERSION_MAJOR 0)
+set(Y86-64-Simulator_VERSION_MINOR 1)
+set(Y86-64-Simulator_VERSION_PATCH 0)
+
+set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g")
+set(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
+
+add_subdirectory(src)
