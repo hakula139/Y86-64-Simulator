@@ -42,7 +42,7 @@ bool Argument::PrintUsageMessage() {
         << "usage: sim input_file\n"
         << "  input_file: <file_name>.yo\n"
         << "    Currently only .yo files are accepted.\n"
-        << "    The file path should NOT contains spaces or backslashes.\n";
+        << "    The file path should NOT contains spaces.\n";
     return true;
 }
 
