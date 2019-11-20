@@ -40,8 +40,7 @@ bool Argument::PrintErrorMessage(int error_code) {
 bool Argument::PrintUsageMessage() {
     std::cout << "usage: sim input_file\n"
               << "  input_file: <file_name>.yo\n"
-              << "    Currently only .yo files are accepted.\n"
-              << "    The file path should NOT contains spaces.\n";
+              << "    Currently only .yo files are accepted.\n";
     return true;
 }
 
