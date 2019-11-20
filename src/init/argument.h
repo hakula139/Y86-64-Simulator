@@ -13,6 +13,7 @@ public:
     std::string input_file() { return input_file_; }
 
 protected:
+    bool PrintInfo();
     bool PrintErrorMessage(int error_code);
     bool PrintUsageMessage();
 

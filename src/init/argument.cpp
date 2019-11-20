@@ -4,10 +4,13 @@
 #include <iostream>
 #include <string>
 
+#include "../config.h"
+
 namespace initialize {
 
 bool Argument::Load(int argc, char** argv) {
     if (argc < 2) {
+        PrintInfo();
         PrintUsageMessage();
         return false;
     }
@@ -23,6 +26,13 @@ bool Argument::Load(int argc, char** argv) {
         input_file_ = input_file;
     }
 
+    return true;
+}
+
+bool Argument::PrintInfo() {
+    std::cout << "Y86-64 Processor Simulator v";
+    std::cout << kSimVersionMajor << '.' << kSimVersionMinor << '.'
+              << kSimVersionPatch << '\n';
     return true;
 }
 
