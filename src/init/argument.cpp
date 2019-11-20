@@ -28,14 +28,14 @@ bool Argument::Load(int argc, char** argv) {
     return true;
 }
 
-bool Argument::PrintInfo() {
+bool Argument::PrintInfo() const {
     std::cout << "Y86-64 Processor Simulator v";
     std::cout << kSimVersionMajor << '.' << kSimVersionMinor << '.'
               << kSimVersionPatch << '\n';
     return true;
 }
 
-bool Argument::PrintErrorMessage(int error_code) {
+bool Argument::PrintErrorMessage(int error_code) const {
     switch (error_code) {
         case 1: std::cerr << "Error 1: No arguments provided.\n"; break;
         case 2: std::cerr << "Error 2: Invalid filename.\n"; break;
@@ -46,21 +46,21 @@ bool Argument::PrintErrorMessage(int error_code) {
     return true;
 }
 
-bool Argument::PrintUsageMessage() {
+bool Argument::PrintUsageMessage() const {
     std::cout << "usage: sim input_file\n"
               << "  input_file: <file_name>.yo\n"
               << "    Currently only .yo files are accepted.\n";
     return true;
 }
 
-bool Argument::FilenameIsValid(const std::string& file_name) {
+bool Argument::FilenameIsValid(const std::string& file_name) const {
     size_t length = file_name.size();
     if (length <= 3) return false;
     if (file_name.substr(length - 3, 3) != ".yo") return false;
     return true;
 }
 
-bool Argument::FileExists(const std::string& file_name) {
+bool Argument::FileExists(const std::string& file_name) const {
     std::ifstream try_file(file_name);
     if (!try_file) return false;
     // Hope the file will not be removed after checking. :-(

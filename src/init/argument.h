@@ -10,15 +10,15 @@ class Argument {
 public:
     bool Load(int argc, char** argv);
 
-    std::string input_file() { return input_file_; }
+    std::string input_file() const { return input_file_; }
 
 protected:
-    bool PrintInfo();
-    bool PrintErrorMessage(int error_code);
-    bool PrintUsageMessage();
+    bool PrintInfo() const;
+    bool PrintErrorMessage(int error_code) const;
+    bool PrintUsageMessage() const;
 
-    bool FilenameIsValid(const std::string& file_name);
-    bool FileExists(const std::string& file_name);
+    bool FilenameIsValid(const std::string& file_name) const;
+    bool FileExists(const std::string& file_name) const;
 
     std::string input_file_;
 };
