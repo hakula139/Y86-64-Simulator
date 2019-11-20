@@ -25,23 +25,23 @@ enum RegisterMap : int {
     R15 = 0xF
 };
 
-enum ConditionCodeMap : int { ZF = 0x0, SF = 0x1, OF = 0x2 };
+enum ConditionCodeMap : int { OF = 0x0, SF = 0x1, ZF = 0x2 };
 
-// Manage the value in each register
+// Manages the value in each register
 class Register {
 public:
     Register() : data_(kTotal_) {}
 
-    uint64_t Get(int reg) const { return data_.at(reg); }
-    bool     Set(int reg, uint64_t value);
+    uint64_t Get(int register_num) const { return data_.at(register_num); }
+    bool     Set(int register_num, uint64_t value);
     bool     Clear();
 
 protected:
-    const size_t          kTotal_ = 16;
-    std::vector<uint64_t> data_;
+    static constexpr size_t kTotal_ = 16;
+    std::vector<uint64_t>   data_;
 };
 
-// Manage the value in each condition code
+// Manages the value in each condition code
 class ConditionCode {
     ConditionCode() : data_(kTotal_) {}
 
@@ -50,8 +50,8 @@ class ConditionCode {
     bool Clear();
 
 protected:
-    const size_t      kTotal_ = 3;
-    std::vector<bool> data_;
+    static constexpr size_t kTotal_ = 3;
+    std::vector<bool>       data_;
 };
 
 }  // namespace assets

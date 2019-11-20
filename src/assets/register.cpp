@@ -2,8 +2,8 @@
 
 namespace assets {
 
-bool Register::Set(int reg, uint64_t value) {
-    data_.at(reg) = value;
+bool Register::Set(int register_num, uint64_t value) {
+    data_.at(register_num) = value;
     return true;
 }
 

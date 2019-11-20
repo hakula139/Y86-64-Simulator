@@ -35,7 +35,7 @@ bool Argument::PrintInfo() const {
     return true;
 }
 
-bool Argument::PrintErrorMessage(int error_code) const {
+bool Argument::PrintErrorMessage(const int error_code) const {
     switch (error_code) {
         case 1: std::cerr << "Error 1: No arguments provided.\n"; break;
         case 2: std::cerr << "Error 2: Invalid filename.\n"; break;

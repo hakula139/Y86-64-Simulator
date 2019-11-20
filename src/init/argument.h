@@ -5,7 +5,7 @@
 
 namespace initialize {
 
-// Collect and handle the arguments passed to the main() function
+// Collects and handles the arguments passed to the main() function
 class Argument {
 public:
     bool Load(int argc, char** argv);
@@ -14,7 +14,7 @@ public:
 
 protected:
     bool PrintInfo() const;
-    bool PrintErrorMessage(int error_code) const;
+    bool PrintErrorMessage(const int error_code) const;
     bool PrintUsageMessage() const;
 
     bool FilenameIsValid(const std::string& file_name) const;
