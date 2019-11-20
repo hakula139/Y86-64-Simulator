@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-namespace Init {
+namespace initialize {
 
 bool Argument::Load(int argc, char** argv) {
     if (argc < 2) {
@@ -38,11 +38,10 @@ bool Argument::PrintErrorMessage(int error_code) {
 }
 
 bool Argument::PrintUsageMessage() {
-    std::cout
-        << "usage: sim input_file\n"
-        << "  input_file: <file_name>.yo\n"
-        << "    Currently only .yo files are accepted.\n"
-        << "    The file path should NOT contains spaces.\n";
+    std::cout << "usage: sim input_file\n"
+              << "  input_file: <file_name>.yo\n"
+              << "    Currently only .yo files are accepted.\n"
+              << "    The file path should NOT contains spaces.\n";
     return true;
 }
 
@@ -60,4 +59,4 @@ bool Argument::FileExists(const std::string& file_name) {
     return true;
 }
 
-}  // namespace Init
+}  // namespace initialize

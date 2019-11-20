@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace Init {
+namespace initialize {
 
 // Collect and handle the arguments passed to the main() function
 class Argument {
@@ -22,6 +22,6 @@ protected:
     std::string input_file_;
 };
 
-}  // namespace Init
+}  // namespace initialize
 
 #endif  // SRC_INIT_ARGUMENT_H_
