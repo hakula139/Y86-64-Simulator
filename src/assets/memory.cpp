@@ -3,7 +3,7 @@
 namespace assets {
 
 uint64_t Memory::Get(uint64_t address, size_t size) const {
-    if (address >= kCapacity_ - size) return UINT64_MAX;  // error
+    if (size > 8 || address >= kCapacity_ - size) return UINT64_MAX;  // error
     uint64_t result = 0;
     for (size_t i = 0; i < size; ++i)
         result += data_.at(i + address) << (i << 3);

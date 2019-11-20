@@ -11,7 +11,7 @@ class Memory {
 public:
     Memory() : data_(kCapacity_) {}
 
-    // Reads 'size' bytes from 'address'
+    // Reads 'size' (<= 8) bytes from 'address'
     uint64_t Get(uint64_t address, size_t size) const;
     // Writes 'value' (8 bytes) to 'address'
     bool Set(uint64_t address, uint64_t value);
