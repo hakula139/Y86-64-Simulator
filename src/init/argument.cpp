@@ -14,7 +14,6 @@ bool Argument::Load(int argc, char** argv) {
         PrintUsageMessage();
         return false;
     }
-
     std::string input_file(argv[1]);
     if (!FilenameIsValid(input_file)) {
         PrintErrorMessage(2);
@@ -25,7 +24,7 @@ bool Argument::Load(int argc, char** argv) {
     } else {
         input_file_ = input_file;
     }
-
+    std::cout << "Successfully read " << input_file << '\n';
     return true;
 }
 
