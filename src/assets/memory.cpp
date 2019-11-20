@@ -14,7 +14,7 @@ uint64_t Memory::Get(uint64_t address, size_t size) {
 
 bool Memory::Set(uint64_t address, uint64_t value) {
     if (address >= kCapacity_ - 8) return false;
-    for (; value; value >> 8)
+    for (; value; value >>= 8)
         data_.at(address++) = value & 0xFF;  // gets the lowest byte
     return true;
 }

@@ -2,8 +2,8 @@
 
 namespace assets {
 
-std::vector<uint64_t> Register::data_(kTotal);
-std::vector<bool>     ConditionCode::data_(kTotal);
+std::vector<uint64_t> Register::data_(kTotal_);
+std::vector<bool>     ConditionCode::data_(kTotal_);
 
 bool Register::Set(int register_num, uint64_t value) {
     data_.at(register_num) = value;
