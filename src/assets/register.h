@@ -30,28 +30,24 @@ enum ConditionCodeMap : int { OF = 0x0, SF = 0x1, ZF = 0x2 };
 // Manages the value in each register
 class Register {
 public:
-    Register() : data_(kTotal_) {}
-
     uint64_t Get(int register_num) const { return data_.at(register_num); }
     bool     Set(int register_num, uint64_t value);
     bool     Clear();
 
 protected:
-    static constexpr size_t kTotal_ = 16;
-    std::vector<uint64_t>   data_;
+    static constexpr size_t      kTotal_ = 16;
+    static std::vector<uint64_t> data_;
 };
 
 // Manages the value in each condition code
 class ConditionCode {
-    ConditionCode() : data_(kTotal_) {}
-
     bool Get(int condition_code) const { return data_.at(condition_code); }
     bool Set(int condition_code, uint64_t value);
     bool Clear();
 
 protected:
-    static constexpr size_t kTotal_ = 3;
-    std::vector<bool>       data_;
+    static constexpr size_t  kTotal_ = 3;
+    static std::vector<bool> data_;
 };
 
 }  // namespace assets

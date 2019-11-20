@@ -9,8 +9,6 @@ namespace assets {
 // Manages the memory, using little-endian storage
 class Memory {
 public:
-    Memory() : data_(kCapacity_) {}
-
     // Reads 'size' (<= 8) bytes from 'address'
     uint64_t Get(uint64_t address, size_t size) const;
     // Writes 'value' (8 bytes) to 'address'
@@ -18,8 +16,8 @@ public:
     bool Clear();
 
 protected:
-    static constexpr size_t kCapacity_ = 1 << 28;  // 256 MB
-    std::vector<uint8_t>    data_;
+    static constexpr size_t     kCapacity_ = 1 << 28;  // 256 MB
+    static std::vector<uint8_t> data_;
 };
 
 }  // namespace assets
