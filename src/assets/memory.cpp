@@ -4,7 +4,7 @@ namespace assets {
 
 std::vector<uint8_t> Memory::data_(kCapacity_);
 
-uint64_t Memory::Get(uint64_t address, size_t size) const {
+uint64_t Memory::Get(uint64_t address, size_t size) {
     if (size > 8 || address >= kCapacity_ - size) return UINT64_MAX;  // error
     uint64_t result = 0;
     for (size_t i = 0; i < size; ++i)

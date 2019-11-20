@@ -10,10 +10,10 @@ namespace assets {
 class Memory {
 public:
     // Reads 'size' (<= 8) bytes from 'address'
-    uint64_t Get(uint64_t address, size_t size) const;
+    static uint64_t Get(uint64_t address, size_t size);
     // Writes 'value' (8 bytes) to 'address'
-    bool Set(uint64_t address, uint64_t value);
-    bool Clear();
+    static bool Set(uint64_t address, uint64_t value);
+    static bool Clear();
 
 protected:
     static constexpr size_t     kCapacity_ = 1 << 28;  // 256 MB

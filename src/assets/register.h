@@ -30,9 +30,9 @@ enum ConditionCodeMap : int { OF = 0x0, SF = 0x1, ZF = 0x2 };
 // Manages the value in each register
 class Register {
 public:
-    uint64_t Get(int register_num) const { return data_.at(register_num); }
-    bool     Set(int register_num, uint64_t value);
-    bool     Clear();
+    static uint64_t Get(int register_num) { return data_.at(register_num); }
+    static bool     Set(int register_num, uint64_t value);
+    static bool     Clear();
 
 protected:
     static constexpr size_t      kTotal_ = 16;
@@ -41,9 +41,9 @@ protected:
 
 // Manages the value in each condition code
 class ConditionCode {
-    bool Get(int condition_code) const { return data_.at(condition_code); }
-    bool Set(int condition_code, uint64_t value);
-    bool Clear();
+    static bool Get(int condition_code) { return data_.at(condition_code); }
+    static bool Set(int condition_code, uint64_t value);
+    static bool Clear();
 
 protected:
     static constexpr size_t  kTotal_ = 3;
