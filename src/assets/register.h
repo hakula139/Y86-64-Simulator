@@ -41,8 +41,9 @@ protected:
 
 // Manages the value in each condition code
 class ConditionCode {
+public:
     static bool Get(int condition_code) { return data_.at(condition_code); }
-    static bool Set(int condition_code, uint64_t value);
+    static bool Set(int condition_code, bool value);
     static bool Clear();
 
 protected:

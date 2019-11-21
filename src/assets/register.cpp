@@ -15,7 +15,7 @@ bool Register::Clear() {
     return true;
 }
 
-bool ConditionCode::Set(int condition_code, uint64_t value) {
+bool ConditionCode::Set(int condition_code, bool value) {
     data_.at(condition_code) = value;
     return true;
 }
