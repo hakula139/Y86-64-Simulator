@@ -7,7 +7,8 @@ namespace assets {
 
 class ArithmeticLogicUnit {
 public:
-    static uint64_t Add(uint64_t num1, uint64_t num2);
+    static int64_t  AddSigned(int64_t num1, int64_t num2);
+    static uint64_t AddUnsigned(uint64_t num1, uint64_t num2);
     // TODO(Hakula): Add more operations
 };
 
