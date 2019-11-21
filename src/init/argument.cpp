@@ -36,11 +36,12 @@ bool Argument::PrintInfo() const {
 }
 
 bool Argument::PrintErrorMessage(const int error_code) const {
+    std::cerr << "Argument Error ";
     switch (error_code) {
-        case 1: std::cerr << "Error 1: No arguments provided.\n"; break;
-        case 2: std::cerr << "Error 2: Invalid filename.\n"; break;
-        case 3: std::cerr << "Error 3: File does not exist.\n"; break;
-        default: std::cerr << "Error: An unknown error occurs.\n"; break;
+        case 1: std::cerr << "1: No arguments provided.\n"; break;
+        case 2: std::cerr << "2: Invalid filename.\n"; break;
+        case 3: std::cerr << "3: File does not exist.\n"; break;
+        default: std::cerr << "X: An unknown error occurs.\n"; break;
     }
     PrintUsageMessage();
     return true;

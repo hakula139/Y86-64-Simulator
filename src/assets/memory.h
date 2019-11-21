@@ -16,6 +16,8 @@ public:
     static bool Clear();
 
 protected:
+    static bool PrintErrorMessage(const int error_code);
+
     static constexpr size_t     kCapacity_ = 1 << 28;  // 256 MB
     static std::vector<uint8_t> data_;
 };
