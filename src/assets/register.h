@@ -25,7 +25,7 @@ enum RegisterMap : int {
     R15 = 0xF
 };
 
-enum ConditionCodeMap : int { OF = 0x0, SF = 0x1, ZF = 0x2 };
+enum ConditionCodeMap : int { OF = 0x0, SF = 0x1, ZF = 0x2, CF = 0x3 };
 
 // Manages the value in each register
 class Register {
