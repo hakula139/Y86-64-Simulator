@@ -13,5 +13,5 @@ int main(int argc, char** argv) {
     assets::File input(args.input_file());
     if (!input.ReadRawData()) exit(EXIT_FAILURE);
     input.ReadInstructions();
-    input.PrintInstruction(0);
+    // input.PrintAllInstructions();
 }

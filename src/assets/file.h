@@ -17,9 +17,11 @@ public:
     bool ReadInstructions();
     bool PrintRawData() const;
     bool PrintInstruction(uint64_t address) const;
+    bool PrintAllInstructions() const;
 
 protected:
     bool PrintErrorMessage(const int error_code) const;
+    bool SetOutputHexWidth(const size_t width) const;
 
     std::string              input_file_;
     std::vector<std::string> raw_data_;

@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <utility>
 
@@ -23,8 +24,6 @@ bool File::ReadRawData() {
 }
 
 bool File::ReadInstructions() {
-    // TODO(Hakula): Cannot work. Need fix.
-    uint64_t address = 0;
     for (const auto& line : raw_data_) {
         if (line.empty() || line.front() != '0') continue;
         std::vector<uint8_t> instruction;
@@ -38,14 +37,9 @@ bool File::ReadInstructions() {
         }
         if (instruction.empty()) continue;  // no instruction extracted
         auto address_str = line.substr(0, begin - 2);
-        auto address_given =
+        auto address =
             static_cast<uint64_t>(std::stoi(address_str, nullptr, 16));
-        if (address != address_given) {
-            PrintErrorMessage(2);
-            return false;
-        }
         instructions_.insert(std::make_pair(address, instruction));
-        address += i - begin;
     }
     return true;
 }
@@ -60,8 +54,21 @@ bool File::PrintInstruction(uint64_t address) const {
         PrintErrorMessage(3);
         return false;
     }
-    for (const auto& code : instructions_.at(address)) std::cout << code << ' ';
+    std::cout << "0x";
+    SetOutputHexWidth(3);
+    std::cout << address << ':';
+    for (const auto& code : instructions_.at(address)) {
+        std::cout << ' ';
+        SetOutputHexWidth(2);
+        std::cout << static_cast<uint16_t>(code);
+    }
     std::cout << '\n';
+    return true;
+}
+
+bool File::PrintAllInstructions() const {
+    for (const auto& instruction : instructions_)
+        PrintInstruction(instruction.first);
     return true;
 }
 
@@ -73,6 +80,11 @@ bool File::PrintErrorMessage(const int error_code) const {
         case 3: std::cerr << "3: Instruction not found.\n"; break;
         default: std::cerr << "X: An unknown error occurs.\n"; break;
     }
+    return true;
+}
+
+bool File::SetOutputHexWidth(const size_t width) const {
+    std::cout << std::hex << std::setfill('0') << std::setw(width);
     return true;
 }
 
