@@ -1,7 +1,5 @@
 #include <cstdlib>
 #include <fstream>
-#include <iostream>
-
 #include "init/argument.h"
 
 #include "assets/file.h"

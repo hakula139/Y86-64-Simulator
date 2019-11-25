@@ -1,0 +1,4 @@
+#ifndef SRC_STAGES_FETCH_H_
+#define SRC_STAGES_FETCH_H_
+
+#endif  // SRC_STAGES_FETCH_H_
