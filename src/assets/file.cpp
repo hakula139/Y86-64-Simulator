@@ -2,9 +2,10 @@
 
 #include <cstdint>
 #include <fstream>
-#include <iomanip>
 #include <iostream>
 #include <utility>
+
+#include "../utils/utility.h"
 
 namespace assets {
 
@@ -55,11 +56,11 @@ bool File::PrintInstruction(uint64_t address) const {
         return false;
     }
     std::cout << "0x";
-    SetOutputHexWidth(3);
+    utility::SetOutputHexWidth(3);
     std::cout << address << ':';
     for (const auto& code : instructions_.at(address)) {
         std::cout << ' ';
-        SetOutputHexWidth(2);
+        utility::SetOutputHexWidth(2);
         std::cout << static_cast<uint16_t>(code);
     }
     std::cout << '\n';
@@ -80,11 +81,6 @@ bool File::PrintErrorMessage(const int error_code) const {
         case 3: std::cerr << "3: Instruction not found.\n"; break;
         default: std::cerr << "X: An unknown error occurs.\n"; break;
     }
-    return true;
-}
-
-bool File::SetOutputHexWidth(const size_t width) const {
-    std::cout << std::hex << std::setfill('0') << std::setw(width);
     return true;
 }
 
