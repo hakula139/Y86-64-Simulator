@@ -32,7 +32,6 @@ bool File::ReadInstructions() {
         auto                 i     = begin;
         for (; line[i] != ' '; i += 2) {
             auto code_str = line.substr(i, 2);
-            // TODO(Hakula): Check if 'code_str' is a valid hexadecimal number.
             auto code = static_cast<uint8_t>(std::stoi(code_str, nullptr, 16));
             instruction.push_back(code);
         }
