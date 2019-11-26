@@ -8,8 +8,6 @@
 #include "instruction.h"
 #include "memory.h"
 
-using std::vector;
-
 using assets::File;
 using assets::PipelineRegister;
 using assets::ProgramCounter;
@@ -23,13 +21,13 @@ using assets::WRITE_BACK;
 
 namespace stages {
 
-vector<uint8_t> Fetch::instruction_;
-uint64_t        Fetch::pc_;
-uint64_t        Fetch::pred_pc_;
-uint8_t         Fetch::icode_;
-uint8_t         Fetch::ifun_;
-uint8_t         Fetch::stat_;
-bool            Fetch::mem_error_ = false;
+std::vector<uint8_t> Fetch::instruction_;
+uint64_t             Fetch::pc_;
+uint64_t             Fetch::pred_pc_;
+uint8_t              Fetch::icode_;
+uint8_t              Fetch::ifun_;
+uint8_t              Fetch::stat_;
+bool                 Fetch::mem_error_ = false;
 
 bool Fetch::Do(const File& input) {
     pc_          = GetPC();

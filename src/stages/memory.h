@@ -2,10 +2,6 @@
 #define SRC_STAGES_MEMORY_H_
 
 #include <cstdint>
-#include <vector>
-
-#include "../assets/file.h"
-#include "../assets/register.h"
 
 namespace stages {
 

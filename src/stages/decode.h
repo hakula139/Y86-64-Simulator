@@ -2,9 +2,6 @@
 #define SRC_STAGES_DECODE_H_
 
 #include <cstdint>
-#include <vector>
-
-#include "../assets/register.h"
 
 namespace stages {
 
@@ -13,9 +10,7 @@ public:
     // Runs the decode stage
     static bool Do();
 
-    // Forwards into decode stage for valA
     static uint64_t GetValA(uint8_t icode);
-    // Forwards into decode stage for valB
     static uint64_t GetValB(uint8_t icode);
     static uint64_t GetSrcA(uint8_t icode);
     static uint64_t GetSrcB(uint8_t icode);

@@ -2,9 +2,6 @@
 #define SRC_STAGES_WRITE_BACK_H_
 
 #include <cstdint>
-#include <vector>
-
-#include "../assets/register.h"
 
 namespace stages {
 
