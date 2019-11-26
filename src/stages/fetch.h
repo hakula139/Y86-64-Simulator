@@ -1,13 +1,16 @@
 #ifndef SRC_STAGES_FETCH_H_
 #define SRC_STAGES_FETCH_H_
 
-#include "stage.h"
+#include "../assets/register.h"
 
 namespace stages {
 
-class Fetch : public Stage {
+class Fetch {
 public:
+    static bool InstructionIsValid();
+
 protected:
+    static assets::PipelineRegister register_;
 };
 
 }  // namespace stages
