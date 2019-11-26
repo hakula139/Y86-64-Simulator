@@ -17,13 +17,17 @@ using assets::ProgramCounter;
 using utility::ValueIsInArray;
 
 using assets::DECODE;
+using assets::EXECUTE;
+using assets::FETCH;
+using assets::MEMORY;
+using assets::WRITE_BACK;
 
 namespace stages {
 
 vector<uint8_t> Fetch::instruction_;
 
 bool Fetch::Do(const File& input) {
-    auto pc        = PipelineRegister::Get(assets::FETCH, assets::PRED_PC);
+    auto pc        = PipelineRegister::Get(FETCH, assets::PRED_PC);
     bool mem_error = false;
     instruction_   = input.GetInstruction(pc, &mem_error);
     auto icode     = GetICode(&mem_error);
