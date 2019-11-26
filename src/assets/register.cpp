@@ -17,6 +17,11 @@ vector<vector<uint64_t>> PipelineRegister::data_(kStageCount_,
                                                  vector<uint64_t>(kTotal_));
 vector<uint64_t>         ConditionCode::data_(kTotal_);
 
+bool ProgramCounter::Set(uint64_t value) {
+    current_address_ = value;
+    return true;
+}
+
 bool ProgramCounter::Clear() {
     current_address_ = 0ull;
     return true;

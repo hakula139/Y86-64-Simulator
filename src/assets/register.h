@@ -61,6 +61,7 @@ enum StatusMap : int { SAOK = 0x1, SADR = 0x2, SINS = 0x3, SHLT = 0x4 };
 class ProgramCounter {
 public:
     static uint64_t Get() { return current_address_; }
+    static bool     Set(uint64_t value);
     static bool     Clear();
     static bool     Print();
 

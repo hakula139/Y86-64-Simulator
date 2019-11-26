@@ -58,6 +58,7 @@ bool Fetch::Do(const File& input) {
     }
 
     PipelineRegister::Set(DECODE, assets::VAL_P, pc);
+    ProgramCounter::Set(pc);
     return true;
 }
 
