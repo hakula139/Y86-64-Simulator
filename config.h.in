@@ -1,6 +1,8 @@
 #ifndef SRC_CONFIG_H_
 #define SRC_CONFIG_H_
 
+#define SIM_DEBUG 1
+
 constexpr int kSimVersionMajor = @Y86-64-Simulator_VERSION_MAJOR@;
 constexpr int kSimVersionMinor = @Y86-64-Simulator_VERSION_MINOR@;
 constexpr int kSimVersionPatch = @Y86-64-Simulator_VERSION_PATCH@;
