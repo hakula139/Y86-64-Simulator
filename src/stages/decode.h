@@ -4,7 +4,6 @@
 #include <cstdint>
 #include <vector>
 
-#include "../assets/file.h"
 #include "../assets/register.h"
 
 namespace stages {
@@ -12,26 +11,26 @@ namespace stages {
 class Decode {
 public:
     // Runs the decode stage
-    static bool     Do(const assets::File& input);
+    static bool Do();
+
+    // Forwards into decode stage for valA
     static uint64_t GetValA(uint8_t icode);
+    // Forwards into decode stage for valB
     static uint64_t GetValB(uint8_t icode);
     static uint64_t GetSrcA(uint8_t icode);
     static uint64_t GetSrcB(uint8_t icode);
     static uint64_t GetDstE(uint8_t icode);
     static uint64_t GetDstM(uint8_t icode);
-    static uint64_t SrcA(void);
-    static uint64_t SrcB(void);
-    static uint64_t DstE(void);
-    static uint64_t DstM(void);
 
+    static uint64_t src_a() { return src_a_; }
+    static uint64_t src_b() { return src_b_; }
+    static uint64_t dst_e() { return dst_e_; }
+    static uint64_t dst_m() { return dst_m_; }
 
 protected:
     static bool PrintErrorMessage(const int error_code);
 
-    static std::vector<uint8_t>     instruction_;
-    static assets::PipelineRegister register_;
-
-    static uint64_t srcA, srcB, dstE, dstM;
+    static uint64_t dst_e_, dst_m_, src_a_, src_b_;
 };
 
 }  // namespace stages

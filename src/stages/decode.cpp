@@ -2,113 +2,131 @@
 
 #include <iostream>
 
-#include "../assets/file.h"
 #include "../assets/register.h"
 #include "../utils/utility.h"
+#include "execute.h"
 #include "instruction.h"
+#include "memory.h"
 
+using assets::PipelineRegister;
+using assets::Register;
 using utility::ValueIsInArray;
+
+using assets::DECODE;
+using assets::EXECUTE;
+using assets::FETCH;
+using assets::MEMORY;
+using assets::WRITE_BACK;
 
 namespace stages {
 
-bool Decode::Do(const assets::File& input) {
-    auto stat   = assets::PipelineRegister::Get(assets::DECODE, assets::STAT);
-    auto icode  = assets::PipelineRegister::Get(assets::DECODE, assets::I_CODE);
-    auto ifun   = assets::PipelineRegister::Get(assets::DECODE, assets::I_FUN);
-    auto val_c  = assets::PipelineRegister::Get(assets::DECODE, assets::VAL_C);
-    auto val_p  = assets::PipelineRegister::Get(assets::FETCH, assets::PRED_PC);
-    auto val_a  = GetValA(icode);
-    auto val_b  = GetValB(icode);
-    auto M_valE = assets::PipelineRegister::Get(assets::MEMORY, assets::VAL_E);
-    auto W_valM =
-        assets::PipelineRegister::Get(assets::WRITE_BACK, assets::VAL_M);
-    auto W_valE =
-        assets::PipelineRegister::Get(assets::WRITE_BACK, assets::VAL_E);
+uint64_t Decode::dst_e_;
+uint64_t Decode::dst_m_;
+uint64_t Decode::src_a_;
+uint64_t Decode::src_b_;
 
-    srcA = GetSrcA(icode);
-    srcB = GetSrcB(icode);
-    dstE = GetDstE(icode);
-    dstM = GetDstM(icode);
+bool Decode::Do() {
+    auto stat    = PipelineRegister::Get(DECODE, assets::STAT);
+    auto icode   = PipelineRegister::Get(DECODE, assets::I_CODE);
+    auto ifun    = PipelineRegister::Get(DECODE, assets::I_FUN);
+    auto val_c   = PipelineRegister::Get(DECODE, assets::VAL_C);
+    auto val_p   = PipelineRegister::Get(FETCH, assets::PRED_PC);
+    auto val_a   = GetValA(icode);
+    auto val_b   = GetValB(icode);
+    auto m_val_e = PipelineRegister::Get(MEMORY, assets::VAL_E);
+    auto w_val_m = PipelineRegister::Get(WRITE_BACK, assets::VAL_M);
+    auto w_val_e = PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
+    dst_e_       = GetDstE(icode);
+    dst_m_       = GetDstM(icode);
+    src_a_       = GetSrcA(icode);
+    src_b_       = GetSrcB(icode);
 
-    assets::PipelineRegister::Set(assets::EXECUTE, assets::STAT, stat);
-    assets::PipelineRegister::Set(assets::EXECUTE, assets::I_CODE, icode);
-    assets::PipelineRegister::Set(assets::EXECUTE, assets::I_FUN, ifun);
-    assets::PipelineRegister::Set(assets::EXECUTE, assets::VAL_C, val_c);
-    assets::PipelineRegister::Set(assets::EXECUTE, assets::VAL_A, val_a);
-    assets::PipelineRegister::Set(assets::EXECUTE, assets::VAL_B, val_b);
+    PipelineRegister::Set(EXECUTE, assets::STAT, stat);
+    PipelineRegister::Set(EXECUTE, assets::I_CODE, icode);
+    PipelineRegister::Set(EXECUTE, assets::I_FUN, ifun);
+    PipelineRegister::Set(EXECUTE, assets::VAL_C, val_c);
+    PipelineRegister::Set(EXECUTE, assets::VAL_A, val_a);
+    PipelineRegister::Set(EXECUTE, assets::VAL_B, val_b);
+    PipelineRegister::Set(EXECUTE, assets::DST_E, dst_e_);
+    PipelineRegister::Set(EXECUTE, assets::DST_M, dst_m_);
+    PipelineRegister::Set(EXECUTE, assets::SRC_A, src_a_);
+    PipelineRegister::Set(EXECUTE, assets::SRC_B, src_b_);
 
-    return true;
-}
-
-bool Decode::PrintErrorMessage(const int error_code) {
-    std::cerr << "Fetch Error ";
-    switch (error_code) {
-        case 1: std::cerr << "1: No instruction.\n"; break;
-        case 2: std::cerr << "2: Invalid instruction.\n"; break;
-        default: std::cerr << "X: An unknown error occurs.\n"; break;
-    }
     return true;
 }
 
 uint64_t Decode::GetValA(uint8_t icode) {
+    // Uses incremented PC
     if (ValueIsInArray(icode, {ICALL, IJXX}))
-        return assets::PipelineRegister::Get(assets::DECODE, assets::VAL_A);
-    if (srcA == excecute::DstE())
-        return e_valE;  // Forward valE from execute     :
-    if (srcA == MEMORY::DstM()) return m_valM;  // Forward valM from memory
-    if (srcA == MEMORY::DstE()) return M_valE;  // Forward valE from memory
-    if (srcA == WRITE_BACK::DstM())
-        return W_valM;  // Forward valM from write back
-    if (srcA == WRITE_BACK::DstE)
-        return W_valE;  // Forward valE from write back
-    return d_rvalA;     // Use value read from register file
+        return PipelineRegister::Get(DECODE, assets::VAL_P);
+    // Forwards valE from execute
+    if (src_a_ == Execute::dst_e()) return Execute::val_e();
+    // Forwards valM from memory
+    if (src_a_ == Memory::dst_m()) return Memory::val_m();
+    // Forwards valE from memory
+    if (src_a_ == Memory::dst_e())
+        return PipelineRegister::Get(MEMORY, assets::VAL_E);
+    // Forwards valM from write back
+    if (src_a_ == WriteBack::dst_m())
+        return PipelineRegister::Get(WRITE_BACK, assets::VAL_M);
+    // Forwards valE from write back
+    if (src_a_ == WriteBack::dst_e())
+        return PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
+    // Uses value read from register file
+    return Register::Get(assets::VAL_A);
 }
 
 uint64_t Decode::GetValB(uint8_t icode) {
-    if (srcB == excecute::DstE())
-        return e_valE;  // Forward valE from execute     :
-    if (srcB == MEMORY::DstM()) return m_valM;  // Forward valM from memory
-    if (srcB == MEMORY::DstE()) return M_valE;  // Forward valE from memory
-    if (srcB == WRITE_BACK::DstM())
-        return W_valM;  // Forward valM from write back
-    if (srcB == WRITE_BACK::DstE())
-        return W_valE;  // Forward valE from write back
-    return d_rvalB;     // Use value read from register file
+    // Forwards valE from execute
+    if (src_b_ == Execute::dst_e()) return Execute::val_e();
+    // Forwards valM from memory
+    if (src_b_ == Memory::dst_m()) return Memory::val_m();
+    // Forwards valE from memory
+    if (src_b_ == Memory::dst_e())
+        return PipelineRegister::Get(MEMORY, assets::VAL_E);
+    // Forwards valM from write back
+    if (src_b_ == WriteBack::dst_m())
+        return PipelineRegister::Get(WRITE_BACK, assets::VAL_M);
+    // Forwards valE from write back
+    if (src_b_ == WriteBack::dst_e())
+        return PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
+    // Uses value read from register file
+    return Register::Get(assets::VAL_B);
 }
 
 uint64_t Decode::GetSrcA(uint8_t icode) {
     if (ValueIsInArray(icode, {IRRMOVQ, IRMMOVQ, IOPQ, IPUSHQ}))
-        return assets::PipelineRegister::Get(assets::DECODE, assets::R_A);
-    if (ValueIsInArray(icode, {IPOPQ, IRET}))
-        return RRSP;
-    return RNONE;
+        return PipelineRegister::Get(DECODE, assets::R_A);
+    if (ValueIsInArray(icode, {IPOPQ, IRET})) return assets::RSP;
+    return assets::RNONE;  // Don’t need register
 }
 
 uint64_t Decode::GetSrcB(uint8_t icode) {
     if (ValueIsInArray(icode, {IMRMOVQ, IRMMOVQ, IOPQ}))
-        return assets::PipelineRegister::Get(assets::DECODE, assets::R_B);
-    if (ValueIsInArray(icode, {IPUSHQ, IPOPQ, ICALL, IRET}))
-        return RRSP;
-    return RNONE;
+        return PipelineRegister::Get(DECODE, assets::R_B);
+    if (ValueIsInArray(icode, {IPUSHQ, IPOPQ, ICALL, IRET})) return assets::RSP;
+    return assets::RNONE;  // Don’t need register
 }
 
 uint64_t Decode::GetDstE(uint8_t icode) {
     if (ValueIsInArray(icode, {IRRMOVQ, IIRMOVQ, IOPQ}))
-        return assets::PipelineRegister::Get(assets::DECODE, assets::R_B);
-    if (ValueIsInArray(icode, {IPUSHQ, IPOPQ, ICALL, IRET}))
-        return RRSP;
-    return RNONE;
+        return PipelineRegister::Get(DECODE, assets::R_B);
+    if (ValueIsInArray(icode, {IPUSHQ, IPOPQ, ICALL, IRET})) return assets::RSP;
+    return assets::RNONE;  // Don’t write any register
 }
 
 uint64_t Decode::GetDstM(uint8_t icode) {
     if (ValueIsInArray(icode, {IMRMOVQ, IOPQ}))
-        return assets::PipelineRegister::Get(assets::DECODE, assets::R_A);
-    return RNONE;
+        return PipelineRegister::Get(DECODE, assets::R_A);
+    return assets::RNONE;  // Don’t write any register
 }
 
-uint64_t Decode::SrcA(void) { return srcA; }
-uint64_t Decode::SrcB(void) { return srcB; }
-uint64_t Decode::DstE(void) { return dstE; }
-uint64_t Decode::DstM(void) { return dstM; }
+bool Decode::PrintErrorMessage(const int error_code) {
+    std::cerr << "Decode Error ";
+    switch (error_code) {
+        default: std::cerr << "X: An unknown error occurs.\n"; break;
+    }
+    return true;
+}
 
 }  // namespace stages
