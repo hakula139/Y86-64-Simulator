@@ -46,6 +46,17 @@ enum PipelineRegisterMap : int {
 
 enum ConditionCodeMap : int { OF = 0x0, SF = 0x1, ZF = 0x2, CF = 0x3 };
 
+// Manages the value of Program Counter, which contains the address of the
+// instruction being executed at the current time
+class ProgramCounter {
+public:
+    static bool Get() { return current_address_; }
+    static bool Clear();
+
+protected:
+    static uint64_t current_address_;
+};
+
 // Manages the value in each register
 class Register {
 public:

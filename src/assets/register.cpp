@@ -4,6 +4,11 @@ namespace assets {
 
 std::vector<uint64_t> Register::data_(kTotal_);
 
+bool ProgramCounter::Clear() {
+    current_address_ = 0ull;
+    return true;
+}
+
 bool Register::Set(int register_num, uint64_t value) {
     data_.at(register_num) = value;
     return true;
