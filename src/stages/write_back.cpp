@@ -21,11 +21,11 @@ bool WriteBack::Do() {
         PipelineRegister::Set(MEMORY, assets::STAT, assets::SAOK);
     else
         PipelineRegister::Set(WRITE_BACK, assets::STAT, stat);
-    return true;
+    return stat;
 }
 
 bool WriteBack::PrintErrorMessage(const int error_code) {
-    std::cerr << "Execute Error ";
+    std::cerr << "Write Back Error ";
     switch (error_code) {
         default: std::cerr << "X: An unknown error occurs.\n"; break;
     }
