@@ -3,7 +3,7 @@
 
 namespace stages {
 
-enum InstructionMap : int {
+enum InstructionMap : uint8_t {
     IHALT   = 0x0,
     INOP    = 0x1,
     IRRMOVQ = 0x2,
@@ -17,6 +17,8 @@ enum InstructionMap : int {
     IPUSHQ  = 0xA,
     IPOPQ   = 0xB
 };
+
+constexpr uint8_t FNONE = 0x0;
 
 }  // namespace stages
 
