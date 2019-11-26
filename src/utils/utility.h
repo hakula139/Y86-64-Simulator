@@ -15,6 +15,13 @@ bool ValueIsInArray(T value, const std::vector<T>& array) {
     return false;
 }
 
+template <class T>
+bool ValueIsInArray(T value, std::vector<T>&& array) {
+    for (const auto& i : array)
+        if (value == array) return true;
+    return false;
+}
+
 }  // namespace utility
 
 #endif  // SRC_UTILS_UTILITY_H_
