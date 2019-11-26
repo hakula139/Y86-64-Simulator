@@ -1,14 +1,13 @@
 #include "fetch.h"
 
 #include <iostream>
-#include <utility>
 
 #include "../assets/file.h"
 #include "../assets/register.h"
 #include "../utils/utility.h"
 #include "instruction.h"
+#include "memory.h"
 
-using std::move;
 using std::vector;
 
 using assets::File;
@@ -25,59 +24,77 @@ using assets::WRITE_BACK;
 namespace stages {
 
 vector<uint8_t> Fetch::instruction_;
+uint64_t        Fetch::pc_;
+uint64_t        Fetch::pred_pc_;
+uint8_t         Fetch::icode_;
+uint8_t         Fetch::ifun_;
+uint8_t         Fetch::stat_;
+bool            Fetch::mem_error_ = false;
 
 bool Fetch::Do(const File& input) {
-    auto pc        = PipelineRegister::Get(FETCH, assets::PRED_PC);
-    bool mem_error = false;
-    instruction_   = input.GetInstruction(pc, &mem_error);
-    auto icode     = GetICode(&mem_error);
-    bool ins_valid = true;
-    if (!InstructionIsValid(icode)) {
-        Fetch::PrintErrorMessage(2);
-        ins_valid = false;
-    }
-    auto ifun = GetIFun();
-    PipelineRegister::Set(DECODE, assets::I_CODE, icode);
-    PipelineRegister::Set(DECODE, assets::I_FUN, ifun);
-    ++pc;
+    pc_          = GetPC();
+    instruction_ = input.GetInstruction(pc_);
+    icode_       = GetICode();
+    ifun_        = GetIFun();
+    stat_        = GetStat();
 
-    if (mem_error)
-        PipelineRegister::Set(DECODE, assets::STAT, assets::SADR);
-    else if (icode == IHALT)
-        PipelineRegister::Set(DECODE, assets::STAT, assets::SHLT);
-    else if (!ins_valid)
-        PipelineRegister::Set(DECODE, assets::STAT, assets::SINS);
-    else
-        PipelineRegister::Set(DECODE, assets::STAT, assets::SAOK);
+    PipelineRegister::Set(DECODE, assets::I_CODE, icode_);
+    PipelineRegister::Set(DECODE, assets::I_FUN, ifun_);
+    PipelineRegister::Set(DECODE, assets::STAT, stat_);
+    ++pc_;
 
-    if (NeedRegids(icode)) {
+    if (NeedRegids()) {
         PipelineRegister::Set(DECODE, assets::R_A, GetRA());
         PipelineRegister::Set(DECODE, assets::R_B, GetRB());
-        ++pc;
+        ++pc_;
     }
-
-    if (NeedValC(icode)) {
+    if (NeedValC()) {
         PipelineRegister::Set(DECODE, assets::VAL_C, GetValC());
-        pc += 8;
+        pc_ += 8;
     }
 
-    PipelineRegister::Set(DECODE, assets::VAL_P, pc);
-    ProgramCounter::Set(pc);
+    PipelineRegister::Set(DECODE, assets::VAL_P, pc_);
     return true;
 }
 
-uint8_t Fetch::GetICode(bool* mem_error) {
+uint64_t Fetch::GetPC() {
+    // Mispredicted branch: Fetches at incremented PC.
+    auto m_icode = PipelineRegister::Get(MEMORY, assets::I_CODE);
+    auto m_cnd   = PipelineRegister::Get(MEMORY, assets::CND);
+    if (m_icode == IJXX && !m_cnd)
+        return PipelineRegister::Get(MEMORY, assets::VAL_A);
+    // Completion of RET instruction
+    auto w_icode = PipelineRegister::Get(WRITE_BACK, assets::I_CODE);
+    if (w_icode == IRET)
+        return PipelineRegister::Get(WRITE_BACK, assets::VAL_M);
+    //  Default: Uses predicted value of PC
+    return PipelineRegister::Get(FETCH, assets::PRED_PC);
+}
+
+uint8_t Fetch::GetICode() {
+    if (mem_error_) return INOP;
     if (instruction_.empty()) {
         Fetch::PrintErrorMessage(1);
-        *mem_error = true;
+        mem_error_ = true;
         return INOP;
     }
     return (instruction_[0] >> 4) & 0xF;  // the first 4 bits
 }
 
 uint8_t Fetch::GetIFun() {
-    if (instruction_.empty()) return FNONE;
+    if (mem_error_) return FNONE;
     return instruction_[0] & 0xF;  // the second 4 bits
+}
+
+uint8_t Fetch::GetStat() {
+    if (mem_error_) return assets::SADR;
+    auto ins_valid = InstructionIsValid();
+    if (!ins_valid) {
+        Fetch::PrintErrorMessage(2);
+        return assets::SINS;
+    }
+    if (icode_ == IHALT) return assets::SHLT;
+    return assets::SAOK;
 }
 
 uint8_t Fetch::GetRA() { return (instruction_[1] >> 4) & 0xF; }
@@ -91,22 +108,19 @@ uint64_t Fetch::GetValC() {
     return val_c;
 }
 
-bool Fetch::InstructionIsValid(uint8_t icode) {
-    vector<uint8_t> valid_icodes{IHALT,   INOP,    IRRMOVQ, IIRMOVQ,
-                                 IRMMOVQ, IMRMOVQ, IOPQ,    IJXX,
-                                 ICALL,   IRET,    IPUSHQ,  IPOPQ};
-    return ValueIsInArray(icode, move(valid_icodes));
+bool Fetch::InstructionIsValid() {
+    return ValueIsInArray(icode_,
+                          {IHALT, INOP, IRRMOVQ, IIRMOVQ, IRMMOVQ, IMRMOVQ,
+                           IOPQ, IJXX, ICALL, IRET, IPUSHQ, IPOPQ});
 }
 
-bool Fetch::NeedRegids(uint8_t icode) {
-    vector<uint8_t> valid_icodes{IRRMOVQ, IOPQ,    IPUSHQ, IPOPQ,
-                                 IIRMOVQ, IRMMOVQ, IMRMOVQ};
-    return ValueIsInArray(icode, move(valid_icodes));
+bool Fetch::NeedRegids() {
+    return ValueIsInArray(icode_, {IRRMOVQ, IOPQ, IPUSHQ, IPOPQ, IIRMOVQ,
+                                   IRMMOVQ, IMRMOVQ});
 }
 
-bool Fetch::NeedValC(uint8_t icode) {
-    vector<uint8_t> valid_icodes{IIRMOVQ, IRMMOVQ, IMRMOVQ, IJXX, ICALL};
-    return ValueIsInArray(icode, move(valid_icodes));
+bool Fetch::NeedValC() {
+    return ValueIsInArray(icode_, {IIRMOVQ, IRMMOVQ, IMRMOVQ, IJXX, ICALL});
 }
 
 bool Fetch::PrintErrorMessage(const int error_code) {
