@@ -72,10 +72,18 @@ protected:
 };
 
 // Manages the value in each pipeline register
-class PipelineRegister : public Register {
+class PipelineRegister {
+public:
+    static uint64_t Get(int stage_num, int register_num) {
+        return data_.at(stage_num).at(register_num);
+    }
+    static bool Set(int stage_num, int register_num, uint64_t value);
+    static bool Clear();
+
 protected:
-    static constexpr size_t      kTotal_ = 16;
-    static std::vector<uint64_t> data_;
+    static constexpr size_t                   kTotal_      = 16;
+    static constexpr size_t                   kStageCount_ = 5;
+    static std::vector<std::vector<uint64_t>> data_;
 };
 
 // Manages the value in each condition code
