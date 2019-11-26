@@ -25,6 +25,14 @@ enum RegisterMap : int {
     RNONE = 0xF
 };
 
+enum PipelineStageMap : int {
+    FETCH      = 0x1,
+    DECODE     = 0x2,
+    EXECUTE    = 0x3,
+    MEMORY     = 0x4,
+    WRITE_BACK = 0x5
+};
+
 enum PipelineRegisterMap : int {
     PRED_PC = 0x0,
     STAT    = 0x1,
