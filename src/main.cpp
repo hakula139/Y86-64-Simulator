@@ -21,5 +21,5 @@ int main(int argc, char** argv) {
 #endif
 
     bool end = false;
-    while (end) { stages::Fetch::Do(input); }
+    while (!end) { stages::Fetch::Do(input); }
 }

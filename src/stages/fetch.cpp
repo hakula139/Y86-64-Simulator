@@ -16,6 +16,8 @@ using assets::PipelineRegister;
 using assets::ProgramCounter;
 using utility::ValueIsInArray;
 
+using assets::DECODE;
+
 namespace stages {
 
 vector<uint8_t> Fetch::instruction_;
@@ -31,15 +33,31 @@ bool Fetch::Do(const File& input) {
         ins_valid = false;
     }
     auto ifun = GetIFun();
+    ++pc;
 
     if (mem_error)
-        PipelineRegister::Set(assets::FETCH, assets::STAT, assets::SADR);
+        PipelineRegister::Set(DECODE, assets::STAT, assets::SADR);
     else if (icode == IHALT)
-        PipelineRegister::Set(assets::FETCH, assets::STAT, assets::SHLT);
+        PipelineRegister::Set(DECODE, assets::STAT, assets::SHLT);
     else if (!ins_valid)
-        PipelineRegister::Set(assets::FETCH, assets::STAT, assets::SINS);
+        PipelineRegister::Set(DECODE, assets::STAT, assets::SINS);
     else
-        PipelineRegister::Set(assets::FETCH, assets::STAT, assets::SAOK);
+        PipelineRegister::Set(DECODE, assets::STAT, assets::SAOK);
+
+    if (NeedRegids(icode)) {
+        auto reg = instruction_.at(pc);
+        PipelineRegister::Set(DECODE, assets::R_A, (reg >> 4) & 0xF);
+        PipelineRegister::Set(DECODE, assets::R_A, reg & 0xF);
+        ++pc;
+    }
+
+    if (NeedValC(icode)) {
+        uint64_t val_c = 0;
+        // Read 8 bytes from instruction
+        for (size_t i = 0; i < 8; ++i, ++pc)
+            val_c = (val_c << 2) + instruction_.at(pc);
+        PipelineRegister::Set(DECODE, assets::VAL_C, val_c);
+    }
 
     return true;
 }
