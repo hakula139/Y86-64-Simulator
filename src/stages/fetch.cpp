@@ -48,7 +48,7 @@ bool Fetch::Do(const File& input) {
 
     if (NeedRegids(icode)) {
         PipelineRegister::Set(DECODE, assets::R_A, GetRA());
-        PipelineRegister::Set(DECODE, assets::R_A, GetRB());
+        PipelineRegister::Set(DECODE, assets::R_B, GetRB());
         ++pc;
     }
 
@@ -76,6 +76,17 @@ uint8_t Fetch::GetIFun() {
     return instruction_[0] & 0xF;  // the second 4 bits
 }
 
+uint8_t Fetch::GetRA() { return (instruction_[1] >> 4) & 0xF; }
+
+uint8_t Fetch::GetRB() { return instruction_[1] & 0xF; }
+
+uint64_t Fetch::GetValC() {
+    uint64_t val_c = 0;
+    // Read 8 bytes from instruction
+    for (size_t i = 2; i < 10; ++i) val_c += instruction_[i] << ((i - 2) << 3);
+    return val_c;
+}
+
 bool Fetch::InstructionIsValid(uint8_t icode) {
     vector<uint8_t> valid_icodes{IHALT,   INOP,    IRRMOVQ, IIRMOVQ,
                                  IRMMOVQ, IMRMOVQ, IOPQ,    IJXX,
@@ -92,17 +103,6 @@ bool Fetch::NeedRegids(uint8_t icode) {
 bool Fetch::NeedValC(uint8_t icode) {
     vector<uint8_t> valid_icodes{IIRMOVQ, IRMMOVQ, IMRMOVQ, IJXX, ICALL};
     return ValueIsInArray(icode, move(valid_icodes));
-}
-
-uint8_t Fetch::GetRA() { return (instruction_[1] >> 4) & 0xF; }
-
-uint8_t Fetch::GetRB() { return instruction_[1] & 0xF; }
-
-uint64_t Fetch::GetValC() {
-    uint64_t val_c = 0;
-    // Read 8 bytes from instruction
-    for (size_t i = 2; i < 10; ++i) val_c = (val_c << 2) + instruction_[i];
-    return val_c;
 }
 
 bool Fetch::PrintErrorMessage(const int error_code) {
