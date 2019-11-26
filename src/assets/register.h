@@ -53,7 +53,7 @@ enum PipelineRegisterMap : int {
     CND     = 0x10
 };
 
-enum ConditionCodeMap : int { OF = 0x0, SF = 0x1, ZF = 0x2, CF = 0x3 };
+enum ConditionCodeMap : int { OF = 0x0, SF = 0x1, ZF = 0x2 };
 
 enum StatusMap : int { SAOK = 0x1, SADR = 0x2, SINS = 0x3, SHLT = 0x4 };
 
@@ -100,12 +100,16 @@ protected:
 };
 
 // Manages the value in each condition code
-class ConditionCode : public Register {
+class ConditionCode {
+public:
+    static bool Get(int register_num) { return data_.at(register_num); }
+    static bool Set(int register_num, bool value);
+    static bool Clear();
     static bool Print();
 
 protected:
-    static constexpr size_t      kTotal_ = 4;
-    static std::vector<uint64_t> data_;
+    static constexpr size_t  kTotal_ = 3;
+    static std::vector<bool> data_;
 };
 
 }  // namespace assets

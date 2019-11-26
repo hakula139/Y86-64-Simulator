@@ -15,7 +15,7 @@ uint64_t                 ProgramCounter::current_address_ = 0ull;
 vector<uint64_t>         Register::data_(kTotal_);
 vector<vector<uint64_t>> PipelineRegister::data_(kStageCount_,
                                                  vector<uint64_t>(kTotal_));
-vector<uint64_t>         ConditionCode::data_(kTotal_);
+vector<bool>             ConditionCode::data_(kTotal_);
 
 bool ProgramCounter::Set(uint64_t value) {
     current_address_ = value;
@@ -91,8 +91,18 @@ bool PipelineRegister::Print(int stage_num) {
     return true;
 }
 
+bool ConditionCode::Set(int register_num, bool value) {
+    data_.at(register_num) = value;
+    return true;
+}
+
+bool ConditionCode::Clear() {
+    for (auto&& value : data_) value = 0;
+    return true;
+}
+
 bool ConditionCode::Print() {
-    vector<string> register_name{"OF", "SF", "ZF", "CF"};
+    vector<string> register_name{"OF", "SF", "ZF"};
     for (size_t i = 0; i < kTotal_; ++i) {
         std::cout << register_name[i] << Get(i) << '\n';
     }
