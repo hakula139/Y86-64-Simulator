@@ -23,7 +23,7 @@ namespace stages {
 vector<uint8_t> Fetch::instruction_;
 
 bool Fetch::Do(const File& input) {
-    auto pc        = ProgramCounter::Get();
+    auto pc        = PipelineRegister::Get(assets::FETCH, assets::PRED_PC);
     bool mem_error = false;
     instruction_   = input.GetInstruction(pc, &mem_error);
     auto icode     = GetICode(&mem_error);
@@ -33,6 +33,8 @@ bool Fetch::Do(const File& input) {
         ins_valid = false;
     }
     auto ifun = GetIFun();
+    PipelineRegister::Set(DECODE, assets::I_CODE, icode);
+    PipelineRegister::Set(DECODE, assets::I_FUN, ifun);
     ++pc;
 
     if (mem_error)
@@ -45,20 +47,17 @@ bool Fetch::Do(const File& input) {
         PipelineRegister::Set(DECODE, assets::STAT, assets::SAOK);
 
     if (NeedRegids(icode)) {
-        auto reg = instruction_.at(pc);
-        PipelineRegister::Set(DECODE, assets::R_A, (reg >> 4) & 0xF);
-        PipelineRegister::Set(DECODE, assets::R_A, reg & 0xF);
+        PipelineRegister::Set(DECODE, assets::R_A, GetRA());
+        PipelineRegister::Set(DECODE, assets::R_A, GetRB());
         ++pc;
     }
 
     if (NeedValC(icode)) {
-        uint64_t val_c = 0;
-        // Read 8 bytes from instruction
-        for (size_t i = 0; i < 8; ++i, ++pc)
-            val_c = (val_c << 2) + instruction_.at(pc);
-        PipelineRegister::Set(DECODE, assets::VAL_C, val_c);
+        PipelineRegister::Set(DECODE, assets::VAL_C, GetValC());
+        pc += 8;
     }
 
+    PipelineRegister::Set(DECODE, assets::VAL_P, pc);
     return true;
 }
 
@@ -92,6 +91,17 @@ bool Fetch::NeedRegids(uint8_t icode) {
 bool Fetch::NeedValC(uint8_t icode) {
     vector<uint8_t> valid_icodes{IIRMOVQ, IRMMOVQ, IMRMOVQ, IJXX, ICALL};
     return ValueIsInArray(icode, move(valid_icodes));
+}
+
+uint8_t Fetch::GetRA() { return (instruction_[1] >> 4) & 0xF; }
+
+uint8_t Fetch::GetRB() { return instruction_[1] & 0xF; }
+
+uint64_t Fetch::GetValC() {
+    uint64_t val_c = 0;
+    // Read 8 bytes from instruction
+    for (size_t i = 2; i < 10; ++i) val_c = (val_c << 2) + instruction_[i];
+    return val_c;
 }
 
 bool Fetch::PrintErrorMessage(const int error_code) {

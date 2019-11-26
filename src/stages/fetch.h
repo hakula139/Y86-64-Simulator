@@ -13,11 +13,14 @@ class Fetch {
 public:
     // Runs the fetch stage
     static bool Do(const assets::File& input);
-    // Determines instruction code
-    static uint8_t GetICode(bool* mem_error);
-    // Determines instruction function
-    static uint8_t GetIFun();
-    static bool    InstructionIsValid(uint8_t icode);
+
+    static uint8_t  GetICode(bool* mem_error);
+    static uint8_t  GetIFun();
+    static uint8_t  GetRA();
+    static uint8_t  GetRB();
+    static uint64_t GetValC();
+
+    static bool InstructionIsValid(uint8_t icode);
     // Does fetched instruction require a regid byte?
     static bool NeedRegids(uint8_t icode);
     // Does fetched instruction require a constant word?
