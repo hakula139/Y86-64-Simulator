@@ -49,7 +49,8 @@ enum PipelineRegisterMap : int {
     SRC_A   = 0xC,
     SRC_B   = 0xD,
     DST_E   = 0xE,
-    DST_M   = 0xF
+    DST_M   = 0xF,
+    CND     = 0x10
 };
 
 enum ConditionCodeMap : int { OF = 0x0, SF = 0x1, ZF = 0x2, CF = 0x3 };
@@ -89,11 +90,11 @@ public:
         return data_.at(stage_num).at(register_num);
     }
     static bool Set(int stage_num, int register_num, uint64_t value);
-    static bool Clear();
+    static bool Clear(int stage_num);
     static bool Print(int stage_num);
 
 protected:
-    static constexpr size_t                   kTotal_      = 16;
+    static constexpr size_t                   kTotal_      = 17;
     static constexpr size_t                   kStageCount_ = 5;
     static std::vector<std::vector<uint64_t>> data_;
 };
