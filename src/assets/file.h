@@ -13,11 +13,12 @@ class File {
 public:
     explicit File(const std::string& input_file) : input_file_(input_file) {}
 
-    bool ReadRawData();
-    bool ReadInstructions();
-    bool PrintRawData() const;
-    bool PrintInstruction(uint64_t address) const;
-    bool PrintAllInstructions() const;
+    bool                 ReadRawData();
+    bool                 ReadInstructions();
+    bool                 PrintRawData() const;
+    std::vector<uint8_t> GetInstruction(uint64_t address) const;
+    bool                 PrintInstruction(uint64_t address) const;
+    bool                 PrintAllInstructions() const;
 
 protected:
     bool PrintErrorMessage(const int error_code) const;
