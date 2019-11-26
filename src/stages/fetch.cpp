@@ -8,10 +8,14 @@
 #include "../utils/utility.h"
 #include "instruction.h"
 
+using assets::File;
+using assets::PipelineRegister;
+using assets::ProgramCounter;
+
 namespace stages {
 
-bool Fetch::Do(const assets::File& input) {
-    auto pc        = assets::ProgramCounter::Get();
+bool Fetch::Do(const File& input) {
+    auto pc        = ProgramCounter::Get();
     bool mem_error = false;
     instruction_   = input.GetInstruction(pc, &mem_error);
     auto icode     = GetICode(&mem_error);
@@ -23,13 +27,13 @@ bool Fetch::Do(const assets::File& input) {
     auto ifun = GetIFun();
 
     if (mem_error)
-        assets::PipelineRegister::Set(assets::STAT, assets::SADR);
+        PipelineRegister::Set(assets::FETCH, assets::STAT, assets::SADR);
     else if (icode == IHALT)
-        assets::PipelineRegister::Set(assets::STAT, assets::SHLT);
+        PipelineRegister::Set(assets::FETCH, assets::STAT, assets::SHLT);
     else if (!ins_valid)
-        assets::PipelineRegister::Set(assets::STAT, assets::SINS);
+        PipelineRegister::Set(assets::FETCH, assets::STAT, assets::SINS);
     else
-        assets::PipelineRegister::Set(assets::STAT, assets::SAOK);
+        PipelineRegister::Set(assets::FETCH, assets::STAT, assets::SAOK);
 
     return true;
 }
