@@ -60,8 +60,9 @@ enum StatusMap : int { SAOK = 0x1, SADR = 0x2, SINS = 0x3, SHLT = 0x4 };
 // instruction being executed at the current time
 class ProgramCounter {
 public:
-    static bool Get() { return current_address_; }
-    static bool Clear();
+    static uint64_t Get() { return current_address_; }
+    static bool     Clear();
+    static bool     Print();
 
 protected:
     static uint64_t current_address_;
@@ -73,6 +74,7 @@ public:
     static uint64_t Get(int register_num) { return data_.at(register_num); }
     static bool     Set(int register_num, uint64_t value);
     static bool     Clear();
+    static bool     Print();
 
 protected:
     static constexpr size_t      kTotal_ = 16;
@@ -87,6 +89,7 @@ public:
     }
     static bool Set(int stage_num, int register_num, uint64_t value);
     static bool Clear();
+    static bool Print(int stage_num);
 
 protected:
     static constexpr size_t                   kTotal_      = 16;
@@ -96,8 +99,10 @@ protected:
 
 // Manages the value in each condition code
 class ConditionCode : public Register {
+    static bool Print();
+
 protected:
-    static constexpr size_t      kTotal_ = 3;
+    static constexpr size_t      kTotal_ = 4;
     static std::vector<uint64_t> data_;
 };
 
