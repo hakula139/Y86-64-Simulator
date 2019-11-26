@@ -31,7 +31,6 @@ bool Fetch::Do(const assets::File& input) {
     else
         assets::PipelineRegister::Set(assets::STAT, assets::SAOK);
 
-    if (NeedRegids(icode)) { instruction_[1] >> }
     return true;
 }
 
