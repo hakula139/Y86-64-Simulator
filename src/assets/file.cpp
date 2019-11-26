@@ -53,7 +53,7 @@ std::vector<uint8_t> File::GetInstruction(uint64_t address,
                                           bool*    mem_error) const {
     if (!instructions_.count(address)) {
         PrintErrorMessage(3);
-        *mem_error = true;
+        if (mem_error) *mem_error = true;
         return {};
     }
     return instructions_.at(address);
@@ -62,7 +62,7 @@ std::vector<uint8_t> File::GetInstruction(uint64_t address,
 bool File::PrintInstruction(uint64_t address, bool* mem_error) const {
     if (!instructions_.count(address)) {
         PrintErrorMessage(3);
-        *mem_error = true;
+        if (mem_error) *mem_error = true;
         return false;
     }
     std::cout << "0x";
@@ -79,7 +79,7 @@ bool File::PrintInstruction(uint64_t address, bool* mem_error) const {
 
 bool File::PrintAllInstructions() const {
     for (const auto& instruction : instructions_)
-        PrintInstruction(instruction.first);
+        PrintInstruction(instruction.first, nullptr);
     return true;
 }
 

@@ -8,11 +8,17 @@
 #include "../utils/utility.h"
 #include "instruction.h"
 
+using std::move;
+using std::vector;
+
 using assets::File;
 using assets::PipelineRegister;
 using assets::ProgramCounter;
+using utility::ValueIsInArray;
 
 namespace stages {
+
+vector<uint8_t> Fetch::instruction_;
 
 bool Fetch::Do(const File& input) {
     auto pc        = ProgramCounter::Get();
@@ -53,21 +59,21 @@ uint8_t Fetch::GetIFun() {
 }
 
 bool Fetch::InstructionIsValid(uint8_t icode) {
-    std::vector<uint8_t> valid_icodes{IHALT,   INOP,    IRRMOVQ, IIRMOVQ,
-                                      IRMMOVQ, IMRMOVQ, IOPQ,    IJXX,
-                                      ICALL,   IRET,    IPUSHQ,  IPOPQ};
-    return utility::ValueIsInArray(icode, std::move(valid_icodes));
+    vector<uint8_t> valid_icodes{IHALT,   INOP,    IRRMOVQ, IIRMOVQ,
+                                 IRMMOVQ, IMRMOVQ, IOPQ,    IJXX,
+                                 ICALL,   IRET,    IPUSHQ,  IPOPQ};
+    return ValueIsInArray(icode, move(valid_icodes));
 }
 
 bool Fetch::NeedRegids(uint8_t icode) {
-    std::vector<uint8_t> valid_icodes{IRRMOVQ, IOPQ,    IPUSHQ, IPOPQ,
-                                      IIRMOVQ, IRMMOVQ, IMRMOVQ};
-    return utility::ValueIsInArray(icode, std::move(valid_icodes));
+    vector<uint8_t> valid_icodes{IRRMOVQ, IOPQ,    IPUSHQ, IPOPQ,
+                                 IIRMOVQ, IRMMOVQ, IMRMOVQ};
+    return ValueIsInArray(icode, move(valid_icodes));
 }
 
 bool Fetch::NeedValC(uint8_t icode) {
-    std::vector<uint8_t> valid_icodes{IIRMOVQ, IRMMOVQ, IMRMOVQ, IJXX, ICALL};
-    return utility::ValueIsInArray(icode, std::move(valid_icodes));
+    vector<uint8_t> valid_icodes{IIRMOVQ, IRMMOVQ, IMRMOVQ, IJXX, ICALL};
+    return ValueIsInArray(icode, move(valid_icodes));
 }
 
 bool Fetch::PrintErrorMessage(const int error_code) {

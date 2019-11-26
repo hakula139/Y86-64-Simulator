@@ -26,8 +26,7 @@ public:
 protected:
     static bool PrintErrorMessage(const int error_code);
 
-    static std::vector<uint8_t>     instruction_;
-    static assets::PipelineRegister register_;
+    static std::vector<uint8_t> instruction_;
 };
 
 }  // namespace stages

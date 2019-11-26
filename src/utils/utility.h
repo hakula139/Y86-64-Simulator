@@ -18,7 +18,7 @@ bool ValueIsInArray(T value, const std::vector<T>& array) {
 template <class T>
 bool ValueIsInArray(T value, std::vector<T>&& array) {
     for (const auto& i : array)
-        if (value == array) return true;
+        if (value == i) return true;
     return false;
 }
 

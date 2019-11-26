@@ -11,6 +11,7 @@ using std::vector;
 
 namespace assets {
 
+uint64_t                 ProgramCounter::current_address_ = 0ull;
 vector<uint64_t>         Register::data_(kTotal_);
 vector<vector<uint64_t>> PipelineRegister::data_(kStageCount_,
                                                  vector<uint64_t>(kTotal_));
