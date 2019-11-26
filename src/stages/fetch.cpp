@@ -1,6 +1,7 @@
 #include "fetch.h"
 
 #include <iostream>
+#include <utility>
 
 #include "../assets/file.h"
 #include "../assets/register.h"
@@ -38,7 +39,18 @@ bool Fetch::InstructionIsValid(uint8_t icode) {
     std::vector<uint8_t> valid_icodes{IHALT,   INOP,    IRRMOVQ, IIRMOVQ,
                                       IRMMOVQ, IMRMOVQ, IOPQ,    IJXX,
                                       ICALL,   IRET,    IPUSHQ,  IPOPQ};
-    return utility::ValueIsInArray(icode, valid_icodes);
+    return utility::ValueIsInArray(icode, std::move(valid_icodes));
+}
+
+bool Fetch::NeedRegids(uint8_t icode) {
+    std::vector<uint8_t> valid_icodes{IRRMOVQ, IOPQ,    IPUSHQ, IPOPQ,
+                                      IIRMOVQ, IRMMOVQ, IMRMOVQ};
+    return utility::ValueIsInArray(icode, std::move(valid_icodes));
+}
+
+bool Fetch::NeedValC(uint8_t icode) {
+    std::vector<uint8_t> valid_icodes{IIRMOVQ, IRMMOVQ, IMRMOVQ, IJXX, ICALL};
+    return utility::ValueIsInArray(icode, std::move(valid_icodes));
 }
 
 bool Fetch::PrintErrorMessage(const int error_code) {

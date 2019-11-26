@@ -11,10 +11,17 @@ namespace stages {
 
 class Fetch {
 public:
-    static bool    Do(const assets::File& input);
+    // Runs the fetch stage
+    static bool Do(const assets::File& input);
+    // Determines instruction code
     static uint8_t GetICode();
+    // Determines instruction function
     static uint8_t GetIFun();
     static bool    InstructionIsValid(uint8_t icode);
+    // Does fetched instruction require a regid byte?
+    static bool NeedRegids(uint8_t icode);
+    // Does fetched instruction require a constant word?
+    static bool NeedValC(uint8_t icode);
 
 protected:
     static bool PrintErrorMessage(const int error_code);
