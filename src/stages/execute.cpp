@@ -12,13 +12,20 @@ using std::move;
 using std::vector;
 
 using assets::ArithmeticLogicUnit;
+using assets::ConditionCode;
 using assets::PipelineRegister;
 using utility::ValueIsInArray;
 
+using assets::DECODE;
 using assets::EXECUTE;
+using assets::FETCH;
 using assets::MEMORY;
+using assets::WRITE_BACK;
 
 namespace stages {
+
+uint64_t Execute::val_e_;
+uint64_t Execute::dst_e_;
 
 bool Execute::Do() {
     auto stat     = PipelineRegister::Get(EXECUTE, assets::STAT);
@@ -28,17 +35,17 @@ bool Execute::Do() {
     auto alu_b    = GetAluB(icode);
     auto alu_func = GetAluFunction(icode);
     auto cnd      = GetCondition(ifun);
-    auto val_e    = GetValE(alu_a, alu_b, alu_func);
+    val_e_        = GetValE(alu_a, alu_b, alu_func);
     auto val_a    = PipelineRegister::Get(EXECUTE, assets::VAL_A);
-    auto dst_e    = PipelineRegister::Get(EXECUTE, assets::DST_E);
+    dst_e_        = PipelineRegister::Get(EXECUTE, assets::DST_E);
     auto dst_m    = PipelineRegister::Get(EXECUTE, assets::DST_M);
 
     PipelineRegister::Set(MEMORY, assets::STAT, stat);
     PipelineRegister::Set(MEMORY, assets::I_CODE, icode);
     PipelineRegister::Set(MEMORY, assets::CND, cnd);
-    PipelineRegister::Set(MEMORY, assets::VAL_E, val_e);
+    PipelineRegister::Set(MEMORY, assets::VAL_E, val_e_);
     PipelineRegister::Set(MEMORY, assets::VAL_A, val_a);
-    if (cnd) PipelineRegister::Set(MEMORY, assets::DST_E, dst_e);
+    if (cnd) PipelineRegister::Set(MEMORY, assets::DST_E, dst_e_);
     PipelineRegister::Set(MEMORY, assets::DST_M, dst_m);
 
     return true;
@@ -68,9 +75,9 @@ uint64_t Execute::GetAluFunction(uint8_t icode) {
 }
 
 bool Execute::GetCondition(uint8_t ifun) {
-    auto zf     = assets::ConditionCode::Get(assets::ZF);
-    auto sf     = assets::ConditionCode::Get(assets::SF);
-    auto of     = assets::ConditionCode::Get(assets::OF);
+    auto zf     = ConditionCode::Get(assets::ZF);
+    auto sf     = ConditionCode::Get(assets::SF);
+    auto of     = ConditionCode::Get(assets::OF);
     bool result = 1;
     switch (ifun) {
         case assets::C_LE: result = zf || (sf && !of) || (!sf && of); break;

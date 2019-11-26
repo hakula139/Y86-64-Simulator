@@ -4,7 +4,6 @@
 #include <cstdint>
 #include <vector>
 
-#include "../assets/file.h"
 #include "../assets/register.h"
 
 namespace stages {
@@ -23,11 +22,16 @@ public:
     static bool     GetCondition(uint8_t ifun);
     static uint64_t GetValE(uint64_t alu_a, uint64_t alu_b, uint64_t alu_func);
 
-    // Should the condition codes be updated?
+    // True if the condition codes should be updated
     static bool NeedUpdateCC(uint8_t icode);
+
+    static uint64_t val_e() { return val_e_; }
+    static uint64_t dst_e() { return dst_e_; }
 
 protected:
     static bool PrintErrorMessage(const int error_code);
+
+    static uint64_t val_e_, dst_e_;
 };
 
 }  // namespace stages
