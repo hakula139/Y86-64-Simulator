@@ -1,15 +1,13 @@
 #include "execute.h"
 
 #include <iostream>
-#include <utility>
 
 #include "../assets/alu.h"
 #include "../assets/register.h"
 #include "../utils/utility.h"
 #include "instruction.h"
-
-using std::move;
-using std::vector;
+#include "memory.h"
+#include "write_back.h"
 
 using assets::ArithmeticLogicUnit;
 using assets::ConditionCode;
@@ -24,6 +22,7 @@ using assets::WRITE_BACK;
 
 namespace stages {
 
+uint64_t Execute::val_a_;
 uint64_t Execute::val_e_;
 uint64_t Execute::dst_e_;
 
@@ -36,7 +35,7 @@ bool Execute::Do() {
     auto alu_func = GetAluFunction(icode);
     auto cnd      = GetCondition(ifun);
     val_e_        = GetValE(alu_a, alu_b, alu_func);
-    auto val_a    = PipelineRegister::Get(EXECUTE, assets::VAL_A);
+    val_a_        = PipelineRegister::Get(EXECUTE, assets::VAL_A);
     dst_e_        = PipelineRegister::Get(EXECUTE, assets::DST_E);
     auto dst_m    = PipelineRegister::Get(EXECUTE, assets::DST_M);
 
@@ -44,7 +43,7 @@ bool Execute::Do() {
     PipelineRegister::Set(MEMORY, assets::I_CODE, icode);
     PipelineRegister::Set(MEMORY, assets::CND, cnd);
     PipelineRegister::Set(MEMORY, assets::VAL_E, val_e_);
-    PipelineRegister::Set(MEMORY, assets::VAL_A, val_a);
+    PipelineRegister::Set(MEMORY, assets::VAL_A, val_a_);
     if (cnd) PipelineRegister::Set(MEMORY, assets::DST_E, dst_e_);
     PipelineRegister::Set(MEMORY, assets::DST_M, dst_m);
 
@@ -113,7 +112,14 @@ uint64_t Execute::GetValE(uint64_t alu_a, uint64_t alu_b, uint64_t alu_func) {
     return static_cast<uint64_t>(result);
 }
 
-bool Execute::NeedUpdateCC(uint8_t icode) { return icode == IOPQ; }
+bool Execute::NeedUpdateCC(uint8_t icode) {
+    if (icode != IOPQ) return false;
+    // State changes only during normal operation
+    std::vector mem_error_status{assets::SADR, assets::SINS, assets::SHLT};
+    if (ValueIsInArray(Memory::stat(), mem_error_status)) return false;
+    if (ValueIsInArray(WriteBack::stat(), mem_error_status)) return false;
+    return true;
+}
 
 bool Execute::PrintErrorMessage(const int error_code) {
     std::cerr << "Execute Error ";

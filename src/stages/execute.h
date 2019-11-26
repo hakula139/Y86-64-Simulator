@@ -25,13 +25,14 @@ public:
     // True if the condition codes should be updated
     static bool NeedUpdateCC(uint8_t icode);
 
+    static uint64_t val_a() { return val_a_; }
     static uint64_t val_e() { return val_e_; }
     static uint64_t dst_e() { return dst_e_; }
 
 protected:
     static bool PrintErrorMessage(const int error_code);
 
-    static uint64_t val_e_, dst_e_;
+    static uint64_t val_a_, val_e_, dst_e_;
 };
 
 }  // namespace stages

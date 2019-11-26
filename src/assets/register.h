@@ -55,7 +55,7 @@ enum PipelineRegisterMap : int {
 
 enum ConditionCodeMap : int { OF = 0x0, SF = 0x1, ZF = 0x2 };
 
-enum StatusMap : int { SAOK = 0x1, SADR = 0x2, SINS = 0x3, SHLT = 0x4 };
+enum StatusMap : uint8_t { SAOK = 0x1, SADR = 0x2, SINS = 0x3, SHLT = 0x4 };
 
 // Manages the value of Program Counter, which contains the address of the
 // instruction being executed at the current time
