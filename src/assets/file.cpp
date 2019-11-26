@@ -49,17 +49,20 @@ bool File::PrintRawData() const {
     return true;
 }
 
-std::vector<uint8_t> File::GetInstruction(uint64_t address) const {
+std::vector<uint8_t> File::GetInstruction(uint64_t address,
+                                          bool*    mem_error) const {
     if (!instructions_.count(address)) {
         PrintErrorMessage(3);
+        *mem_error = true;
         return {};
     }
     return instructions_.at(address);
 }
 
-bool File::PrintInstruction(uint64_t address) const {
+bool File::PrintInstruction(uint64_t address, bool* mem_error) const {
     if (!instructions_.count(address)) {
         PrintErrorMessage(3);
+        *mem_error = true;
         return false;
     }
     std::cout << "0x";

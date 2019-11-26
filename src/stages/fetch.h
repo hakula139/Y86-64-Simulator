@@ -14,7 +14,7 @@ public:
     // Runs the fetch stage
     static bool Do(const assets::File& input);
     // Determines instruction code
-    static uint8_t GetICode();
+    static uint8_t GetICode(bool* mem_error);
     // Determines instruction function
     static uint8_t GetIFun();
     static bool    InstructionIsValid(uint8_t icode);

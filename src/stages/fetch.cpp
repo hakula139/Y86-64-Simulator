@@ -11,20 +11,34 @@
 namespace stages {
 
 bool Fetch::Do(const assets::File& input) {
-    auto pc      = assets::ProgramCounter::Get();
-    instruction_ = input.GetInstruction(pc);
-    auto icode   = GetICode();
+    auto pc        = assets::ProgramCounter::Get();
+    bool mem_error = false;
+    instruction_   = input.GetInstruction(pc, &mem_error);
+    auto icode     = GetICode(&mem_error);
+    bool ins_valid = true;
     if (!InstructionIsValid(icode)) {
         Fetch::PrintErrorMessage(2);
-        return false;
+        ins_valid = false;
     }
     auto ifun = GetIFun();
+
+    if (mem_error)
+        assets::PipelineRegister::Set(assets::STAT, assets::SADR);
+    else if (icode == IHALT)
+        assets::PipelineRegister::Set(assets::STAT, assets::SHLT);
+    else if (!ins_valid)
+        assets::PipelineRegister::Set(assets::STAT, assets::SINS);
+    else
+        assets::PipelineRegister::Set(assets::STAT, assets::SAOK);
+
+    if (NeedRegids(icode)) { instruction_[1] >> }
     return true;
 }
 
-uint8_t Fetch::GetICode() {
+uint8_t Fetch::GetICode(bool* mem_error) {
     if (instruction_.empty()) {
         Fetch::PrintErrorMessage(1);
+        *mem_error = true;
         return INOP;
     }
     return (instruction_[0] >> 4) & 0xF;  // the first 4 bits
