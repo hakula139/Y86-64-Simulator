@@ -13,8 +13,8 @@ class Decode {
 public:
     // Runs the decode stage
     static bool     Do(const assets::File& input);
-    static uint64_t GetAluA(uint8_t icode);
-    static uint64_t GetAluB(uint8_t icode);
+    static uint64_t GetValA(uint8_t icode);
+    static uint64_t GetValB(uint8_t icode);
     static uint64_t GetSrcA(uint8_t icode);
     static uint64_t GetSrcB(uint8_t icode);
     static uint64_t GetDstE(uint8_t icode);

@@ -17,8 +17,8 @@ bool Decode::Do(const assets::File& input) {
     auto ifun   = assets::PipelineRegister::Get(assets::DECODE, assets::I_FUN);
     auto val_c  = assets::PipelineRegister::Get(assets::DECODE, assets::VAL_C);
     auto val_p  = assets::PipelineRegister::Get(assets::FETCH, assets::PRED_PC);
-    auto val_a  = GetAluA(icode);
-    auto val_b  = GetAluB(icode);
+    auto val_a  = GetValA(icode);
+    auto val_b  = GetValB(icode);
     auto M_valE = assets::PipelineRegister::Get(assets::MEMORY, assets::VAL_E);
     auto W_valM =
         assets::PipelineRegister::Get(assets::WRITE_BACK, assets::VAL_M);
@@ -50,7 +50,7 @@ bool Decode::PrintErrorMessage(const int error_code) {
     return true;
 }
 
-uint64_t Decode::GetAluA(uint8_t icode) {
+uint64_t Decode::GetValA(uint8_t icode) {
     if (ValueIsInArray(icode, {ICALL, IJXX}))
         return assets::PipelineRegister::Get(assets::DECODE, assets::VAL_A);
     if (srcA == excecute::DstE())
@@ -64,7 +64,7 @@ uint64_t Decode::GetAluA(uint8_t icode) {
     return d_rvalA;     // Use value read from register file
 }
 
-uint64_t Decode::GetAluB(uint8_t icode) {
+uint64_t Decode::GetValB(uint8_t icode) {
     if (srcB == excecute::DstE())
         return e_valE;  // Forward valE from execute     :
     if (srcB == MEMORY::DstM()) return m_valM;  // Forward valM from memory
