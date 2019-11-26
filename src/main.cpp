@@ -3,11 +3,14 @@
 
 #include "config.h"
 
-#include "init/argument.h"
-
 #include "assets/file.h"
-
+#include "assets/register.h"
+#include "init/argument.h"
+#include "stages/decode.h"
+#include "stages/execute.h"
 #include "stages/fetch.h"
+#include "stages/memory.h"
+#include "stages/write_back.h"
 
 int main(int argc, char** argv) {
     initialize::Argument args;
@@ -20,16 +23,19 @@ int main(int argc, char** argv) {
     input.PrintAllInstructions();
 #endif
 
-    bool end = false;
-    while (!end) {
+    bool status = false;
+    while (!status) {
+        status = stages::WriteBack::Do();
+        stages::Memory::Do();
+        stages::Execute::Do();
+        stages::Decode::Do();
         stages::Fetch::Do(input);
 #if SIM_DEBUG
-        // assets::PipelineRegister::Print(assets::FETCH);
+        assets::PipelineRegister::Print(assets::FETCH);
         assets::PipelineRegister::Print(assets::DECODE);
-        // assets::PipelineRegister::Print(assets::EXECUTE);
-        // assets::PipelineRegister::Print(assets::MEMORY);
-        // assets::PipelineRegister::Print(assets::WRITE_BACK);
+        assets::PipelineRegister::Print(assets::EXECUTE);
+        assets::PipelineRegister::Print(assets::MEMORY);
+        assets::PipelineRegister::Print(assets::WRITE_BACK);
 #endif
-        end = true;
     }
 }
