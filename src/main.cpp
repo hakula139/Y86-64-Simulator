@@ -24,7 +24,11 @@ int main(int argc, char** argv) {
     while (!end) {
         stages::Fetch::Do(input);
 #if SIM_DEBUG
-        assets::PipelineRegister::Print(assets::FETCH);
+        // assets::PipelineRegister::Print(assets::FETCH);
+        assets::PipelineRegister::Print(assets::DECODE);
+        // assets::PipelineRegister::Print(assets::EXECUTE);
+        // assets::PipelineRegister::Print(assets::MEMORY);
+        // assets::PipelineRegister::Print(assets::WRITE_BACK);
 #endif
         end = true;
     }

@@ -67,19 +67,11 @@ bool PipelineRegister::Clear(int stage_num) {
 bool PipelineRegister::Print(int stage_num) {
     vector<string> stage_name{"FETCH", "DECODE", "EXECUTE", "MEMORY",
                               "WRITE BACK"};
-
-    vector<vector<string>> stage_register_name{
-        {"PRED_PC"},  // Fetch Stage
-        {"STAT", "I_CODE", "I_FUN", "R_A", "R_B", "VAL_C",
-         "VAL_P"},  // Decode Stage
-        {"STAT", "I_CODE", "I_FUN", "VAL_C", "VAL_A", "VAL_B", "DST_E", "DST_M",
-         "SRC_A", "SRC_B"},  // Execute Stage
-        {"STAT", "I_CODE", "CND", "VAL_E", "VAL_A", "DST_E",
-         "DST_M"},  // Memory Stage
-        {"STAT", "I_CODE", "VAL_E", "VAL_M", "DST_E",
-         "DST_M"}  // Write Back Stage
-    };
-
+    vector<string> stage_register_name{"PRED_PC", "STAT",  "I_CODE", "I_FUN",
+                                       "R_A",     "R_B",   "VAL_C",  "VAL_P",
+                                       "VAL_A",   "VAL_B", "VAL_E",  "VAL_M",
+                                       "SRC_A",   "SRC_B", "DST_E",  "DST_M",
+                                       "CND"};
     vector<vector<int>> stage_register_num{
         {PRED_PC},                                      // Fetch Stage
         {STAT, I_CODE, I_FUN, R_A, R_B, VAL_C, VAL_P},  // Decode Stage
@@ -92,7 +84,7 @@ bool PipelineRegister::Print(int stage_num) {
     std::cout << string(5, '=') << ' ' << stage_name[stage_num] << ' '
               << string(5, '=') << '\n';
     for (auto&& i : stage_register_num[stage_num]) {
-        std::cout << stage_register_name[stage_num][i] << "\t = 0x";
+        std::cout << stage_register_name[i] << "\t = 0x";
         utility::SetOutputHexWidth(8);
         std::cout << Get(stage_num, i) << '\n';
     }
