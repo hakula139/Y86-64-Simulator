@@ -46,6 +46,8 @@ enum PipelineRegisterMap : int {
 
 enum ConditionCodeMap : int { OF = 0x0, SF = 0x1, ZF = 0x2, CF = 0x3 };
 
+enum StatusMap : int { SAOK = 0x1, SADR = 0x2, SINS = 0x3, SHLT = 0x4 };
+
 // Manages the value of Program Counter, which contains the address of the
 // instruction being executed at the current time
 class ProgramCounter {
@@ -72,13 +74,15 @@ protected:
 // Manages the value in each pipeline register
 class PipelineRegister : public Register {
 protected:
-    static constexpr size_t kTotal_ = 16;
+    static constexpr size_t      kTotal_ = 16;
+    static std::vector<uint64_t> data_;
 };
 
 // Manages the value in each condition code
 class ConditionCode : public Register {
 protected:
-    static constexpr size_t kTotal_ = 3;
+    static constexpr size_t      kTotal_ = 3;
+    static std::vector<uint64_t> data_;
 };
 
 }  // namespace assets
