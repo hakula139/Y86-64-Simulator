@@ -18,7 +18,8 @@ enum InstructionMap : uint8_t {
     IPOPQ   = 0xB
 };
 
-constexpr uint8_t FNONE = 0x0;
+constexpr uint8_t FNONE  = 0x0;
+constexpr uint8_t ALUADD = 0x0;
 
 }  // namespace stages
 
