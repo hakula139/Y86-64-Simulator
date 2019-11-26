@@ -1,4 +1,4 @@
-#include "writeback.h"
+#include "write_back.h"
 
 #include <iostream>
 #include <utility>
@@ -22,12 +22,14 @@ using assets::FETCH;
 using assets::MEMORY;
 using assets::WRITE_BACK;
 
-namespace stage{
+namespace stage {
 
-bool WriteBack::Do(){
-    auto stat     = PipelineRegister::Get(WRITE_BACK, assets::STAT);
-    if(stat==SBUB) PipelineRegister::Set(MEMORY, assets::STAT, SAOK);
-    else PipelineRegister::Set(WRITE_BACK, assets::STAT, stat);
+bool WriteBack::Do() {
+    auto stat = PipelineRegister::Get(WRITE_BACK, assets::STAT);
+    if (stat == SBUB)
+        PipelineRegister::Set(MEMORY, assets::STAT, SAOK);
+    else
+        PipelineRegister::Set(WRITE_BACK, assets::STAT, stat);
 }
 
 bool WriteBack::PrintErrorMessage(const int error_code) {
@@ -38,4 +40,4 @@ bool WriteBack::PrintErrorMessage(const int error_code) {
     return true;
 }
 
-}
+}  // namespace stage

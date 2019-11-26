@@ -1,5 +1,5 @@
-#ifndef SRC_STAGES_FETCH_H_
-#define SRC_STAGES_FETCH_H_
+#ifndef SRC_STAGES_MEMORY_H_
+#define SRC_STAGES_MEMORY_H_
 
 #include <cstdint>
 #include <vector>
@@ -15,8 +15,8 @@ public:
     static bool Do();
 
     static uint64_t GetMemAddr(uint8_t icode);
-    static bool GetMemRead(uint8_t icode);
-    static bool GetMemWrite(uint8_t icode);
+    static bool     GetMemRead(uint8_t icode);
+    static bool     GetMemWrite(uint8_t icode);
 
 protected:
     static bool PrintErrorMessage(const int error_code);
@@ -24,4 +24,4 @@ protected:
 
 }  // namespace stages
 
-#endif  // SRC_STAGES_FETCH_H_
+#endif  // SRC_STAGES_MEMORY_H_

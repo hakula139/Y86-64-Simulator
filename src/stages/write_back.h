@@ -1,5 +1,5 @@
-#ifndef SRC_STAGES_EXECUTE_H_
-#define SRC_STAGES_EXECUTE_H_
+#ifndef SRC_STAGES_WRITE_BACK_H_
+#define SRC_STAGES_WRITE_BACK_H_
 
 #include <cstdint>
 #include <vector>
@@ -19,4 +19,4 @@ protected:
 
 };  // namespace stages
 
-#endif  // SRC_STAGES_EXECUTE_H_
+#endif  // SRC_STAGES_WRITE_BACK_H_
