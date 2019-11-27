@@ -7,6 +7,7 @@
 #include "instruction.h"
 
 using assets::PipelineRegister;
+using assets::Register;
 using utility::ValueIsInArray;
 
 using assets::DECODE;
@@ -17,25 +18,28 @@ using assets::WRITE_BACK;
 
 namespace stages {
 
-uint8_t  WriteBack::stat_;
-uint64_t WriteBack::val_e_;
-uint64_t WriteBack::dst_m_;
-uint64_t WriteBack::val_m_;
-bool     WriteBack::bubble_ = false;
-bool     WriteBack::stall_  = false;
+uint8_t WriteBack::stat_;
+bool    WriteBack::bubble_ = false;
+bool    WriteBack::stall_  = false;
 
 uint8_t WriteBack::Do() {
     bubble_ = NeedBubble();
     stall_  = NeedStall();
 
-    stat_  = PipelineRegister::Get(WRITE_BACK, assets::STAT);
-    val_e_ = PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
+    stat_      = PipelineRegister::Get(WRITE_BACK, assets::STAT);
+    auto val_e = PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
+    auto val_m = PipelineRegister::Get(WRITE_BACK, assets::VAL_M);
+    auto dst_e = PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
+    auto dst_m = PipelineRegister::Get(WRITE_BACK, assets::VAL_M);
+
+    Register::Set(dst_e, val_e);
+    Register::Set(dst_m, val_m);
 
     return GetStat();
 }
 
 uint8_t WriteBack::GetStat() {
-    if (stat_ == assets::SBUB) return assets::SAOK;
+    if (bubble_) return assets::SAOK;
     return stat_;
 }
 
