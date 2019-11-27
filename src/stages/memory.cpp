@@ -72,6 +72,18 @@ bool Memory::GetMemWrite(uint8_t icode) {
     return ValueIsInArray(icode, {IRMMOVQ, IPUSHQ, ICALL});
 }
 
+bool Memory::NeedBubble() {
+    // Starts injecting bubbles as soon as exception passes through memory stage
+    if (ValueIsInArray(stat_, {assets::SADR, assets::SINS, assets::SHLT}))
+        return true;
+    auto w_stat = PipelineRegister::Get(WRITE_BACK, assets::STAT);
+    if (ValueIsInArray(w_stat, {assets::SADR, assets::SINS, assets::SHLT}))
+        return true;
+    return false;
+}
+
+bool Memory::NeedStall() { return false; }
+
 bool Memory::PrintErrorMessage(const int error_code) {
     std::cerr << "Memory Error ";
     switch (error_code) {

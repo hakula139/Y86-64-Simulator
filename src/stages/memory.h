@@ -18,6 +18,10 @@ public:
     // Sets write control signal
     static bool GetMemWrite(uint8_t icode);
 
+    // Should I stall or inject a bubble into Pipeline Register M?
+    static bool NeedBubble();
+    static bool NeedStall();
+
     static uint8_t  stat() { return stat_; }
     static uint64_t val_m() { return val_m_; }
     static bool     mem_error() { return mem_error_; }
