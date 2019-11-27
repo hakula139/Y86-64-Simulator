@@ -15,7 +15,8 @@ public:
 
     bool                 ReadRawData();
     bool                 ReadInstructions();
-    std::vector<uint8_t> GetInstruction(uint64_t address) const;
+    std::vector<uint8_t> GetInstruction(uint64_t address,
+                                        bool*    mem_error) const;
 
     bool PrintRawData() const;
     bool PrintInstruction(uint64_t address) const;

@@ -6,9 +6,10 @@ namespace assets {
 
 std::vector<uint8_t> Memory::data_(kCapacity_);
 
-uint64_t Memory::Get(uint64_t address, size_t size) {
+uint64_t Memory::Get(uint64_t address, size_t size, bool* mem_error) {
     if (size > 8 || address >= kCapacity_ - size) {
         PrintErrorMessage(1);
+        *mem_error = true;
         return UINT64_MAX;
     }
     uint64_t result = 0;
@@ -17,9 +18,10 @@ uint64_t Memory::Get(uint64_t address, size_t size) {
     return result;
 }
 
-bool Memory::Set(uint64_t address, uint64_t value) {
+bool Memory::Set(uint64_t address, uint64_t value, bool* mem_error) {
     if (address >= kCapacity_ - 8) {
         PrintErrorMessage(1);
+        *mem_error = true;
         return false;
     }
     for (; value; value >>= 8)

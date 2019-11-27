@@ -1,6 +1,7 @@
 #include "execute.h"
 
 #include <iostream>
+#include <vector>
 
 #include "../assets/alu.h"
 #include "../assets/register.h"
@@ -115,7 +116,8 @@ uint64_t Execute::GetValE(uint64_t alu_a, uint64_t alu_b, uint64_t alu_func) {
 bool Execute::NeedUpdateCC(uint8_t icode) {
     if (icode != IOPQ) return false;
     // State changes only during normal operation
-    std::vector mem_error_status{assets::SADR, assets::SINS, assets::SHLT};
+    std::vector<uint8_t> mem_error_status{assets::SADR, assets::SINS,
+                                          assets::SHLT};
     if (ValueIsInArray(Memory::stat(), mem_error_status)) return false;
     if (ValueIsInArray(WriteBack::stat(), mem_error_status)) return false;
     return true;

@@ -27,8 +27,8 @@ uint8_t WriteBack::Do() {
 }
 
 uint8_t WriteBack::GetStat() {
-    if (stat() == assets::SBUB) return assets::SAOK;
-    return stat();
+    if (stat_ == assets::SBUB) return assets::SAOK;
+    return stat_;
 }
 
 bool WriteBack::PrintErrorMessage(const int error_code) {

@@ -18,12 +18,16 @@ public:
     // Sets write control signal
     static bool GetMemWrite(uint8_t icode);
 
-    static uint64_t stat() { return stat_; }
+    static uint8_t  stat() { return stat_; }
+    static uint64_t val_m() { return val_m_; }
+    static bool     mem_error() { return mem_error_; }
 
 protected:
     static bool PrintErrorMessage(const int error_code);
 
-    static uint8_t stat_;
+    static uint8_t  stat_;
+    static uint64_t val_m_;
+    static bool     mem_error_;
 };
 
 }  // namespace stages

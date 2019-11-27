@@ -10,9 +10,9 @@ namespace assets {
 class Memory {
 public:
     // Reads 'size' (<= 8) bytes from 'address'
-    static uint64_t Get(uint64_t address, size_t size);
+    static uint64_t Get(uint64_t address, size_t size, bool* mem_error);
     // Writes 'value' (8 bytes) to 'address'
-    static bool Set(uint64_t address, uint64_t value);
+    static bool Set(uint64_t address, uint64_t value, bool* mem_error);
     static bool Clear();
 
 protected:

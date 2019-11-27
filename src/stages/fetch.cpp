@@ -31,7 +31,7 @@ bool                 Fetch::mem_error_ = false;
 
 bool Fetch::Do(const File& input) {
     pc_          = GetPC();
-    instruction_ = input.GetInstruction(pc_);
+    instruction_ = input.GetInstruction(pc_, &mem_error_);
     icode_       = GetICode();
     ifun_        = GetIFun();
     stat_        = GetStat();
