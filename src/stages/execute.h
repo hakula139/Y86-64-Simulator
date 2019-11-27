@@ -26,10 +26,15 @@ public:
     static uint64_t val_e() { return val_e_; }
     static uint64_t dst_e() { return dst_e_; }
 
+    static void set_bubble(bool bubble) { bubble_ = bubble; }
+    static void set_stall(bool stall) { stall_ = stall; }
+
 protected:
     static bool PrintErrorMessage(const int error_code);
 
     static uint64_t val_a_, val_e_, dst_e_;
+    static bool     bubble_;
+    static bool     stall_;
 };
 
 }  // namespace stages

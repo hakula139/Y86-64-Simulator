@@ -24,6 +24,8 @@ uint64_t Decode::dst_e_;
 uint64_t Decode::dst_m_;
 uint64_t Decode::src_a_;
 uint64_t Decode::src_b_;
+bool     Decode::bubble_ = false;
+bool     Decode::stall_  = false;
 
 bool Decode::Do() {
     auto stat    = PipelineRegister::Get(DECODE, assets::STAT);
@@ -62,15 +64,16 @@ uint64_t Decode::GetValA(uint8_t icode) {
     // Forwards valE from execute
     if (src_a_ == Execute::dst_e()) return Execute::val_e();
     // Forwards valM from memory
-    if (src_a_ == Memory::dst_m()) return Memory::val_m();
+    if (src_a_ == PipelineRegister::Get(MEMORY, assets::DST_M))
+        return Memory::val_m();
     // Forwards valE from memory
-    if (src_a_ == Memory::dst_e())
+    if (src_a_ == PipelineRegister::Get(MEMORY, assets::DST_E))
         return PipelineRegister::Get(MEMORY, assets::VAL_E);
     // Forwards valM from write back
-    if (src_a_ == WriteBack::dst_m())
+    if (src_a_ == PipelineRegister::Get(WRITE_BACK, assets::DST_M))
         return PipelineRegister::Get(WRITE_BACK, assets::VAL_M);
     // Forwards valE from write back
-    if (src_a_ == WriteBack::dst_e())
+    if (src_a_ == PipelineRegister::Get(WRITE_BACK, assets::DST_E))
         return PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
     // Uses value read from register file
     return Register::Get(assets::VAL_A);
@@ -80,15 +83,16 @@ uint64_t Decode::GetValB(uint8_t icode) {
     // Forwards valE from execute
     if (src_b_ == Execute::dst_e()) return Execute::val_e();
     // Forwards valM from memory
-    if (src_b_ == Memory::dst_m()) return Memory::val_m();
+    if (src_b_ == PipelineRegister::Get(MEMORY, assets::DST_M))
+        return Memory::val_m();
     // Forwards valE from memory
-    if (src_b_ == Memory::dst_e())
+    if (src_b_ == PipelineRegister::Get(MEMORY, assets::DST_E))
         return PipelineRegister::Get(MEMORY, assets::VAL_E);
     // Forwards valM from write back
-    if (src_b_ == WriteBack::dst_m())
+    if (src_b_ == PipelineRegister::Get(WRITE_BACK, assets::DST_M))
         return PipelineRegister::Get(WRITE_BACK, assets::VAL_M);
     // Forwards valE from write back
-    if (src_b_ == WriteBack::dst_e())
+    if (src_b_ == PipelineRegister::Get(WRITE_BACK, assets::DST_E))
         return PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
     // Uses value read from register file
     return Register::Get(assets::VAL_B);
@@ -119,6 +123,37 @@ uint64_t Decode::GetDstM(uint8_t icode) {
     if (ValueIsInArray(icode, {IMRMOVQ, IOPQ}))
         return PipelineRegister::Get(DECODE, assets::R_A);
     return assets::RNONE;  // Don’t write any register
+}
+
+bool Decode::NeedBubble() {
+    // Mispredicted branch
+    auto e_icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
+    auto e_cnd   = PipelineRegister::Get(EXECUTE, assets::CND);
+    if (e_icode == IJXX && !e_cnd) return true;
+    // Stalling at fetch while ret passes through pipeline but not condition for
+    // a load / use hazard
+    auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
+    auto d_src_a = PipelineRegister::Get(DECODE, assets::SRC_A);
+    auto d_src_b = PipelineRegister::Get(DECODE, assets::SRC_B);
+    auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
+    auto m_icode = PipelineRegister::Get(MEMORY, assets::I_CODE);
+    if (!ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
+        ValueIsInArray(e_dst_m, {d_src_a, d_src_b}) &&
+        ValueIsInArray(static_cast<uint64_t>(IRET),
+                       {d_icode, e_icode, m_icode}))
+        return true;
+    return false;
+}
+
+bool Decode::NeedStall() {
+    // Conditions for a load / use hazard
+    auto e_icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
+    auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
+    auto d_src_a = PipelineRegister::Get(DECODE, assets::SRC_A);
+    auto d_src_b = PipelineRegister::Get(DECODE, assets::SRC_B);
+    if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
+        ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
+        return true;
 }
 
 bool Decode::PrintErrorMessage(const int error_code) {

@@ -22,12 +22,17 @@ public:
     static uint64_t val_m() { return val_m_; }
     static bool     mem_error() { return mem_error_; }
 
+    static void set_bubble(bool bubble) { bubble_ = bubble; }
+    static void set_stall(bool stall) { stall_ = stall; }
+
 protected:
     static bool PrintErrorMessage(const int error_code);
 
     static uint8_t  stat_;
     static uint64_t val_m_;
     static bool     mem_error_;
+    static bool     bubble_;
+    static bool     stall_;
 };
 
 }  // namespace stages

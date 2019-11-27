@@ -21,7 +21,9 @@ namespace stages {
 
 uint8_t  Memory::stat_;
 uint64_t Memory::val_m_;
-bool     Memory::mem_error_;
+bool     Memory::mem_error_ = false;
+bool     Memory::bubble_    = false;
+bool     Memory::stall_     = false;
 
 bool Memory::Do() {
     stat_        = PipelineRegister::Get(MEMORY, assets::STAT);

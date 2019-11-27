@@ -26,6 +26,8 @@ namespace stages {
 uint64_t Execute::val_a_;
 uint64_t Execute::val_e_;
 uint64_t Execute::dst_e_;
+bool     Execute::bubble_ = false;
+bool     Execute::stall_  = false;
 
 bool Execute::Do() {
     auto stat     = PipelineRegister::Get(EXECUTE, assets::STAT);

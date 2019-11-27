@@ -28,8 +28,13 @@ uint8_t              Fetch::icode_;
 uint8_t              Fetch::ifun_;
 uint8_t              Fetch::stat_;
 bool                 Fetch::mem_error_ = false;
+bool                 Fetch::bubble_    = false;
+bool                 Fetch::stall_     = false;
 
 bool Fetch::Do(const File& input) {
+    bubble_ = NeedBubble();
+    stall_  = NeedStall();
+
     pc_          = GetPC();
     instruction_ = input.GetInstruction(pc_, &mem_error_);
     icode_       = GetICode();
@@ -119,6 +124,26 @@ bool Fetch::NeedRegids() {
 
 bool Fetch::NeedValC() {
     return ValueIsInArray(icode_, {IIRMOVQ, IRMMOVQ, IMRMOVQ, IJXX, ICALL});
+}
+
+bool Fetch::NeedBubble() { return false; }
+
+bool Fetch::NeedStall() {
+    // Conditions for a load / use hazard
+    auto e_icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
+    auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
+    auto d_src_a = PipelineRegister::Get(DECODE, assets::SRC_A);
+    auto d_src_b = PipelineRegister::Get(DECODE, assets::SRC_B);
+    if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
+        ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
+        return true;
+    //  # Stalling at fetch while ret passes through pipeline
+    auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
+    auto m_icode = PipelineRegister::Get(MEMORY, assets::I_CODE);
+    if (ValueIsInArray(static_cast<uint64_t>(IRET),
+                       {d_icode, e_icode, m_icode}))
+        return true;
+    return false;
 }
 
 bool Fetch::PrintErrorMessage(const int error_code) {

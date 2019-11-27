@@ -19,6 +19,8 @@ uint8_t  WriteBack::stat_;
 uint64_t WriteBack::val_e_;
 uint64_t WriteBack::dst_m_;
 uint64_t WriteBack::val_m_;
+bool     WriteBack::bubble_ = false;
+bool     WriteBack::stall_  = false;
 
 uint8_t WriteBack::Do() {
     stat_  = PipelineRegister::Get(WRITE_BACK, assets::STAT);

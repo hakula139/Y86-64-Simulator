@@ -26,6 +26,9 @@ public:
     static bool NeedRegids();
     // Does fetched instruction require a constant word?
     static bool NeedValC();
+    // Should I stall or inject a bubble into Pipeline Register F?
+    static bool NeedBubble();
+    static bool NeedStall();
 
     static uint64_t pc() { return pc_; }
     static uint64_t pred_pc() { return pred_pc_; }
@@ -34,6 +37,9 @@ public:
     static uint8_t  stat() { return stat_; }
     static bool     mem_error() { return mem_error_; }
 
+    static void set_bubble(bool bubble) { bubble_ = bubble; }
+    static void set_stall(bool stall) { stall_ = stall; }
+
 protected:
     static bool PrintErrorMessage(const int error_code);
 
@@ -41,6 +47,8 @@ protected:
     static uint64_t             pc_, pred_pc_;
     static uint8_t              icode_, ifun_, stat_;
     static bool                 mem_error_;
+    static bool                 bubble_;
+    static bool                 stall_;
 };
 
 }  // namespace stages
