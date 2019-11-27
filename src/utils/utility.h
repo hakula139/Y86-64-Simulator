@@ -2,11 +2,12 @@
 #define SRC_UTILS_UTILITY_H_
 
 #include <cstddef>
+#include <iostream>
 #include <vector>
 
 namespace utility {
 
-bool SetOutputHexWidth(size_t width);
+bool SetOutputHexWidth(size_t width, std::ostream& output = std::cout);
 
 template <class T>
 bool ValueIsInArray(T value, const std::vector<T>& array) {

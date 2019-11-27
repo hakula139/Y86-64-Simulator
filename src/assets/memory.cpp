@@ -1,6 +1,9 @@
 #include "memory.h"
 
+#include <fstream>
 #include <iostream>
+
+#include "../utils/utility.h"
 
 namespace assets {
 
@@ -34,10 +37,35 @@ bool Memory::Clear() {
     return true;
 }
 
+bool Memory::Dump() {
+    std::ofstream output;
+    output.open("memory.txt", std::ofstream::out | std::ofstream::trunc);
+    if (!output) {
+        PrintErrorMessage(2);
+        return false;
+    }
+    output << "===== MEMORY DUMP =====";
+    uint64_t address = 0ull;
+    for (auto&& value : data_) {
+        if (!(address % 8)) {
+            output << "\n0x";
+            utility::SetOutputHexWidth(3, output);
+            output << address << ": ";
+        }
+        utility::SetOutputHexWidth(2, output);
+        output << static_cast<int>(value) << ' ';
+        ++address;
+    }
+    output << '\n';
+    output.close();
+    return true;
+}
+
 bool Memory::PrintErrorMessage(const int error_code) {
     std::cerr << "Memory Error ";
     switch (error_code) {
         case 1: std::cerr << "1: Out of range.\n"; break;
+        case 2: std::cerr << "2: Cannot write file.\n"; break;
         default: std::cerr << "X: An unknown error occurs.\n"; break;
     }
     return true;

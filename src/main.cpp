@@ -5,6 +5,7 @@
 #include "config.h"
 
 #include "assets/file.h"
+#include "assets/memory.h"
 #include "assets/register.h"
 #include "init/argument.h"
 #include "stages/decode.h"
@@ -34,15 +35,20 @@ int main(int argc, char** argv) {
         stages::Fetch::Do(input);
         ++clock;
 
+#if SIM_DEBUG
         assets::PipelineRegister::Print(assets::FETCH);
         assets::PipelineRegister::Print(assets::DECODE);
         assets::PipelineRegister::Print(assets::EXECUTE);
         assets::PipelineRegister::Print(assets::MEMORY);
         assets::PipelineRegister::Print(assets::WRITE_BACK);
+        assets::Memory::Dump();
+#endif
         assets::Register::Print();
         assets::ConditionCode::Print();
+#if SIM_DEBUG
         std::cout << "Press enter to continue, CTRL + C to exit.\n";
         std::getchar();
+#endif
     }
-    std::cout << "Program Exit: Clock cycles = " << clock << '\n';
+    std::cout << "Program Exit: Clock cycles = " << std::dec << clock << '\n';
 }
