@@ -28,6 +28,8 @@ public:
     static uint64_t val_a() { return val_a_; }
     static uint64_t val_e() { return val_e_; }
     static uint64_t dst_e() { return dst_e_; }
+    static bool     bubble() { return bubble_; }
+    static bool     stall() { return stall_; }
 
     static void set_bubble(bool bubble) { bubble_ = bubble; }
     static void set_stall(bool stall) { stall_ = stall; }

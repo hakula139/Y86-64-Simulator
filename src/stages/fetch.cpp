@@ -5,8 +5,8 @@
 #include "../assets/file.h"
 #include "../assets/register.h"
 #include "../utils/utility.h"
+#include "decode.h"
 #include "instruction.h"
-#include "memory.h"
 
 using assets::File;
 using assets::PipelineRegister;
@@ -24,6 +24,7 @@ namespace stages {
 std::vector<uint8_t> Fetch::instruction_;
 uint64_t             Fetch::pc_;
 uint64_t             Fetch::pred_pc_;
+uint64_t             Fetch::val_c_;
 uint8_t              Fetch::icode_;
 uint8_t              Fetch::ifun_;
 uint8_t              Fetch::stat_;
@@ -34,6 +35,7 @@ bool                 Fetch::stall_     = false;
 bool Fetch::Do(const File& input) {
     bubble_ = NeedBubble();
     stall_  = NeedStall();
+    if (!Decode::bubble() && Decode::stall()) return false;
 
     pc_          = GetPC();
     instruction_ = input.GetInstruction(pc_, &mem_error_);
@@ -52,11 +54,18 @@ bool Fetch::Do(const File& input) {
         ++pc_;
     }
     if (NeedValC()) {
-        PipelineRegister::Set(DECODE, assets::VAL_C, GetValC());
+        val_c_ = GetValC();
+        PipelineRegister::Set(DECODE, assets::VAL_C, val_c_);
         pc_ += 8;
     }
 
     PipelineRegister::Set(DECODE, assets::VAL_P, pc_);
+
+    if (bubble_)
+        PipelineRegister::Clear(FETCH);
+    else if (!stall_)
+        PipelineRegister::Set(FETCH, assets::PRED_PC, GetPredPC());
+    if (Decode::bubble()) PipelineRegister::Clear(DECODE);
     return true;
 }
 
@@ -72,6 +81,11 @@ uint64_t Fetch::GetPC() {
         return PipelineRegister::Get(WRITE_BACK, assets::VAL_M);
     //  Default: Uses predicted value of PC
     return PipelineRegister::Get(FETCH, assets::PRED_PC);
+}
+
+uint64_t Fetch::GetPredPC() {
+    if (ValueIsInArray(icode_, {IJXX, ICALL})) return val_c_;
+    return pc_;
 }
 
 uint8_t Fetch::GetICode() {

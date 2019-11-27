@@ -25,8 +25,12 @@ bool     WriteBack::bubble_ = false;
 bool     WriteBack::stall_  = false;
 
 uint8_t WriteBack::Do() {
+    bubble_ = NeedBubble();
+    stall_  = NeedStall();
+
     stat_  = PipelineRegister::Get(WRITE_BACK, assets::STAT);
     val_e_ = PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
+
     return GetStat();
 }
 

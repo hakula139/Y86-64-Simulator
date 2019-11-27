@@ -28,6 +28,10 @@ bool     Decode::bubble_ = false;
 bool     Decode::stall_  = false;
 
 bool Decode::Do() {
+    bubble_ = NeedBubble();
+    stall_  = NeedStall();
+    if (!Execute::bubble() && Execute::stall()) return false;
+
     auto stat    = PipelineRegister::Get(DECODE, assets::STAT);
     auto icode   = PipelineRegister::Get(DECODE, assets::I_CODE);
     auto ifun    = PipelineRegister::Get(DECODE, assets::I_FUN);
@@ -43,6 +47,8 @@ bool Decode::Do() {
     src_a_       = GetSrcA(icode);
     src_b_       = GetSrcB(icode);
 
+    // TODO(Hakula): Need to write register file
+
     PipelineRegister::Set(EXECUTE, assets::STAT, stat);
     PipelineRegister::Set(EXECUTE, assets::I_CODE, icode);
     PipelineRegister::Set(EXECUTE, assets::I_FUN, ifun);
@@ -54,6 +60,7 @@ bool Decode::Do() {
     PipelineRegister::Set(EXECUTE, assets::SRC_A, src_a_);
     PipelineRegister::Set(EXECUTE, assets::SRC_B, src_b_);
 
+    if (Execute::bubble()) PipelineRegister::Clear(EXECUTE);
     return true;
 }
 

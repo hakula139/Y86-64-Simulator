@@ -7,6 +7,7 @@
 #include "../assets/register.h"
 #include "../utils/utility.h"
 #include "instruction.h"
+#include "write_back.h"
 
 using assets::PipelineRegister;
 using utility::ValueIsInArray;
@@ -26,6 +27,10 @@ bool     Memory::bubble_    = false;
 bool     Memory::stall_     = false;
 
 bool Memory::Do() {
+    bubble_ = NeedBubble();
+    stall_  = NeedStall();
+    if (!WriteBack::bubble() && WriteBack::stall()) return false;
+
     stat_        = PipelineRegister::Get(MEMORY, assets::STAT);
     auto icode   = PipelineRegister::Get(MEMORY, assets::I_CODE);
     auto val_e   = PipelineRegister::Get(MEMORY, assets::VAL_E);
@@ -45,6 +50,7 @@ bool Memory::Do() {
     PipelineRegister::Set(WRITE_BACK, assets::DST_M, dst_m);
     PipelineRegister::Set(WRITE_BACK, assets::VAL_M, val_m_);
 
+    if (WriteBack::bubble()) PipelineRegister::Clear(WRITE_BACK);
     return true;
 }
 

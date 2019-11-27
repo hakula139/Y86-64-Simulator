@@ -30,6 +30,10 @@ bool     Execute::bubble_ = false;
 bool     Execute::stall_  = false;
 
 bool Execute::Do() {
+    bubble_ = NeedBubble();
+    stall_  = NeedStall();
+    if (!Memory::bubble() && Memory::stall()) return false;
+
     auto stat     = PipelineRegister::Get(EXECUTE, assets::STAT);
     auto icode    = PipelineRegister::Get(EXECUTE, assets::I_CODE);
     auto ifun     = PipelineRegister::Get(EXECUTE, assets::I_FUN);
@@ -50,6 +54,10 @@ bool Execute::Do() {
     if (cnd) PipelineRegister::Set(MEMORY, assets::DST_E, dst_e_);
     PipelineRegister::Set(MEMORY, assets::DST_M, dst_m);
 
+    if (Memory::bubble()) {
+        PipelineRegister::Clear(MEMORY);
+        if (NeedUpdateCC(icode)) ConditionCode::Clear();
+    }
     return true;
 }
 
