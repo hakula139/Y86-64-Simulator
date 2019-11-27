@@ -32,22 +32,16 @@ bool Decode::Do() {
     stall_  = NeedStall();
     if (!Execute::bubble() && Execute::stall()) return false;
 
-    auto stat    = PipelineRegister::Get(DECODE, assets::STAT);
-    auto icode   = PipelineRegister::Get(DECODE, assets::I_CODE);
-    auto ifun    = PipelineRegister::Get(DECODE, assets::I_FUN);
-    auto val_c   = PipelineRegister::Get(DECODE, assets::VAL_C);
-    auto val_p   = PipelineRegister::Get(FETCH, assets::PRED_PC);
-    auto val_a   = GetValA(icode);
-    auto val_b   = GetValB(icode);
-    auto m_val_e = PipelineRegister::Get(MEMORY, assets::VAL_E);
-    auto w_val_m = PipelineRegister::Get(WRITE_BACK, assets::VAL_M);
-    auto w_val_e = PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
-    dst_e_       = GetDstE(icode);
-    dst_m_       = GetDstM(icode);
-    src_a_       = GetSrcA(icode);
-    src_b_       = GetSrcB(icode);
-
-    // TODO(Hakula): Need to write register file
+    auto stat  = PipelineRegister::Get(DECODE, assets::STAT);
+    auto icode = PipelineRegister::Get(DECODE, assets::I_CODE);
+    auto ifun  = PipelineRegister::Get(DECODE, assets::I_FUN);
+    auto val_c = PipelineRegister::Get(DECODE, assets::VAL_C);
+    auto val_a = GetValA(icode);
+    auto val_b = GetValB(icode);
+    dst_e_     = GetDstE(icode);
+    dst_m_     = GetDstM(icode);
+    src_a_     = GetSrcA(icode);
+    src_b_     = GetSrcB(icode);
 
     PipelineRegister::Set(EXECUTE, assets::STAT, stat);
     PipelineRegister::Set(EXECUTE, assets::I_CODE, icode);
