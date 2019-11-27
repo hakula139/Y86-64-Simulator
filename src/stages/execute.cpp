@@ -125,6 +125,23 @@ bool Execute::NeedUpdateCC(uint8_t icode) {
     return true;
 }
 
+bool Execute::NeedBubble() {
+    // Mispredicted branch
+    auto e_icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
+    auto e_cnd   = PipelineRegister::Get(EXECUTE, assets::CND);
+    if (e_icode == IJXX && !e_cnd) return true;
+    // Conditions for a load/use hazard
+    auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
+    auto d_src_a = PipelineRegister::Get(DECODE, assets::SRC_A);
+    auto d_src_b = PipelineRegister::Get(DECODE, assets::SRC_B);
+    if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
+        ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
+        return true;
+    return false;
+}
+
+bool Execute::NeedStall() { return false; }
+
 bool Execute::PrintErrorMessage(const int error_code) {
     std::cerr << "Execute Error ";
     switch (error_code) {

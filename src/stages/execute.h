@@ -21,6 +21,9 @@ public:
 
     // True if the condition codes should be updated
     static bool NeedUpdateCC(uint8_t icode);
+    // Should I stall or inject a bubble into Pipeline Register E?
+    static bool NeedBubble();
+    static bool NeedStall();
 
     static uint64_t val_a() { return val_a_; }
     static uint64_t val_e() { return val_e_; }

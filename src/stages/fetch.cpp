@@ -137,7 +137,7 @@ bool Fetch::NeedStall() {
     if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
         ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
         return true;
-    //  # Stalling at fetch while ret passes through pipeline
+    // Stalling at fetch while ret passes through pipeline
     auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
     auto m_icode = PipelineRegister::Get(MEMORY, assets::I_CODE);
     if (ValueIsInArray(static_cast<uint64_t>(IRET),
