@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
         assets::PipelineRegister::Print(assets::EXECUTE);
         assets::PipelineRegister::Print(assets::MEMORY);
         assets::PipelineRegister::Print(assets::WRITE_BACK);
-        std::cout << "Press enter to continue.\n";
+        std::cout << "Press enter to continue, CTRL + C to exit.\n";
         std::getchar();
     }
     std::cout << "Program Exit: Clock cycles = " << clock << '\n';
