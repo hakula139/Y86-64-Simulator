@@ -25,8 +25,6 @@ uint64_t Memory::val_m_;
 bool     Memory::mem_error_ = false;
 
 bool Memory::Do() {
-    if (!WriteBack::NeedBubble() && WriteBack::NeedStall()) return false;
-
     stat_        = PipelineRegister::Get(MEMORY, assets::STAT);
     auto icode   = PipelineRegister::Get(MEMORY, assets::I_CODE);
     auto val_e   = PipelineRegister::Get(MEMORY, assets::VAL_E);
@@ -34,21 +32,22 @@ bool Memory::Do() {
     auto dst_e   = PipelineRegister::Get(MEMORY, assets::DST_E);
     auto dst_m   = PipelineRegister::Get(MEMORY, assets::DST_M);
     auto address = GetMemAddress(icode);
-
     if (GetMemRead(icode))
         val_m_ = assets::Memory::Get(address, 8, &mem_error_);
     else
         val_m_ = val_a;
     if (GetMemWrite(icode)) assets::Memory::Set(address, val_a, &mem_error_);
 
-    PipelineRegister::Set(WRITE_BACK, assets::STAT, GetStat());
-    PipelineRegister::Set(WRITE_BACK, assets::I_CODE, icode);
-    PipelineRegister::Set(WRITE_BACK, assets::VAL_E, val_e);
-    PipelineRegister::Set(WRITE_BACK, assets::VAL_M, val_m_);
-    PipelineRegister::Set(WRITE_BACK, assets::DST_E, dst_e);
-    PipelineRegister::Set(WRITE_BACK, assets::DST_M, dst_m);
-
-    if (WriteBack::NeedBubble()) PipelineRegister::Clear(WRITE_BACK);
+    if (WriteBack::NeedBubble()) {
+        PipelineRegister::Clear(WRITE_BACK);
+    } else if (!WriteBack::NeedStall()) {
+        PipelineRegister::Set(WRITE_BACK, assets::STAT, GetStat());
+        PipelineRegister::Set(WRITE_BACK, assets::I_CODE, icode);
+        PipelineRegister::Set(WRITE_BACK, assets::VAL_E, val_e);
+        PipelineRegister::Set(WRITE_BACK, assets::VAL_M, val_m_);
+        PipelineRegister::Set(WRITE_BACK, assets::DST_E, dst_e);
+        PipelineRegister::Set(WRITE_BACK, assets::DST_M, dst_m);
+    }
     return true;
 }
 

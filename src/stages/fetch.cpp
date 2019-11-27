@@ -31,37 +31,40 @@ uint8_t              Fetch::stat_;
 bool                 Fetch::mem_error_ = false;
 
 bool Fetch::Do(const File& input) {
-    if (!Decode::NeedBubble() && Decode::NeedStall()) return false;
-
     pc_          = GetPC();
     instruction_ = input.GetInstruction(pc_, &mem_error_);
     icode_       = GetICode();
     ifun_        = GetIFun();
     stat_        = GetStat();
-
-    PipelineRegister::Set(DECODE, assets::I_CODE, icode_);
-    PipelineRegister::Set(DECODE, assets::I_FUN, ifun_);
-    PipelineRegister::Set(DECODE, assets::STAT, stat_);
+    uint8_t r_a  = assets::RNONE;
+    uint8_t r_b  = assets::RNONE;
     ++pc_;
-
     if (NeedRegids()) {
-        PipelineRegister::Set(DECODE, assets::R_A, GetRA());
-        PipelineRegister::Set(DECODE, assets::R_B, GetRB());
+        r_a = GetRA();
+        r_b = GetRB();
         ++pc_;
     }
     if (NeedValC()) {
         val_c_ = GetValC();
-        PipelineRegister::Set(DECODE, assets::VAL_C, val_c_);
         pc_ += 8;
     }
-
-    PipelineRegister::Set(DECODE, assets::VAL_P, pc_);
 
     if (NeedBubble())
         PipelineRegister::Clear(FETCH);
     else if (!NeedStall())
         PipelineRegister::Set(FETCH, assets::PRED_PC, GetPredPC());
-    if (Decode::NeedBubble()) PipelineRegister::Clear(DECODE);
+
+    if (Decode::NeedBubble()) {
+        PipelineRegister::Clear(DECODE);
+    } else if (!Decode::NeedStall()) {
+        PipelineRegister::Set(DECODE, assets::I_CODE, icode_);
+        PipelineRegister::Set(DECODE, assets::I_FUN, ifun_);
+        PipelineRegister::Set(DECODE, assets::STAT, stat_);
+        PipelineRegister::Set(DECODE, assets::VAL_P, pc_);
+        PipelineRegister::Set(DECODE, assets::R_A, r_a);
+        PipelineRegister::Set(DECODE, assets::R_B, r_b);
+        PipelineRegister::Set(DECODE, assets::VAL_C, val_c_);
+    }
     return true;
 }
 

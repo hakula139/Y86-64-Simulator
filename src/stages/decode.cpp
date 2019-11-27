@@ -26,8 +26,6 @@ uint64_t Decode::src_a_;
 uint64_t Decode::src_b_;
 
 bool Decode::Do() {
-    if (!Execute::NeedBubble() && Execute::NeedStall()) return false;
-
     auto stat  = PipelineRegister::Get(DECODE, assets::STAT);
     auto icode = PipelineRegister::Get(DECODE, assets::I_CODE);
     auto ifun  = PipelineRegister::Get(DECODE, assets::I_FUN);
@@ -39,18 +37,20 @@ bool Decode::Do() {
     dst_e_     = GetDstE(icode);
     dst_m_     = GetDstM(icode);
 
-    PipelineRegister::Set(EXECUTE, assets::STAT, stat);
-    PipelineRegister::Set(EXECUTE, assets::I_CODE, icode);
-    PipelineRegister::Set(EXECUTE, assets::I_FUN, ifun);
-    PipelineRegister::Set(EXECUTE, assets::VAL_C, val_c);
-    PipelineRegister::Set(EXECUTE, assets::VAL_A, val_a);
-    PipelineRegister::Set(EXECUTE, assets::VAL_B, val_b);
-    PipelineRegister::Set(EXECUTE, assets::DST_E, dst_e_);
-    PipelineRegister::Set(EXECUTE, assets::DST_M, dst_m_);
-    PipelineRegister::Set(EXECUTE, assets::SRC_A, src_a_);
-    PipelineRegister::Set(EXECUTE, assets::SRC_B, src_b_);
-
-    if (Execute::NeedBubble()) PipelineRegister::Clear(EXECUTE);
+    if (Execute::NeedBubble()) {
+        PipelineRegister::Clear(EXECUTE);
+    } else if (!Execute::NeedStall()) {
+        PipelineRegister::Set(EXECUTE, assets::STAT, stat);
+        PipelineRegister::Set(EXECUTE, assets::I_CODE, icode);
+        PipelineRegister::Set(EXECUTE, assets::I_FUN, ifun);
+        PipelineRegister::Set(EXECUTE, assets::VAL_C, val_c);
+        PipelineRegister::Set(EXECUTE, assets::VAL_A, val_a);
+        PipelineRegister::Set(EXECUTE, assets::VAL_B, val_b);
+        PipelineRegister::Set(EXECUTE, assets::DST_E, dst_e_);
+        PipelineRegister::Set(EXECUTE, assets::DST_M, dst_m_);
+        PipelineRegister::Set(EXECUTE, assets::SRC_A, src_a_);
+        PipelineRegister::Set(EXECUTE, assets::SRC_B, src_b_);
+    }
     return true;
 }
 

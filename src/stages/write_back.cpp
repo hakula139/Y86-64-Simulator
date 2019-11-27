@@ -29,7 +29,6 @@ uint8_t WriteBack::Do() {
 
     Register::Set(dst_e, val_e);
     Register::Set(dst_m, val_m);
-
     return GetStat();
 }
 

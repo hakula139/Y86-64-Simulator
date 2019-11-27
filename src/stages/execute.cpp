@@ -29,8 +29,6 @@ uint64_t Execute::dst_e_;
 bool     Execute::cnd_;
 
 bool Execute::Do() {
-    if (!Memory::NeedBubble() && Memory::NeedStall()) return false;
-
     auto stat     = PipelineRegister::Get(EXECUTE, assets::STAT);
     auto icode    = PipelineRegister::Get(EXECUTE, assets::I_CODE);
     auto ifun     = PipelineRegister::Get(EXECUTE, assets::I_FUN);
@@ -43,17 +41,17 @@ bool Execute::Do() {
     dst_e_        = GetDstE();
     auto dst_m    = PipelineRegister::Get(EXECUTE, assets::DST_M);
 
-    PipelineRegister::Set(MEMORY, assets::STAT, stat);
-    PipelineRegister::Set(MEMORY, assets::I_CODE, icode);
-    PipelineRegister::Set(MEMORY, assets::CND, cnd_);
-    PipelineRegister::Set(MEMORY, assets::VAL_E, val_e_);
-    PipelineRegister::Set(MEMORY, assets::VAL_A, val_a_);
-    if (cnd_) PipelineRegister::Set(MEMORY, assets::DST_E, dst_e_);
-    PipelineRegister::Set(MEMORY, assets::DST_M, dst_m);
-
     if (Memory::NeedBubble()) {
         PipelineRegister::Clear(MEMORY);
         if (NeedUpdateCC(icode)) ConditionCode::Clear();
+    } else if (!Memory::NeedStall()) {
+        PipelineRegister::Set(MEMORY, assets::STAT, stat);
+        PipelineRegister::Set(MEMORY, assets::I_CODE, icode);
+        PipelineRegister::Set(MEMORY, assets::CND, cnd_);
+        PipelineRegister::Set(MEMORY, assets::VAL_E, val_e_);
+        PipelineRegister::Set(MEMORY, assets::VAL_A, val_a_);
+        PipelineRegister::Set(MEMORY, assets::DST_E, dst_e_);
+        PipelineRegister::Set(MEMORY, assets::DST_M, dst_m);
     }
     return true;
 }
@@ -85,7 +83,7 @@ bool Execute::GetCondition(uint8_t ifun) {
     auto zf     = ConditionCode::Get(assets::ZF);
     auto sf     = ConditionCode::Get(assets::SF);
     auto of     = ConditionCode::Get(assets::OF);
-    bool result = 1;
+    bool result = true;
     switch (ifun) {
         case assets::C_LE: result = zf || (sf && !of) || (!sf && of); break;
         case assets::C_L: result = (sf && !of) || (!sf && of); break;
