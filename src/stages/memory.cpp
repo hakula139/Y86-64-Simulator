@@ -18,6 +18,8 @@ using assets::WRITE_BACK;
 
 namespace stages {
 
+uint64_t Memory::stat_;
+
 bool Memory::Do() {
     stat_      = PipelineRegister::Get(MEMORY, assets::STAT);
     auto icode = PipelineRegister::Get(MEMORY, assets::I_CODE);
