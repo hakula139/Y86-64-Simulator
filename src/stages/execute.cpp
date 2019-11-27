@@ -26,6 +26,7 @@ namespace stages {
 uint64_t Execute::val_a_;
 uint64_t Execute::val_e_;
 uint64_t Execute::dst_e_;
+bool     Execute::cnd_;
 
 bool Execute::Do() {
     if (!Memory::NeedBubble() && Memory::NeedStall()) return false;
@@ -36,18 +37,18 @@ bool Execute::Do() {
     auto alu_a    = GetAluA(icode);
     auto alu_b    = GetAluB(icode);
     auto alu_func = GetAluFunction(icode);
-    auto cnd      = GetCondition(ifun);
+    cnd_          = GetCondition(ifun);
     val_e_        = GetValE(alu_a, alu_b, alu_func);
     val_a_        = PipelineRegister::Get(EXECUTE, assets::VAL_A);
-    dst_e_        = PipelineRegister::Get(EXECUTE, assets::DST_E);
+    dst_e_        = GetDstE();
     auto dst_m    = PipelineRegister::Get(EXECUTE, assets::DST_M);
 
     PipelineRegister::Set(MEMORY, assets::STAT, stat);
     PipelineRegister::Set(MEMORY, assets::I_CODE, icode);
-    PipelineRegister::Set(MEMORY, assets::CND, cnd);
+    PipelineRegister::Set(MEMORY, assets::CND, cnd_);
     PipelineRegister::Set(MEMORY, assets::VAL_E, val_e_);
     PipelineRegister::Set(MEMORY, assets::VAL_A, val_a_);
-    if (cnd) PipelineRegister::Set(MEMORY, assets::DST_E, dst_e_);
+    if (cnd_) PipelineRegister::Set(MEMORY, assets::DST_E, dst_e_);
     PipelineRegister::Set(MEMORY, assets::DST_M, dst_m);
 
     if (Memory::NeedBubble()) {
@@ -117,6 +118,13 @@ uint64_t Execute::GetValE(uint64_t alu_a, uint64_t alu_b, uint64_t alu_func) {
         default: break;
     }
     return static_cast<uint64_t>(result);
+}
+
+uint64_t Execute::GetDstE() {
+    // Set dstE to RNONE in event of not-taken conditional move
+    auto icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
+    if (icode == IRRMOVQ && !cnd_) return assets::RNONE;
+    return PipelineRegister::Get(EXECUTE, assets::DST_E);
 }
 
 bool Execute::NeedUpdateCC(uint8_t icode) {

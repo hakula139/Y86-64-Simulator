@@ -44,9 +44,9 @@ bool Memory::Do() {
     PipelineRegister::Set(WRITE_BACK, assets::STAT, GetStat());
     PipelineRegister::Set(WRITE_BACK, assets::I_CODE, icode);
     PipelineRegister::Set(WRITE_BACK, assets::VAL_E, val_e);
+    PipelineRegister::Set(WRITE_BACK, assets::VAL_M, val_m_);
     PipelineRegister::Set(WRITE_BACK, assets::DST_E, dst_e);
     PipelineRegister::Set(WRITE_BACK, assets::DST_M, dst_m);
-    PipelineRegister::Set(WRITE_BACK, assets::VAL_M, val_m_);
 
     if (WriteBack::NeedBubble()) PipelineRegister::Clear(WRITE_BACK);
     return true;

@@ -18,6 +18,7 @@ public:
     static uint64_t GetAluFunction(uint8_t icode);
     static bool     GetCondition(uint8_t ifun);
     static uint64_t GetValE(uint64_t alu_a, uint64_t alu_b, uint64_t alu_func);
+    static uint64_t GetDstE();
 
     // True if the condition codes should be updated
     static bool NeedUpdateCC(uint8_t icode);
@@ -28,11 +29,13 @@ public:
     static uint64_t val_a() { return val_a_; }
     static uint64_t val_e() { return val_e_; }
     static uint64_t dst_e() { return dst_e_; }
+    static bool     cnd() { return cnd_; }
 
 protected:
     static bool PrintErrorMessage(const int error_code);
 
     static uint64_t val_a_, val_e_, dst_e_;
+    static bool     cnd_;
 };
 
 }  // namespace stages
