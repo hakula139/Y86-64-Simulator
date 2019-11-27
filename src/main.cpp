@@ -39,6 +39,8 @@ int main(int argc, char** argv) {
         assets::PipelineRegister::Print(assets::EXECUTE);
         assets::PipelineRegister::Print(assets::MEMORY);
         assets::PipelineRegister::Print(assets::WRITE_BACK);
+        assets::Register::Print();
+        assets::ConditionCode::Print();
         std::cout << "Press enter to continue, CTRL + C to exit.\n";
         std::getchar();
     }

@@ -46,6 +46,7 @@ bool Register::Print() {
     vector<string> register_name{"RAX", "RCX", "RDX", "RBX", "RSP",
                                  "RBP", "RSI", "RDI", "R8 ", "R9 ",
                                  "R10", "R11", "R12", "R13", "R14"};
+    std::cout << string(5, '=') << " REGISTER " << string(5, '=') << '\n';
     for (size_t i = 0; i < kTotal_ - 1; ++i) {
         std::cout << '%' << register_name[i] << " = 0x";
         utility::SetOutputHexWidth(8);
@@ -102,9 +103,10 @@ bool ConditionCode::Clear() {
 }
 
 bool ConditionCode::Print() {
+    std::cout << string(5, '=') << " CONDITION CODE " << string(5, '=') << '\n';
     vector<string> register_name{"OF", "SF", "ZF"};
     for (size_t i = 0; i < kTotal_; ++i) {
-        std::cout << register_name[i] << Get(i) << '\n';
+        std::cout << register_name[i] << " = " << Get(i) << '\n';
     }
     return true;
 }
