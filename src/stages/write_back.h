@@ -11,6 +11,10 @@ public:
     static uint8_t Do();
     static uint8_t GetStat();
 
+    // Should I stall or inject a bubble into Pipeline Register W?
+    static bool NeedBubble();
+    static bool NeedStall();
+
     static uint8_t  stat() { return stat_; }
     static uint64_t val_e() { return val_e_; }
     static uint64_t dst_m() { return dst_m_; }

@@ -3,9 +3,11 @@
 #include <iostream>
 
 #include "../assets/register.h"
+#include "../utils/utility.h"
 #include "instruction.h"
 
 using assets::PipelineRegister;
+using utility::ValueIsInArray;
 
 using assets::DECODE;
 using assets::EXECUTE;
@@ -31,6 +33,15 @@ uint8_t WriteBack::Do() {
 uint8_t WriteBack::GetStat() {
     if (stat_ == assets::SBUB) return assets::SAOK;
     return stat_;
+}
+
+bool WriteBack::NeedBubble() { return false; }
+
+bool WriteBack::NeedStall() {
+    auto w_stat = PipelineRegister::Get(WRITE_BACK, assets::STAT);
+    if (ValueIsInArray(w_stat, {assets::SADR, assets::SINS, assets::SHLT}))
+        return true;
+    return false;
 }
 
 bool WriteBack::PrintErrorMessage(const int error_code) {
