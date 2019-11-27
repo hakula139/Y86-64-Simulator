@@ -87,7 +87,7 @@ uint64_t Fetch::GetPredPC() {
 uint8_t Fetch::GetICode() {
     if (mem_error_) return INOP;
     if (instruction_.empty()) {
-        Fetch::PrintErrorMessage(1);
+        // Fetch::PrintErrorMessage(1);
         mem_error_ = true;
         return INOP;
     }

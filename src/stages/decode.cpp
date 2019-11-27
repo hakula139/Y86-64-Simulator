@@ -32,12 +32,12 @@ bool Decode::Do() {
     auto icode = PipelineRegister::Get(DECODE, assets::I_CODE);
     auto ifun  = PipelineRegister::Get(DECODE, assets::I_FUN);
     auto val_c = PipelineRegister::Get(DECODE, assets::VAL_C);
+    src_a_     = GetSrcA(icode);
+    src_b_     = GetSrcB(icode);
     auto val_a = GetValA(icode);
     auto val_b = GetValB(icode);
     dst_e_     = GetDstE(icode);
     dst_m_     = GetDstM(icode);
-    src_a_     = GetSrcA(icode);
-    src_b_     = GetSrcB(icode);
 
     PipelineRegister::Set(EXECUTE, assets::STAT, stat);
     PipelineRegister::Set(EXECUTE, assets::I_CODE, icode);
@@ -73,7 +73,7 @@ uint64_t Decode::GetValA(uint8_t icode) {
     if (src_a_ == PipelineRegister::Get(WRITE_BACK, assets::DST_E))
         return PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
     // Uses value read from register file
-    return Register::Get(assets::VAL_A);
+    return Register::Get(src_a_);
 }
 
 uint64_t Decode::GetValB(uint8_t icode) {
@@ -92,7 +92,7 @@ uint64_t Decode::GetValB(uint8_t icode) {
     if (src_b_ == PipelineRegister::Get(WRITE_BACK, assets::DST_E))
         return PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
     // Uses value read from register file
-    return Register::Get(assets::VAL_B);
+    return Register::Get(src_b_);
 }
 
 uint64_t Decode::GetSrcA(uint8_t icode) {

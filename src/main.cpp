@@ -24,9 +24,9 @@ int main(int argc, char** argv) {
     input.PrintAllInstructions();
 #endif
 
-    bool     status = false;
+    uint8_t  status = assets::SAOK;
     uint64_t clock  = 0ull;
-    while (!status) {
+    while (status == assets::SAOK) {
         status = stages::WriteBack::Do();
         stages::Memory::Do();
         stages::Execute::Do();

@@ -3,7 +3,7 @@
 
 #define SIM_DEBUG 1
 
-constexpr int kSimVersionMajor = 1;
+constexpr int kSimVersionMajor = 2;
 constexpr int kSimVersionMinor = 0;
 constexpr int kSimVersionPatch = 1;
 

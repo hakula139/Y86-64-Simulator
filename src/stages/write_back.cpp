@@ -24,8 +24,8 @@ uint8_t WriteBack::Do() {
     stat_      = PipelineRegister::Get(WRITE_BACK, assets::STAT);
     auto val_e = PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
     auto val_m = PipelineRegister::Get(WRITE_BACK, assets::VAL_M);
-    auto dst_e = PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
-    auto dst_m = PipelineRegister::Get(WRITE_BACK, assets::VAL_M);
+    auto dst_e = PipelineRegister::Get(WRITE_BACK, assets::DST_E);
+    auto dst_m = PipelineRegister::Get(WRITE_BACK, assets::DST_M);
 
     Register::Set(dst_e, val_e);
     Register::Set(dst_m, val_m);
@@ -34,7 +34,7 @@ uint8_t WriteBack::Do() {
 }
 
 uint8_t WriteBack::GetStat() {
-    if (NeedBubble()) return assets::SAOK;
+    if (stat_ == assets::SBUB) return assets::SAOK;
     return stat_;
 }
 

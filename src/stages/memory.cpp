@@ -37,6 +37,8 @@ bool Memory::Do() {
 
     if (GetMemRead(icode))
         val_m_ = assets::Memory::Get(address, 8, &mem_error_);
+    else
+        val_m_ = val_a;
     if (GetMemWrite(icode)) assets::Memory::Set(address, val_a, &mem_error_);
 
     PipelineRegister::Set(WRITE_BACK, assets::STAT, GetStat());
