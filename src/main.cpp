@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
         stages::Decode::Do();
         stages::Fetch::Do(input);
         ++clock;
-#if SIM_DEBUG
+
         assets::PipelineRegister::Print(assets::FETCH);
         assets::PipelineRegister::Print(assets::DECODE);
         assets::PipelineRegister::Print(assets::EXECUTE);
@@ -41,7 +41,6 @@ int main(int argc, char** argv) {
         assets::PipelineRegister::Print(assets::WRITE_BACK);
         std::cout << "Press enter to continue.\n";
         std::getchar();
-#endif
     }
     std::cout << "Program Exit: Clock cycles = " << clock << '\n';
 }
