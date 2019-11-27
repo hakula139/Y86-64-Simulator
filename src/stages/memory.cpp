@@ -19,37 +19,43 @@ using assets::WRITE_BACK;
 namespace stages {
 
 bool Memory::Do() {
-    auto stat  = PipelineRegister::Get(MEMORY, assets::STAT);
-    auto dst_e = PipelineRegister::Get(MEMORY, assets::DST_E);
-    auto dst_m = PipelineRegister::Get(MEMORY, assets::DST_M);
+    stat_      = PipelineRegister::Get(MEMORY, assets::STAT);
     auto icode = PipelineRegister::Get(MEMORY, assets::I_CODE);
     auto val_e = PipelineRegister::Get(MEMORY, assets::VAL_E);
     auto val_a = PipelineRegister::Get(MEMORY, assets::VAL_A);
-    auto val_m = GetMemAddr(icode);
+    auto dst_e = PipelineRegister::Get(MEMORY, assets::DST_E);
+    auto dst_m = PipelineRegister::Get(MEMORY, assets::DST_M);
+    auto val_m = GetMemAddress(icode);
 
-    if (!dmem_error)
-        PipelineRegister::Set(WRITE_BACK, assets::STAT, stat);
-    else
-        PipelineRegister::Set(WRITE_BACK, assets::STAT, assets::SADR);
-    PipelineRegister::Set(WRITE_BACK, assets::DST_E, dst_e);
-    PipelineRegister::Set(WRITE_BACK, assets::DST_M, dst_m);
+    PipelineRegister::Set(WRITE_BACK, assets::STAT, GetStat());
     PipelineRegister::Set(WRITE_BACK, assets::I_CODE, icode);
     PipelineRegister::Set(WRITE_BACK, assets::VAL_E, val_e);
+    PipelineRegister::Set(WRITE_BACK, assets::DST_E, dst_e);
+    PipelineRegister::Set(WRITE_BACK, assets::DST_M, dst_m);
     PipelineRegister::Set(WRITE_BACK, assets::VAL_M, val_m);
+
+    return true;
+}
+
+uint64_t Memory::GetStat() {
+    if (dmem_error) return assets::SADR;
+    return stat();
+}
+
+uint64_t GetMemAddress(uint8_t icode) {
+    if (ValueIsInArray(icode, {IRMMOVQ, IMRMOVQ, ICALL, IPUSHQ}))
+        return PipelineRegister::Get(MEMORY, assets::VAL_E);
+    if (ValueIsInArray(icode, {IPOPQ, IRET}))
+        return PipelineRegister::Get(MEMORY, assets::VAL_A);
+    return 0ull;  // Other instructions don’t need address
 }
 
 bool Memory::GetMemRead(uint8_t icode) {
     return ValueIsInArray(icode, {IMRMOVQ, IPOPQ, IRET});
 }
-bool Memory::GetMemRead(uint8_t icode) {
-    return ValueIsInArray(icode, {IMRMOVQ, IPUSHQ, ICALL});
-}
 
-uint64_t GetMemAddr(uint8_t icode) {
-    if (ValueIsInArray(icode, {IRMMOVQ, IMRMOVQ, ICALL, IPUSHQ}))
-        return PipelineRegister::Get(MEMORY, assets::VAL_E);
-    if (ValueIsInArray(icode, {IPOPQ, IRET}))
-        return PipelineRegister::Get(MEMORY, assets::VAL_A);
+bool Memory::GetMemWrite(uint8_t icode) {
+    return ValueIsInArray(icode, {IMRMOVQ, IPUSHQ, ICALL});
 }
 
 bool Memory::PrintErrorMessage(const int error_code) {
