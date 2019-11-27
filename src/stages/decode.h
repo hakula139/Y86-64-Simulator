@@ -25,18 +25,11 @@ public:
     static uint64_t src_b() { return src_b_; }
     static uint64_t dst_e() { return dst_e_; }
     static uint64_t dst_m() { return dst_m_; }
-    static bool     bubble() { return bubble_; }
-    static bool     stall() { return stall_; }
-
-    static void set_bubble(bool bubble) { bubble_ = bubble; }
-    static void set_stall(bool stall) { stall_ = stall; }
 
 protected:
     static bool PrintErrorMessage(const int error_code);
 
     static uint64_t dst_e_, dst_m_, src_a_, src_b_;
-    static bool     bubble_;
-    static bool     stall_;
 };
 
 }  // namespace stages

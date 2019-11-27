@@ -16,18 +16,11 @@ public:
     static bool NeedStall();
 
     static uint8_t stat() { return stat_; }
-    static bool    bubble() { return bubble_; }
-    static bool    stall() { return stall_; }
-
-    static void set_bubble(bool bubble) { bubble_ = bubble; }
-    static void set_stall(bool stall) { stall_ = stall; }
 
 protected:
     static bool PrintErrorMessage(const int error_code);
 
     static uint8_t stat_;
-    static bool    bubble_;
-    static bool    stall_;
 };
 
 };  // namespace stages

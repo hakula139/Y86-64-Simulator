@@ -29,13 +29,9 @@ uint8_t              Fetch::icode_;
 uint8_t              Fetch::ifun_;
 uint8_t              Fetch::stat_;
 bool                 Fetch::mem_error_ = false;
-bool                 Fetch::bubble_    = false;
-bool                 Fetch::stall_     = false;
 
 bool Fetch::Do(const File& input) {
-    bubble_ = NeedBubble();
-    stall_  = NeedStall();
-    if (!Decode::bubble() && Decode::stall()) return false;
+    if (!Decode::NeedBubble() && Decode::NeedStall()) return false;
 
     pc_          = GetPC();
     instruction_ = input.GetInstruction(pc_, &mem_error_);
@@ -61,11 +57,11 @@ bool Fetch::Do(const File& input) {
 
     PipelineRegister::Set(DECODE, assets::VAL_P, pc_);
 
-    if (bubble_)
+    if (NeedBubble())
         PipelineRegister::Clear(FETCH);
-    else if (!stall_)
+    else if (!NeedStall())
         PipelineRegister::Set(FETCH, assets::PRED_PC, GetPredPC());
-    if (Decode::bubble()) PipelineRegister::Clear(DECODE);
+    if (Decode::NeedBubble()) PipelineRegister::Clear(DECODE);
     return true;
 }
 

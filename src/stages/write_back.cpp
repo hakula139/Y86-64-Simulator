@@ -19,13 +19,8 @@ using assets::WRITE_BACK;
 namespace stages {
 
 uint8_t WriteBack::stat_;
-bool    WriteBack::bubble_ = false;
-bool    WriteBack::stall_  = false;
 
 uint8_t WriteBack::Do() {
-    bubble_ = NeedBubble();
-    stall_  = NeedStall();
-
     stat_      = PipelineRegister::Get(WRITE_BACK, assets::STAT);
     auto val_e = PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
     auto val_m = PipelineRegister::Get(WRITE_BACK, assets::VAL_M);
@@ -39,7 +34,7 @@ uint8_t WriteBack::Do() {
 }
 
 uint8_t WriteBack::GetStat() {
-    if (bubble_) return assets::SAOK;
+    if (NeedBubble()) return assets::SAOK;
     return stat_;
 }
 

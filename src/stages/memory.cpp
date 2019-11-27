@@ -23,13 +23,9 @@ namespace stages {
 uint8_t  Memory::stat_;
 uint64_t Memory::val_m_;
 bool     Memory::mem_error_ = false;
-bool     Memory::bubble_    = false;
-bool     Memory::stall_     = false;
 
 bool Memory::Do() {
-    bubble_ = NeedBubble();
-    stall_  = NeedStall();
-    if (!WriteBack::bubble() && WriteBack::stall()) return false;
+    if (!WriteBack::NeedBubble() && WriteBack::NeedStall()) return false;
 
     stat_        = PipelineRegister::Get(MEMORY, assets::STAT);
     auto icode   = PipelineRegister::Get(MEMORY, assets::I_CODE);
@@ -50,7 +46,7 @@ bool Memory::Do() {
     PipelineRegister::Set(WRITE_BACK, assets::DST_M, dst_m);
     PipelineRegister::Set(WRITE_BACK, assets::VAL_M, val_m_);
 
-    if (WriteBack::bubble()) PipelineRegister::Clear(WRITE_BACK);
+    if (WriteBack::NeedBubble()) PipelineRegister::Clear(WRITE_BACK);
     return true;
 }
 

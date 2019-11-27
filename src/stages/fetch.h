@@ -44,11 +44,6 @@ public:
     static uint8_t  ifun() { return ifun_; }
     static uint8_t  stat() { return stat_; }
     static bool     mem_error() { return mem_error_; }
-    static bool     bubble() { return bubble_; }
-    static bool     stall() { return stall_; }
-
-    static void set_bubble(bool bubble) { bubble_ = bubble; }
-    static void set_stall(bool stall) { stall_ = stall; }
 
 protected:
     static bool PrintErrorMessage(const int error_code);
@@ -57,8 +52,6 @@ protected:
     static uint64_t             pc_, pred_pc_, val_c_;
     static uint8_t              icode_, ifun_, stat_;
     static bool                 mem_error_;
-    static bool                 bubble_;
-    static bool                 stall_;
 };
 
 }  // namespace stages

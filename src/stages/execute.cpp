@@ -26,13 +26,9 @@ namespace stages {
 uint64_t Execute::val_a_;
 uint64_t Execute::val_e_;
 uint64_t Execute::dst_e_;
-bool     Execute::bubble_ = false;
-bool     Execute::stall_  = false;
 
 bool Execute::Do() {
-    bubble_ = NeedBubble();
-    stall_  = NeedStall();
-    if (!Memory::bubble() && Memory::stall()) return false;
+    if (!Memory::NeedBubble() && Memory::NeedStall()) return false;
 
     auto stat     = PipelineRegister::Get(EXECUTE, assets::STAT);
     auto icode    = PipelineRegister::Get(EXECUTE, assets::I_CODE);
@@ -54,7 +50,7 @@ bool Execute::Do() {
     if (cnd) PipelineRegister::Set(MEMORY, assets::DST_E, dst_e_);
     PipelineRegister::Set(MEMORY, assets::DST_M, dst_m);
 
-    if (Memory::bubble()) {
+    if (Memory::NeedBubble()) {
         PipelineRegister::Clear(MEMORY);
         if (NeedUpdateCC(icode)) ConditionCode::Clear();
     }

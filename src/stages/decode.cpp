@@ -24,13 +24,9 @@ uint64_t Decode::dst_e_;
 uint64_t Decode::dst_m_;
 uint64_t Decode::src_a_;
 uint64_t Decode::src_b_;
-bool     Decode::bubble_ = false;
-bool     Decode::stall_  = false;
 
 bool Decode::Do() {
-    bubble_ = NeedBubble();
-    stall_  = NeedStall();
-    if (!Execute::bubble() && Execute::stall()) return false;
+    if (!Execute::NeedBubble() && Execute::NeedStall()) return false;
 
     auto stat  = PipelineRegister::Get(DECODE, assets::STAT);
     auto icode = PipelineRegister::Get(DECODE, assets::I_CODE);
@@ -54,7 +50,7 @@ bool Decode::Do() {
     PipelineRegister::Set(EXECUTE, assets::SRC_A, src_a_);
     PipelineRegister::Set(EXECUTE, assets::SRC_B, src_b_);
 
-    if (Execute::bubble()) PipelineRegister::Clear(EXECUTE);
+    if (Execute::NeedBubble()) PipelineRegister::Clear(EXECUTE);
     return true;
 }
 
