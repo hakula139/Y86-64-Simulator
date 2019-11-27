@@ -155,6 +155,7 @@ bool Decode::NeedStall() {
     if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
         ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
         return true;
+    return false;
 }
 
 bool Decode::PrintErrorMessage(const int error_code) {

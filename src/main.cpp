@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <fstream>
+#include <iostream>
 
 #include "config.h"
 
@@ -23,19 +24,24 @@ int main(int argc, char** argv) {
     input.PrintAllInstructions();
 #endif
 
-    bool status = false;
+    bool     status = false;
+    uint64_t clock  = 0ull;
     while (!status) {
         status = stages::WriteBack::Do();
         stages::Memory::Do();
         stages::Execute::Do();
         stages::Decode::Do();
         stages::Fetch::Do(input);
+        ++clock;
 #if SIM_DEBUG
         assets::PipelineRegister::Print(assets::FETCH);
         assets::PipelineRegister::Print(assets::DECODE);
         assets::PipelineRegister::Print(assets::EXECUTE);
         assets::PipelineRegister::Print(assets::MEMORY);
         assets::PipelineRegister::Print(assets::WRITE_BACK);
+        std::cout << "Press enter to continue.\n";
+        std::getchar();
 #endif
     }
+    std::cout << "Program Exit: Clock cycles = " << clock << '\n';
 }

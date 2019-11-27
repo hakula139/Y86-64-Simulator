@@ -62,7 +62,7 @@ uint8_t Memory::GetStat() {
     return stat_;
 }
 
-uint64_t GetMemAddress(uint8_t icode) {
+uint64_t Memory::GetMemAddress(uint8_t icode) {
     if (ValueIsInArray(icode, {IRMMOVQ, IMRMOVQ, ICALL, IPUSHQ}))
         return PipelineRegister::Get(MEMORY, assets::VAL_E);
     if (ValueIsInArray(icode, {IPOPQ, IRET}))
