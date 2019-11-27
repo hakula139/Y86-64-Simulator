@@ -15,13 +15,20 @@ using assets::WRITE_BACK;
 
 namespace stages {
 
-bool WriteBack::Do() {
-    auto stat = PipelineRegister::Get(WRITE_BACK, assets::STAT);
-    if (stat == assets::SBUB)
-        PipelineRegister::Set(MEMORY, assets::STAT, assets::SAOK);
-    else
-        PipelineRegister::Set(WRITE_BACK, assets::STAT, stat);
-    return stat;
+uint8_t  WriteBack::stat_;
+uint64_t WriteBack::val_e_;
+uint64_t WriteBack::dst_m_;
+uint64_t WriteBack::val_m_;
+
+uint8_t WriteBack::Do() {
+    stat_  = PipelineRegister::Get(WRITE_BACK, assets::STAT);
+    val_e_ = PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
+    return GetStat();
+}
+
+uint8_t WriteBack::GetStat() {
+    if (stat() == assets::SBUB) return assets::SAOK;
+    return stat();
 }
 
 bool WriteBack::PrintErrorMessage(const int error_code) {
