@@ -18,7 +18,7 @@ using assets::WRITE_BACK;
 
 namespace stages {
 
-uint64_t Memory::stat_;
+uint8_t Memory::stat_;
 
 bool Memory::Do() {
     stat_      = PipelineRegister::Get(MEMORY, assets::STAT);
@@ -39,7 +39,7 @@ bool Memory::Do() {
     return true;
 }
 
-uint64_t Memory::GetStat() {
+uint8_t Memory::GetStat() {
     if (dmem_error) return assets::SADR;
     return stat();
 }
