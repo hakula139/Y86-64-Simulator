@@ -116,14 +116,15 @@ uint64_t Decode::GetDstM(uint8_t icode) {
 bool Decode::NeedBubble() {
     // Mispredicted branch
     auto e_icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
-    auto e_cnd   = Execute::cnd();
+    auto e_ifun  = PipelineRegister::Get(EXECUTE, assets::I_FUN);
+    auto e_cnd   = Execute::GetCondition(e_ifun);
     if (e_icode == IJXX && !e_cnd) return true;
     // Stalling at fetch while ret passes through pipeline but not condition for
     // a load / use hazard
     auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
-    auto d_src_a = Decode::src_a();
-    auto d_src_b = Decode::src_b();
     auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
+    auto d_src_a = Decode::GetSrcA(d_icode);
+    auto d_src_b = Decode::GetSrcB(d_icode);
     auto m_icode = PipelineRegister::Get(MEMORY, assets::I_CODE);
     if (!(ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
           ValueIsInArray(e_dst_m, {d_src_a, d_src_b})) &&
@@ -137,8 +138,9 @@ bool Decode::NeedStall() {
     // Conditions for a load / use hazard
     auto e_icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
     auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
-    auto d_src_a = Decode::src_a();
-    auto d_src_b = Decode::src_b();
+    auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
+    auto d_src_a = Decode::GetSrcA(d_icode);
+    auto d_src_b = Decode::GetSrcB(d_icode);
     if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
         ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
         return true;
