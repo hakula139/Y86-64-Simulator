@@ -131,7 +131,7 @@ bool Execute::NeedUpdateCC(uint8_t icode) {
     // State changes only during normal operation
     std::vector<uint8_t> mem_error_status{assets::SADR, assets::SINS,
                                           assets::SHLT};
-    if (ValueIsInArray(Memory::stat(), mem_error_status)) return false;
+    if (ValueIsInArray(Memory::GetStat(), mem_error_status)) return false;
     auto w_stat = PipelineRegister::Get(WRITE_BACK, assets::STAT);
     if (ValueIsInArray(static_cast<uint8_t>(w_stat), mem_error_status))
         return false;
@@ -141,12 +141,14 @@ bool Execute::NeedUpdateCC(uint8_t icode) {
 bool Execute::NeedBubble() {
     // Mispredicted branch
     auto e_icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
-    auto e_cnd   = Execute::cnd();
+    auto e_ifun  = PipelineRegister::Get(EXECUTE, assets::I_FUN);
+    auto e_cnd   = Execute::GetCondition(e_ifun);
     if (e_icode == IJXX && !e_cnd) return true;
     // Conditions for a load/use hazard
     auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
-    auto d_src_a = Decode::src_a();
-    auto d_src_b = Decode::src_b();
+    auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
+    auto d_src_a = Decode::GetSrcA(d_icode);
+    auto d_src_b = Decode::GetSrcB(d_icode);
     if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
         ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
         return true;

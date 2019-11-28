@@ -50,11 +50,6 @@ bool Fetch::Do(const File& input) {
         pc_ += 8;
     }
 
-    if (NeedBubble())
-        PipelineRegister::Clear(FETCH);
-    else if (!NeedStall())
-        PipelineRegister::Set(FETCH, assets::PRED_PC, GetPredPC());
-
     if (Decode::NeedBubble()) {
         PipelineRegister::Clear(DECODE);
     } else if (!Decode::NeedStall()) {
@@ -66,6 +61,12 @@ bool Fetch::Do(const File& input) {
         PipelineRegister::Set(DECODE, assets::R_B, r_b);
         PipelineRegister::Set(DECODE, assets::VAL_C, val_c_);
     }
+
+    if (NeedBubble())
+        PipelineRegister::Clear(FETCH);
+    else if (!NeedStall())
+        PipelineRegister::Set(FETCH, assets::PRED_PC, GetPredPC());
+
     return true;
 }
 
@@ -146,13 +147,13 @@ bool Fetch::NeedStall() {
     // Conditions for a load / use hazard
     auto e_icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
     auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
-    auto d_src_a = Decode::src_a();
-    auto d_src_b = Decode::src_b();
+    auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
+    auto d_src_a = Decode::GetSrcA(d_icode);
+    auto d_src_b = Decode::GetSrcB(d_icode);
     if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
         ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
         return true;
     // Stalling at fetch while ret passes through pipeline
-    auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
     auto m_icode = PipelineRegister::Get(MEMORY, assets::I_CODE);
     if (ValueIsInArray(static_cast<uint64_t>(IRET),
                        {d_icode, e_icode, m_icode}))

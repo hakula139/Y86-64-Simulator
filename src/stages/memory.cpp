@@ -6,6 +6,7 @@
 #include "../assets/memory.h"
 #include "../assets/register.h"
 #include "../utils/utility.h"
+#include "fetch.h"
 #include "instruction.h"
 #include "write_back.h"
 
@@ -52,10 +53,7 @@ bool Memory::Do() {
 }
 
 uint8_t Memory::GetStat() {
-    if (mem_error_) {
-        PrintErrorMessage(1);
-        return assets::SADR;
-    }
+    if (Fetch::mem_error()) return assets::SADR;
     return PipelineRegister::Get(MEMORY, assets::STAT);
 }
 
@@ -77,7 +75,7 @@ bool Memory::GetMemWrite(uint8_t icode) {
 
 bool Memory::NeedBubble() {
     // Starts injecting bubbles as soon as exception passes through memory stage
-    if (ValueIsInArray(stat_, {assets::SADR, assets::SINS, assets::SHLT}))
+    if (ValueIsInArray(GetStat(), {assets::SADR, assets::SINS, assets::SHLT}))
         return true;
     auto w_stat = PipelineRegister::Get(WRITE_BACK, assets::STAT);
     if (ValueIsInArray(w_stat, {assets::SADR, assets::SINS, assets::SHLT}))
@@ -90,7 +88,6 @@ bool Memory::NeedStall() { return false; }
 bool Memory::PrintErrorMessage(const int error_code) {
     std::cerr << "Memory Error ";
     switch (error_code) {
-        case 1: std::cerr << "1: Cannot operate memory.\n"; break;
         default: std::cerr << "X: An unknown error occurs.\n"; break;
     }
     return true;
