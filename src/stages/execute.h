@@ -7,6 +7,8 @@ namespace stages {
 
 class Execute {
 public:
+    friend class Bubble;
+
     // Runs the execute stage
     static bool Do();
 
@@ -34,7 +36,8 @@ public:
 protected:
     static bool PrintErrorMessage(const int error_code);
 
-    static uint64_t val_a_, val_e_, dst_e_;
+    static uint64_t val_a_, val_e_, dst_e_, dst_m_;
+    static uint8_t  icode_, ifun_, stat_;
     static bool     cnd_;
 };
 

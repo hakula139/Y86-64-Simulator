@@ -8,6 +8,7 @@
 #include "assets/memory.h"
 #include "assets/register.h"
 #include "init/argument.h"
+#include "stages/bubble.h"
 #include "stages/decode.h"
 #include "stages/execute.h"
 #include "stages/fetch.h"
@@ -30,9 +31,15 @@ int main(int argc, char** argv) {
     while (status == assets::SAOK) {
         status = stages::WriteBack::Do();
         stages::Memory::Do();
+        // stages::Bubble::UpdateWriteBackStage();
         stages::Execute::Do();
+        // stages::Bubble::UpdateMemoryStage();
         stages::Decode::Do();
+        // stages::Bubble::UpdateExecuteStage();
         stages::Fetch::Do(input);
+        // stages::Bubble::UpdateDecodeStage();
+        // stages::Bubble::UpdateFetchStage();
+        stages::Bubble::UpdateAll();
         ++clock;
         std::cout << "Cycle " << std::dec << clock << ":\n";
 

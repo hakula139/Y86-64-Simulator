@@ -7,6 +7,8 @@ namespace stages {
 
 class Memory {
 public:
+    friend class Bubble;
+
     // Runs the memory stage
     static bool Do();
 
@@ -29,8 +31,8 @@ public:
 protected:
     static bool PrintErrorMessage(const int error_code);
 
-    static uint8_t  stat_;
-    static uint64_t val_m_;
+    static uint64_t val_m_, val_e_, val_a_, dst_e_, dst_m_;
+    static uint8_t  icode_, stat_;
     static bool     mem_error_;
 };
 

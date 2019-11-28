@@ -10,7 +10,6 @@
 
 using assets::File;
 using assets::PipelineRegister;
-using assets::ProgramCounter;
 using utility::ValueIsInArray;
 
 using assets::DECODE;
@@ -28,6 +27,8 @@ uint64_t             Fetch::val_c_;
 uint8_t              Fetch::icode_;
 uint8_t              Fetch::ifun_;
 uint8_t              Fetch::stat_;
+uint8_t              Fetch::r_a_;
+uint8_t              Fetch::r_b_;
 bool                 Fetch::mem_error_ = false;
 
 bool Fetch::Do(const File& input) {
@@ -36,37 +37,19 @@ bool Fetch::Do(const File& input) {
     instruction_ = input.GetInstruction(pc_, &mem_error_);
     icode_       = GetICode();
     ifun_        = GetIFun();
+    stat_        = GetStat();
     ++pc_;
-    stat_       = GetStat();
-    uint8_t r_a = assets::RNONE;
-    uint8_t r_b = assets::RNONE;
+    r_a_ = assets::RNONE;
+    r_b_ = assets::RNONE;
     if (NeedRegids()) {
-        r_a = GetRA();
-        r_b = GetRB();
+        r_a_ = GetRA();
+        r_b_ = GetRB();
         ++pc_;
     }
     if (NeedValC()) {
         val_c_ = GetValC(pc_ - cur_pc);
         pc_ += 8;
     }
-
-    if (Decode::NeedBubble()) {
-        PipelineRegister::Clear(DECODE);
-    } else if (!Decode::NeedStall()) {
-        PipelineRegister::Set(DECODE, assets::I_CODE, icode_);
-        PipelineRegister::Set(DECODE, assets::I_FUN, ifun_);
-        PipelineRegister::Set(DECODE, assets::STAT, stat_);
-        PipelineRegister::Set(DECODE, assets::VAL_P, pc_);
-        PipelineRegister::Set(DECODE, assets::R_A, r_a);
-        PipelineRegister::Set(DECODE, assets::R_B, r_b);
-        PipelineRegister::Set(DECODE, assets::VAL_C, val_c_);
-    }
-
-    if (NeedBubble())
-        PipelineRegister::Clear(FETCH);
-    else if (!NeedStall())
-        PipelineRegister::Set(FETCH, assets::PRED_PC, GetPredPC());
-
     return true;
 }
 
@@ -147,13 +130,13 @@ bool Fetch::NeedStall() {
     // Conditions for a load / use hazard
     auto e_icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
     auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
-    auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
-    auto d_src_a = Decode::GetSrcA(d_icode);
-    auto d_src_b = Decode::GetSrcB(d_icode);
+    auto d_src_a = Decode::src_a();
+    auto d_src_b = Decode::src_b();
     if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
         ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
         return true;
     // Stalling at fetch while ret passes through pipeline
+    auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
     auto m_icode = PipelineRegister::Get(MEMORY, assets::I_CODE);
     if (ValueIsInArray(static_cast<uint64_t>(IRET),
                        {d_icode, e_icode, m_icode}))

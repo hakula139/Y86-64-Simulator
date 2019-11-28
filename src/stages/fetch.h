@@ -10,6 +10,8 @@ namespace stages {
 
 class Fetch {
 public:
+    friend class Bubble;
+
     // Runs the fetch stage
     static bool Do(const assets::File& input);
 
@@ -37,20 +39,14 @@ public:
     static bool NeedBubble();
     static bool NeedStall();
 
-    static uint64_t pc() { return pc_; }
-    static uint64_t pred_pc() { return pred_pc_; }
-    static uint64_t val_c() { return val_c_; }
-    static uint8_t  icode() { return icode_; }
-    static uint8_t  ifun() { return ifun_; }
-    static uint8_t  stat() { return stat_; }
-    static bool     mem_error() { return mem_error_; }
+    static bool mem_error() { return mem_error_; }
 
 protected:
     static bool PrintErrorMessage(const int error_code);
 
     static std::vector<uint8_t> instruction_;
     static uint64_t             pc_, pred_pc_, val_c_;
-    static uint8_t              icode_, ifun_, stat_;
+    static uint8_t              icode_, ifun_, stat_, r_a_, r_b_;
     static bool                 mem_error_;
 };
 

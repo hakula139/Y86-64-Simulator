@@ -2,13 +2,11 @@
 
 #include <iostream>
 
-#include "../assets/file.h"
 #include "../assets/memory.h"
 #include "../assets/register.h"
 #include "../utils/utility.h"
 #include "fetch.h"
 #include "instruction.h"
-#include "write_back.h"
 
 using assets::PipelineRegister;
 using utility::ValueIsInArray;
@@ -21,34 +19,28 @@ using assets::WRITE_BACK;
 
 namespace stages {
 
-uint8_t  Memory::stat_;
 uint64_t Memory::val_m_;
+uint64_t Memory::val_e_;
+uint64_t Memory::val_a_;
+uint64_t Memory::dst_e_;
+uint64_t Memory::dst_m_;
+uint8_t  Memory::icode_;
+uint8_t  Memory::stat_;
 bool     Memory::mem_error_ = false;
 
 bool Memory::Do() {
-    auto icode   = PipelineRegister::Get(MEMORY, assets::I_CODE);
-    auto val_e   = PipelineRegister::Get(MEMORY, assets::VAL_E);
-    auto val_a   = PipelineRegister::Get(MEMORY, assets::VAL_A);
-    auto dst_e   = PipelineRegister::Get(MEMORY, assets::DST_E);
-    auto dst_m   = PipelineRegister::Get(MEMORY, assets::DST_M);
-    auto address = GetMemAddress(icode);
-    if (GetMemRead(icode))
+    icode_       = PipelineRegister::Get(MEMORY, assets::I_CODE);
+    val_e_       = PipelineRegister::Get(MEMORY, assets::VAL_E);
+    val_a_       = PipelineRegister::Get(MEMORY, assets::VAL_A);
+    dst_e_       = PipelineRegister::Get(MEMORY, assets::DST_E);
+    dst_m_       = PipelineRegister::Get(MEMORY, assets::DST_M);
+    auto address = GetMemAddress(icode_);
+    if (GetMemRead(icode_))
         val_m_ = assets::Memory::Get(address, 8, &mem_error_);
     else
-        val_m_ = val_a;
-    if (GetMemWrite(icode)) assets::Memory::Set(address, val_a, &mem_error_);
+        val_m_ = val_a_;
+    if (GetMemWrite(icode_)) assets::Memory::Set(address, val_a_, &mem_error_);
     stat_ = GetStat();
-
-    if (WriteBack::NeedBubble()) {
-        PipelineRegister::Clear(WRITE_BACK);
-    } else if (!WriteBack::NeedStall()) {
-        PipelineRegister::Set(WRITE_BACK, assets::STAT, GetStat());
-        PipelineRegister::Set(WRITE_BACK, assets::I_CODE, icode);
-        PipelineRegister::Set(WRITE_BACK, assets::VAL_E, val_e);
-        PipelineRegister::Set(WRITE_BACK, assets::VAL_M, val_m_);
-        PipelineRegister::Set(WRITE_BACK, assets::DST_E, dst_e);
-        PipelineRegister::Set(WRITE_BACK, assets::DST_M, dst_m);
-    }
     return true;
 }
 
@@ -75,7 +67,7 @@ bool Memory::GetMemWrite(uint8_t icode) {
 
 bool Memory::NeedBubble() {
     // Starts injecting bubbles as soon as exception passes through memory stage
-    if (ValueIsInArray(GetStat(), {assets::SADR, assets::SINS, assets::SHLT}))
+    if (ValueIsInArray(stat_, {assets::SADR, assets::SINS, assets::SHLT}))
         return true;
     auto w_stat = PipelineRegister::Get(WRITE_BACK, assets::STAT);
     if (ValueIsInArray(w_stat, {assets::SADR, assets::SINS, assets::SHLT}))

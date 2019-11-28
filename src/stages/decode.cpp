@@ -24,33 +24,24 @@ uint64_t Decode::dst_e_;
 uint64_t Decode::dst_m_;
 uint64_t Decode::src_a_;
 uint64_t Decode::src_b_;
+uint64_t Decode::val_c_;
+uint64_t Decode::val_a_;
+uint64_t Decode::val_b_;
+uint8_t  Decode::icode_;
+uint8_t  Decode::ifun_;
+uint8_t  Decode::stat_;
 
 bool Decode::Do() {
-    auto stat  = PipelineRegister::Get(DECODE, assets::STAT);
-    auto icode = PipelineRegister::Get(DECODE, assets::I_CODE);
-    auto ifun  = PipelineRegister::Get(DECODE, assets::I_FUN);
-    auto val_c = PipelineRegister::Get(DECODE, assets::VAL_C);
-    src_a_     = GetSrcA(icode);
-    src_b_     = GetSrcB(icode);
-    auto val_a = GetValA(icode);
-    auto val_b = GetValB(icode);
-    dst_e_     = GetDstE(icode);
-    dst_m_     = GetDstM(icode);
-
-    if (Execute::NeedBubble()) {
-        PipelineRegister::Clear(EXECUTE);
-    } else if (!Execute::NeedStall()) {
-        PipelineRegister::Set(EXECUTE, assets::STAT, stat);
-        PipelineRegister::Set(EXECUTE, assets::I_CODE, icode);
-        PipelineRegister::Set(EXECUTE, assets::I_FUN, ifun);
-        PipelineRegister::Set(EXECUTE, assets::VAL_C, val_c);
-        PipelineRegister::Set(EXECUTE, assets::VAL_A, val_a);
-        PipelineRegister::Set(EXECUTE, assets::VAL_B, val_b);
-        PipelineRegister::Set(EXECUTE, assets::DST_E, dst_e_);
-        PipelineRegister::Set(EXECUTE, assets::DST_M, dst_m_);
-        PipelineRegister::Set(EXECUTE, assets::SRC_A, src_a_);
-        PipelineRegister::Set(EXECUTE, assets::SRC_B, src_b_);
-    }
+    stat_  = PipelineRegister::Get(DECODE, assets::STAT);
+    icode_ = PipelineRegister::Get(DECODE, assets::I_CODE);
+    ifun_  = PipelineRegister::Get(DECODE, assets::I_FUN);
+    val_c_ = PipelineRegister::Get(DECODE, assets::VAL_C);
+    src_a_ = GetSrcA(icode_);
+    src_b_ = GetSrcB(icode_);
+    val_a_ = GetValA(icode_);
+    val_b_ = GetValB(icode_);
+    dst_e_ = GetDstE(icode_);
+    dst_m_ = GetDstM(icode_);
     return true;
 }
 
@@ -125,15 +116,14 @@ uint64_t Decode::GetDstM(uint8_t icode) {
 bool Decode::NeedBubble() {
     // Mispredicted branch
     auto e_icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
-    auto e_ifun  = PipelineRegister::Get(EXECUTE, assets::I_FUN);
-    auto e_cnd   = Execute::GetCondition(e_ifun);
+    auto e_cnd   = Execute::cnd();
     if (e_icode == IJXX && !e_cnd) return true;
     // Stalling at fetch while ret passes through pipeline but not condition for
     // a load / use hazard
     auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
+    auto d_src_a = Decode::src_a();
+    auto d_src_b = Decode::src_b();
     auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
-    auto d_src_a = Decode::GetSrcA(d_icode);
-    auto d_src_b = Decode::GetSrcB(d_icode);
     auto m_icode = PipelineRegister::Get(MEMORY, assets::I_CODE);
     if (!(ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
           ValueIsInArray(e_dst_m, {d_src_a, d_src_b})) &&
@@ -147,9 +137,8 @@ bool Decode::NeedStall() {
     // Conditions for a load / use hazard
     auto e_icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
     auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
-    auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
-    auto d_src_a = Decode::GetSrcA(d_icode);
-    auto d_src_b = Decode::GetSrcB(d_icode);
+    auto d_src_a = Decode::src_a();
+    auto d_src_b = Decode::src_b();
     if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
         ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
         return true;

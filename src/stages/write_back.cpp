@@ -26,7 +26,6 @@ uint8_t WriteBack::Do() {
     auto dst_e = PipelineRegister::Get(WRITE_BACK, assets::DST_E);
     auto dst_m = PipelineRegister::Get(WRITE_BACK, assets::DST_M);
     stat_      = GetStat();
-
     Register::Set(dst_e, val_e);
     Register::Set(dst_m, val_m);
     return stat_;

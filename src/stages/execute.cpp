@@ -9,7 +9,6 @@
 #include "decode.h"
 #include "instruction.h"
 #include "memory.h"
-#include "write_back.h"
 
 using assets::ArithmeticLogicUnit;
 using assets::ConditionCode;
@@ -27,33 +26,24 @@ namespace stages {
 uint64_t Execute::val_a_;
 uint64_t Execute::val_e_;
 uint64_t Execute::dst_e_;
+uint64_t Execute::dst_m_;
+uint8_t  Execute::icode_;
+uint8_t  Execute::ifun_;
+uint8_t  Execute::stat_;
 bool     Execute::cnd_;
 
 bool Execute::Do() {
-    auto stat     = PipelineRegister::Get(EXECUTE, assets::STAT);
-    auto icode    = PipelineRegister::Get(EXECUTE, assets::I_CODE);
-    auto ifun     = PipelineRegister::Get(EXECUTE, assets::I_FUN);
-    auto alu_a    = GetAluA(icode);
-    auto alu_b    = GetAluB(icode);
-    auto alu_func = GetAluFunction(icode);
-    cnd_          = GetCondition(ifun);
+    stat_         = PipelineRegister::Get(EXECUTE, assets::STAT);
+    icode_        = PipelineRegister::Get(EXECUTE, assets::I_CODE);
+    ifun_         = PipelineRegister::Get(EXECUTE, assets::I_FUN);
+    auto alu_a    = GetAluA(icode_);
+    auto alu_b    = GetAluB(icode_);
+    auto alu_func = GetAluFunction(icode_);
+    cnd_          = GetCondition(ifun_);
     val_e_        = GetValE(alu_a, alu_b, alu_func);
     val_a_        = PipelineRegister::Get(EXECUTE, assets::VAL_A);
     dst_e_        = GetDstE();
-    auto dst_m    = PipelineRegister::Get(EXECUTE, assets::DST_M);
-
-    if (Memory::NeedBubble()) {
-        PipelineRegister::Clear(MEMORY);
-        if (NeedUpdateCC(icode)) ConditionCode::Clear();
-    } else if (!Memory::NeedStall()) {
-        PipelineRegister::Set(MEMORY, assets::STAT, stat);
-        PipelineRegister::Set(MEMORY, assets::I_CODE, icode);
-        PipelineRegister::Set(MEMORY, assets::CND, cnd_);
-        PipelineRegister::Set(MEMORY, assets::VAL_E, val_e_);
-        PipelineRegister::Set(MEMORY, assets::VAL_A, val_a_);
-        PipelineRegister::Set(MEMORY, assets::DST_E, dst_e_);
-        PipelineRegister::Set(MEMORY, assets::DST_M, dst_m);
-    }
+    dst_m_        = PipelineRegister::Get(EXECUTE, assets::DST_M);
     return true;
 }
 
@@ -131,7 +121,7 @@ bool Execute::NeedUpdateCC(uint8_t icode) {
     // State changes only during normal operation
     std::vector<uint8_t> mem_error_status{assets::SADR, assets::SINS,
                                           assets::SHLT};
-    if (ValueIsInArray(Memory::GetStat(), mem_error_status)) return false;
+    if (ValueIsInArray(Memory::stat(), mem_error_status)) return false;
     auto w_stat = PipelineRegister::Get(WRITE_BACK, assets::STAT);
     if (ValueIsInArray(static_cast<uint8_t>(w_stat), mem_error_status))
         return false;
@@ -141,14 +131,12 @@ bool Execute::NeedUpdateCC(uint8_t icode) {
 bool Execute::NeedBubble() {
     // Mispredicted branch
     auto e_icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
-    auto e_ifun  = PipelineRegister::Get(EXECUTE, assets::I_FUN);
-    auto e_cnd   = Execute::GetCondition(e_ifun);
+    auto e_cnd   = Execute::cnd();
     if (e_icode == IJXX && !e_cnd) return true;
     // Conditions for a load/use hazard
     auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
-    auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
-    auto d_src_a = Decode::GetSrcA(d_icode);
-    auto d_src_b = Decode::GetSrcB(d_icode);
+    auto d_src_a = Decode::src_a();
+    auto d_src_b = Decode::src_b();
     if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
         ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
         return true;
