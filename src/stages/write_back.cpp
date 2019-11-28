@@ -21,20 +21,21 @@ namespace stages {
 uint8_t WriteBack::stat_;
 
 uint8_t WriteBack::Do() {
-    stat_      = PipelineRegister::Get(WRITE_BACK, assets::STAT);
     auto val_e = PipelineRegister::Get(WRITE_BACK, assets::VAL_E);
     auto val_m = PipelineRegister::Get(WRITE_BACK, assets::VAL_M);
     auto dst_e = PipelineRegister::Get(WRITE_BACK, assets::DST_E);
     auto dst_m = PipelineRegister::Get(WRITE_BACK, assets::DST_M);
+    stat_      = GetStat();
 
     Register::Set(dst_e, val_e);
     Register::Set(dst_m, val_m);
-    return GetStat();
+    return stat_;
 }
 
 uint8_t WriteBack::GetStat() {
-    if (stat_ == assets::SBUB) return assets::SAOK;
-    return stat_;
+    auto w_stat = PipelineRegister::Get(WRITE_BACK, assets::STAT);
+    if (w_stat == assets::SBUB) return assets::SAOK;
+    return w_stat;
 }
 
 bool WriteBack::NeedBubble() { return false; }

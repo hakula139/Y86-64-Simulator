@@ -36,10 +36,10 @@ bool Fetch::Do(const File& input) {
     instruction_ = input.GetInstruction(pc_, &mem_error_);
     icode_       = GetICode();
     ifun_        = GetIFun();
-    stat_        = GetStat();
-    uint8_t r_a  = assets::RNONE;
-    uint8_t r_b  = assets::RNONE;
     ++pc_;
+    stat_       = GetStat();
+    uint8_t r_a = assets::RNONE;
+    uint8_t r_b = assets::RNONE;
     if (NeedRegids()) {
         r_a = GetRA();
         r_b = GetRB();

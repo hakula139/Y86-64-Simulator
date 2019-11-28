@@ -132,7 +132,9 @@ bool Execute::NeedUpdateCC(uint8_t icode) {
     std::vector<uint8_t> mem_error_status{assets::SADR, assets::SINS,
                                           assets::SHLT};
     if (ValueIsInArray(Memory::stat(), mem_error_status)) return false;
-    if (ValueIsInArray(WriteBack::stat(), mem_error_status)) return false;
+    auto w_stat = PipelineRegister::Get(WRITE_BACK, assets::STAT);
+    if (ValueIsInArray(static_cast<uint8_t>(w_stat), mem_error_status))
+        return false;
     return true;
 }
 

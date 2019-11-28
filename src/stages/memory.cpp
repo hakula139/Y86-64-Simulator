@@ -25,7 +25,6 @@ uint64_t Memory::val_m_;
 bool     Memory::mem_error_ = false;
 
 bool Memory::Do() {
-    stat_        = PipelineRegister::Get(MEMORY, assets::STAT);
     auto icode   = PipelineRegister::Get(MEMORY, assets::I_CODE);
     auto val_e   = PipelineRegister::Get(MEMORY, assets::VAL_E);
     auto val_a   = PipelineRegister::Get(MEMORY, assets::VAL_A);
@@ -37,6 +36,7 @@ bool Memory::Do() {
     else
         val_m_ = val_a;
     if (GetMemWrite(icode)) assets::Memory::Set(address, val_a, &mem_error_);
+    stat_ = GetStat();
 
     if (WriteBack::NeedBubble()) {
         PipelineRegister::Clear(WRITE_BACK);
@@ -56,7 +56,7 @@ uint8_t Memory::GetStat() {
         PrintErrorMessage(1);
         return assets::SADR;
     }
-    return stat_;
+    return PipelineRegister::Get(MEMORY, assets::STAT);
 }
 
 uint64_t Memory::GetMemAddress(uint8_t icode) {

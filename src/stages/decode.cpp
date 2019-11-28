@@ -117,7 +117,7 @@ uint64_t Decode::GetDstE(uint8_t icode) {
 }
 
 uint64_t Decode::GetDstM(uint8_t icode) {
-    if (ValueIsInArray(icode, {IMRMOVQ, IOPQ}))
+    if (ValueIsInArray(icode, {IMRMOVQ, IPOPQ}))
         return PipelineRegister::Get(DECODE, assets::R_A);
     return assets::RNONE;  // Don’t write any register
 }
