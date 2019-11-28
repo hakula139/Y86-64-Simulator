@@ -32,6 +32,7 @@ bool                 Fetch::mem_error_ = false;
 
 bool Fetch::Do(const File& input) {
     pc_          = GetPC();
+    auto cur_pc  = pc_;
     instruction_ = input.GetInstruction(pc_, &mem_error_);
     icode_       = GetICode();
     ifun_        = GetIFun();
@@ -45,7 +46,7 @@ bool Fetch::Do(const File& input) {
         ++pc_;
     }
     if (NeedValC()) {
-        val_c_ = GetValC();
+        val_c_ = GetValC(pc_ - cur_pc);
         pc_ += 8;
     }
 
@@ -117,10 +118,10 @@ uint8_t Fetch::GetRA() { return (instruction_[1] >> 4) & 0xF; }
 
 uint8_t Fetch::GetRB() { return instruction_[1] & 0xF; }
 
-uint64_t Fetch::GetValC() {
+uint64_t Fetch::GetValC(uint64_t pos) {
     uint64_t val_c = 0;
     // Read 8 bytes from instruction
-    for (size_t i = 2; i < 10; ++i) val_c += instruction_[i] << ((i - 2) << 3);
+    for (size_t i = 0; i < 8; ++i) val_c += instruction_[pos + i] << (i << 3);
     return val_c;
 }
 

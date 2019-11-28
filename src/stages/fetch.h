@@ -26,7 +26,7 @@ public:
     static uint8_t GetRA();
     static uint8_t GetRB();
     // Does fetched instruction require a constant word?
-    static uint64_t GetValC();
+    static uint64_t GetValC(uint64_t pc);
 
     static bool InstructionIsValid();
     // Does fetched instruction require a regid byte?
