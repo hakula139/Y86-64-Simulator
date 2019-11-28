@@ -6,6 +6,7 @@
 #include "../assets/alu.h"
 #include "../assets/register.h"
 #include "../utils/utility.h"
+#include "decode.h"
 #include "instruction.h"
 #include "memory.h"
 #include "write_back.h"
@@ -138,12 +139,12 @@ bool Execute::NeedUpdateCC(uint8_t icode) {
 bool Execute::NeedBubble() {
     // Mispredicted branch
     auto e_icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
-    auto e_cnd   = PipelineRegister::Get(EXECUTE, assets::CND);
+    auto e_cnd   = Execute::cnd();
     if (e_icode == IJXX && !e_cnd) return true;
     // Conditions for a load/use hazard
     auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
-    auto d_src_a = PipelineRegister::Get(DECODE, assets::SRC_A);
-    auto d_src_b = PipelineRegister::Get(DECODE, assets::SRC_B);
+    auto d_src_a = Decode::src_a();
+    auto d_src_b = Decode::src_b();
     if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
         ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
         return true;

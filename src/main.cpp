@@ -34,6 +34,7 @@ int main(int argc, char** argv) {
         stages::Decode::Do();
         stages::Fetch::Do(input);
         ++clock;
+        std::cout << "Cycle " << std::dec << clock << ":\n";
 
 #if SIM_DEBUG
         assets::PipelineRegister::Print(assets::FETCH);
