@@ -7,6 +7,7 @@
 #include <utility>
 
 #include "../utils/utility.h"
+#include "memory.h"
 
 namespace assets {
 
@@ -61,6 +62,17 @@ std::vector<uint8_t> File::GetInstruction(uint64_t address,
 }
 
 bool File::ReachEOF(uint64_t address) const { return address > max_address_; }
+
+bool File::Load() const {
+    bool mem_error = false;
+    for (const auto& instruction : instructions_) {
+        auto address = instruction.first;
+        for (const auto& code : instruction.second)
+            Memory::Set(address++, code, 1, &mem_error);
+        if (mem_error) break;
+    }
+    return !mem_error;
+}
 
 bool File::PrintInstruction(uint64_t address) const {
     if (!instructions_.count(address)) {

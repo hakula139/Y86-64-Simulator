@@ -36,10 +36,10 @@ bool Execute::Do() {
     stat_         = PipelineRegister::Get(EXECUTE, assets::STAT);
     icode_        = PipelineRegister::Get(EXECUTE, assets::I_CODE);
     ifun_         = PipelineRegister::Get(EXECUTE, assets::I_FUN);
-    auto alu_a    = GetAluA(icode_);
-    auto alu_b    = GetAluB(icode_);
-    auto alu_func = GetAluFunction(icode_);
-    cnd_          = GetCondition(ifun_);
+    auto alu_a    = GetAluA();
+    auto alu_b    = GetAluB();
+    auto alu_func = GetAluFunction();
+    cnd_          = GetCondition();
     val_e_        = GetValE(alu_a, alu_b, alu_func);
     val_a_        = PipelineRegister::Get(EXECUTE, assets::VAL_A);
     dst_e_        = GetDstE();
@@ -47,35 +47,35 @@ bool Execute::Do() {
     return true;
 }
 
-uint64_t Execute::GetAluA(uint8_t icode) {
-    if (ValueIsInArray(icode, {IRRMOVQ, IOPQ}))
+uint64_t Execute::GetAluA() {
+    if (ValueIsInArray(icode_, {IRRMOVQ, IOPQ}))
         return PipelineRegister::Get(EXECUTE, assets::VAL_A);
-    if (ValueIsInArray(icode, {IIRMOVQ, IRMMOVQ, IMRMOVQ}))
+    if (ValueIsInArray(icode_, {IIRMOVQ, IRMMOVQ, IMRMOVQ}))
         return PipelineRegister::Get(EXECUTE, assets::VAL_C);
-    if (ValueIsInArray(icode, {ICALL, IPUSHQ})) return -8ull;
-    if (ValueIsInArray(icode, {IRET, IPOPQ})) return 8ull;
+    if (ValueIsInArray(icode_, {ICALL, IPUSHQ})) return -8ull;
+    if (ValueIsInArray(icode_, {IRET, IPOPQ})) return 8ull;
     return 0;  // Other instructions don’t need ALU
 }
 
-uint64_t Execute::GetAluB(uint8_t icode) {
-    if (ValueIsInArray(icode,
+uint64_t Execute::GetAluB() {
+    if (ValueIsInArray(icode_,
                        {IRMMOVQ, IMRMOVQ, IOPQ, ICALL, IPUSHQ, IRET, IPOPQ}))
         return PipelineRegister::Get(EXECUTE, assets::VAL_B);
-    if (ValueIsInArray(icode, {IRRMOVQ, IIRMOVQ})) return 0ull;
+    if (ValueIsInArray(icode_, {IRRMOVQ, IIRMOVQ})) return 0ull;
     return 0;  // Other instructions don’t need ALU
 }
 
-uint64_t Execute::GetAluFunction(uint8_t icode) {
-    if (icode == IOPQ) return PipelineRegister::Get(EXECUTE, assets::I_FUN);
+uint64_t Execute::GetAluFunction() {
+    if (icode_ == IOPQ) return PipelineRegister::Get(EXECUTE, assets::I_FUN);
     return ALUADD;
 }
 
-bool Execute::GetCondition(uint8_t ifun) {
+bool Execute::GetCondition() {
     auto zf     = ConditionCode::Get(assets::ZF);
     auto sf     = ConditionCode::Get(assets::SF);
     auto of     = ConditionCode::Get(assets::OF);
     bool result = true;
-    switch (ifun) {
+    switch (ifun_) {
         case assets::C_LE: result = zf || (sf && !of) || (!sf && of); break;
         case assets::C_L: result = (sf && !of) || (!sf && of); break;
         case assets::C_E: result = zf; break;
@@ -88,6 +88,7 @@ bool Execute::GetCondition(uint8_t ifun) {
 }
 
 uint64_t Execute::GetValE(uint64_t alu_a, uint64_t alu_b, uint64_t alu_func) {
+    if (icode_ == IJXX) return val_e_;
     auto    num_a  = static_cast<int64_t>(alu_a);
     auto    num_b  = static_cast<int64_t>(alu_b);
     int64_t result = 0;
@@ -111,13 +112,13 @@ uint64_t Execute::GetValE(uint64_t alu_a, uint64_t alu_b, uint64_t alu_func) {
 
 uint64_t Execute::GetDstE() {
     // Set dstE to RNONE in event of not-taken conditional move
-    auto icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
-    if (icode == IRRMOVQ && !cnd_) return assets::RNONE;
+    auto icode_ = PipelineRegister::Get(EXECUTE, assets::I_CODE);
+    if (icode_ == IRRMOVQ && !cnd_) return assets::RNONE;
     return PipelineRegister::Get(EXECUTE, assets::DST_E);
 }
 
-bool Execute::NeedUpdateCC(uint8_t icode) {
-    if (icode != IOPQ) return false;
+bool Execute::NeedUpdateCC() {
+    if (icode_ != IOPQ) return false;
     // State changes only during normal operation
     std::vector<uint8_t> mem_error_status{assets::SADR, assets::SINS,
                                           assets::SHLT};

@@ -13,17 +13,17 @@ public:
     static bool Do();
 
     // Selects input A to ALU
-    static uint64_t GetAluA(uint8_t icode);
+    static uint64_t GetAluA();
     // Selects input B to ALU
-    static uint64_t GetAluB(uint8_t icode);
+    static uint64_t GetAluB();
     // Sets the ALU function
-    static uint64_t GetAluFunction(uint8_t icode);
-    static bool     GetCondition(uint8_t ifun);
+    static uint64_t GetAluFunction();
+    static bool     GetCondition();
     static uint64_t GetValE(uint64_t alu_a, uint64_t alu_b, uint64_t alu_func);
     static uint64_t GetDstE();
 
     // True if the condition codes should be updated
-    static bool NeedUpdateCC(uint8_t icode);
+    static bool NeedUpdateCC();
     // Should I stall or inject a bubble into Pipeline Register E?
     static bool NeedBubble();
     static bool NeedStall();

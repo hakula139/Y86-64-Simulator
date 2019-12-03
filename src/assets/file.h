@@ -18,6 +18,8 @@ public:
     std::vector<uint8_t> GetInstruction(uint64_t address,
                                         bool*    mem_error) const;
     bool                 ReachEOF(uint64_t address) const;
+    // Loads all instructions into memory
+    bool Load() const;
 
     bool PrintRawData() const;
     bool PrintInstruction(uint64_t address) const;

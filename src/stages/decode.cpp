@@ -36,18 +36,18 @@ bool Decode::Do() {
     icode_ = PipelineRegister::Get(DECODE, assets::I_CODE);
     ifun_  = PipelineRegister::Get(DECODE, assets::I_FUN);
     val_c_ = PipelineRegister::Get(DECODE, assets::VAL_C);
-    src_a_ = GetSrcA(icode_);
-    src_b_ = GetSrcB(icode_);
-    val_a_ = GetValA(icode_);
-    val_b_ = GetValB(icode_);
-    dst_e_ = GetDstE(icode_);
-    dst_m_ = GetDstM(icode_);
+    src_a_ = GetSrcA();
+    src_b_ = GetSrcB();
+    val_a_ = GetValA();
+    val_b_ = GetValB();
+    dst_e_ = GetDstE();
+    dst_m_ = GetDstM();
     return true;
 }
 
-uint64_t Decode::GetValA(uint8_t icode) {
+uint64_t Decode::GetValA() {
     // Uses incremented PC
-    if (ValueIsInArray(icode, {ICALL, IJXX}))
+    if (ValueIsInArray(icode_, {ICALL, IJXX}))
         return PipelineRegister::Get(DECODE, assets::VAL_P);
     // Forwards valE from execute
     if (src_a_ == Execute::dst_e()) return Execute::val_e();
@@ -67,7 +67,7 @@ uint64_t Decode::GetValA(uint8_t icode) {
     return Register::Get(src_a_);
 }
 
-uint64_t Decode::GetValB(uint8_t icode) {
+uint64_t Decode::GetValB() {
     // Forwards valE from execute
     if (src_b_ == Execute::dst_e()) return Execute::val_e();
     // Forwards valM from memory
@@ -86,29 +86,31 @@ uint64_t Decode::GetValB(uint8_t icode) {
     return Register::Get(src_b_);
 }
 
-uint64_t Decode::GetSrcA(uint8_t icode) {
-    if (ValueIsInArray(icode, {IRRMOVQ, IRMMOVQ, IOPQ, IPUSHQ}))
+uint64_t Decode::GetSrcA() {
+    if (ValueIsInArray(icode_, {IRRMOVQ, IRMMOVQ, IOPQ, IPUSHQ}))
         return PipelineRegister::Get(DECODE, assets::R_A);
-    if (ValueIsInArray(icode, {IPOPQ, IRET})) return assets::RSP;
+    if (ValueIsInArray(icode_, {IPOPQ, IRET})) return assets::RSP;
     return assets::RNONE;  // Don’t need register
 }
 
-uint64_t Decode::GetSrcB(uint8_t icode) {
-    if (ValueIsInArray(icode, {IMRMOVQ, IRMMOVQ, IOPQ}))
+uint64_t Decode::GetSrcB() {
+    if (ValueIsInArray(icode_, {IMRMOVQ, IRMMOVQ, IOPQ}))
         return PipelineRegister::Get(DECODE, assets::R_B);
-    if (ValueIsInArray(icode, {IPUSHQ, IPOPQ, ICALL, IRET})) return assets::RSP;
+    if (ValueIsInArray(icode_, {IPUSHQ, IPOPQ, ICALL, IRET}))
+        return assets::RSP;
     return assets::RNONE;  // Don’t need register
 }
 
-uint64_t Decode::GetDstE(uint8_t icode) {
-    if (ValueIsInArray(icode, {IRRMOVQ, IIRMOVQ, IOPQ}))
+uint64_t Decode::GetDstE() {
+    if (ValueIsInArray(icode_, {IRRMOVQ, IIRMOVQ, IOPQ}))
         return PipelineRegister::Get(DECODE, assets::R_B);
-    if (ValueIsInArray(icode, {IPUSHQ, IPOPQ, ICALL, IRET})) return assets::RSP;
+    if (ValueIsInArray(icode_, {IPUSHQ, IPOPQ, ICALL, IRET}))
+        return assets::RSP;
     return assets::RNONE;  // Don’t write any register
 }
 
-uint64_t Decode::GetDstM(uint8_t icode) {
-    if (ValueIsInArray(icode, {IMRMOVQ, IPOPQ}))
+uint64_t Decode::GetDstM() {
+    if (ValueIsInArray(icode_, {IMRMOVQ, IPOPQ}))
         return PipelineRegister::Get(DECODE, assets::R_A);
     return assets::RNONE;  // Don’t write any register
 }

@@ -74,7 +74,7 @@ bool Bubble::UpdateExecuteStage() {
 bool Bubble::UpdateMemoryStage() {
     if (Memory::NeedBubble()) {
         PipelineRegister::Clear(MEMORY);
-        if (Execute::NeedUpdateCC(Execute::icode_)) ConditionCode::Clear();
+        if (Execute::NeedUpdateCC()) ConditionCode::Clear();
     } else if (!Memory::NeedStall()) {
         PipelineRegister::Set(MEMORY, assets::STAT, Execute::stat_);
         PipelineRegister::Set(MEMORY, assets::I_CODE, Execute::icode_);

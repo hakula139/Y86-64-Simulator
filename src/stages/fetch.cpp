@@ -48,6 +48,7 @@ bool Fetch::Do(const File& input) {
         r_b_ = GetRB();
         ++pc_;
     }
+    val_c_ = 0ull;
     if (NeedValC()) {
         val_c_ = GetValC(pc_ - cur_pc);
         pc_ += 8;

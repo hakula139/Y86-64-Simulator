@@ -12,12 +12,12 @@ public:
     // Runs the decode stage
     static bool Do();
 
-    static uint64_t GetValA(uint8_t icode);
-    static uint64_t GetValB(uint8_t icode);
-    static uint64_t GetSrcA(uint8_t icode);
-    static uint64_t GetSrcB(uint8_t icode);
-    static uint64_t GetDstE(uint8_t icode);
-    static uint64_t GetDstM(uint8_t icode);
+    static uint64_t GetValA();
+    static uint64_t GetValB();
+    static uint64_t GetSrcA();
+    static uint64_t GetSrcB();
+    static uint64_t GetDstE();
+    static uint64_t GetDstM();
 
     // Should I stall or inject a bubble into Pipeline Register D?
     static bool NeedBubble();

@@ -50,7 +50,7 @@ bool Register::Print() {
     std::cout << string(5, '=') << " REGISTER " << string(5, '=') << '\n';
     for (size_t i = 0; i < kTotal_ - 1; ++i) {
         std::cout << '%' << register_name[i] << " = 0x";
-        utility::SetOutputHexWidth(8);
+        utility::SetOutputHexWidth(16);
         std::cout << Get(i) << '\n';
     }
     return true;
@@ -104,7 +104,7 @@ bool PipelineRegister::Print(int stage_num) {
               << string(5, '=') << '\n';
     for (auto&& i : stage_register_num[stage_num]) {
         std::cout << stage_register_name[i] << "\t = 0x";
-        utility::SetOutputHexWidth(8);
+        utility::SetOutputHexWidth(16);
         std::cout << Get(stage_num, i) << '\n';
     }
     return true;

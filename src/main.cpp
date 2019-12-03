@@ -22,6 +22,7 @@ int main(int argc, char** argv) {
     assets::File input(args.input_file());
     if (!input.ReadRawData()) exit(EXIT_FAILURE);
     input.ReadInstructions();
+    input.Load();
 #if SIM_DEBUG
     input.PrintAllInstructions();
 #endif
@@ -54,7 +55,7 @@ int main(int argc, char** argv) {
         assets::Register::Print();
         assets::ConditionCode::Print();
 #if SIM_DEBUG
-        std::cout << "Press enter to continue, CTRL + C to exit.\n";
+        std::cout << "Press Enter to continue, Ctrl + C to exit.\n";
         std::getchar();
 #endif
     }

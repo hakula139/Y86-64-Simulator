@@ -15,19 +15,22 @@ uint64_t Memory::Get(uint64_t address, size_t size, bool* mem_error) {
         *mem_error = true;
         return UINT64_MAX;
     }
-    uint64_t result = 0;
+    uint64_t result = 0ull;
     for (size_t i = 0; i < size; ++i)
-        result += data_.at(i + address) << (i << 3);
+        result |= static_cast<uint64_t>(data_.at(address++)) << (i << 3);
     return result;
 }
 
-bool Memory::Set(uint64_t address, uint64_t value, bool* mem_error) {
-    if (address >= kCapacity_ - 8) {
+bool Memory::Set(uint64_t address,
+                 uint64_t value,
+                 size_t   size,
+                 bool*    mem_error) {
+    if (size > 8 || address >= kCapacity_ - size) {
         PrintErrorMessage(1);
         *mem_error = true;
         return false;
     }
-    for (; value; value >>= 8)
+    for (size_t i = 0; i < size; ++i, value >>= 8)
         data_.at(address++) = value & 0xFF;  // gets the lowest byte
     return true;
 }

@@ -37,7 +37,8 @@ bool Memory::Do() {
     auto address = GetMemAddress(icode_);
     if (GetMemRead(icode_))
         val_m_ = assets::Memory::Get(address, 8, &mem_error_);
-    if (GetMemWrite(icode_)) assets::Memory::Set(address, val_a_, &mem_error_);
+    if (GetMemWrite(icode_))
+        assets::Memory::Set(address, val_a_, 8, &mem_error_);
     stat_ = GetStat();
     return true;
 }
