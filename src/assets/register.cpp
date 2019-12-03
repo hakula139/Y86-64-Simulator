@@ -67,8 +67,8 @@ bool PipelineRegister::Clear(int stage_num) {
     stage_data.at(STAT)    = SBUB;
     stage_data.at(I_CODE)  = stages::INOP;
     stage_data.at(I_FUN)   = 0;
-    stage_data.at(R_A)     = 0;
-    stage_data.at(R_B)     = 0;
+    stage_data.at(R_A)     = RNONE;
+    stage_data.at(R_B)     = RNONE;
     stage_data.at(VAL_C)   = 0;
     stage_data.at(VAL_P)   = 0;
     stage_data.at(VAL_A)   = 0;

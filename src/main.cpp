@@ -35,23 +35,17 @@ int main(int argc, char** argv) {
         stages::Execute::Do();
         stages::Decode::Do();
         stages::Fetch::Do(input);
-        // stages::Bubble::UpdateFetchStage();
-        // stages::Bubble::UpdateDecodeStage();
-        // stages::Bubble::UpdateExecuteStage();
-        // stages::Bubble::UpdateMemoryStage();
-        // stages::Bubble::UpdateWriteBackStage();
         stages::Bubble::UpdateAll();
         ++clock;
         std::cout << "Cycle " << std::dec << clock << ":\n";
 
-#if SIM_DEBUG
         assets::PipelineRegister::Print(assets::FETCH);
         assets::PipelineRegister::Print(assets::DECODE);
         assets::PipelineRegister::Print(assets::EXECUTE);
         assets::PipelineRegister::Print(assets::MEMORY);
         assets::PipelineRegister::Print(assets::WRITE_BACK);
         assets::Memory::Dump();
-#endif
+
         assets::Register::Print();
         assets::ConditionCode::Print();
 #if SIM_DEBUG

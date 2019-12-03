@@ -33,6 +33,7 @@ bool                 Fetch::mem_error_ = false;
 bool                 Fetch::reach_eof_ = false;
 
 bool Fetch::Do(const File& input) {
+    mem_error_   = false;
     pc_          = GetPC();
     auto cur_pc  = pc_;
     reach_eof_   = input.ReachEOF(pc_);

@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.2)
 project(Y86-64-Simulator)
 set(Y86-64-Simulator_VERSION_MAJOR 3)
 set(Y86-64-Simulator_VERSION_MINOR 0)
-set(Y86-64-Simulator_VERSION_PATCH 1)
+set(Y86-64-Simulator_VERSION_PATCH 3)
 
 set(CMAKE_BUILD_TYPE "Debug")
 set(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g")
