@@ -50,6 +50,7 @@ bool Fetch::Do(const File& input) {
         val_c_ = GetValC(pc_ - cur_pc);
         pc_ += 8;
     }
+    std::cout << pc_ << '\n';
     return true;
 }
 
@@ -69,7 +70,7 @@ uint64_t Fetch::GetPC() {
 
 uint64_t Fetch::GetPredPC() {
     if (ValueIsInArray(icode_, {IJXX, ICALL})) return val_c_;
-    return pc_;
+    return PipelineRegister::Get(FETCH, assets::VAL_P);
 }
 
 uint8_t Fetch::GetICode() {
@@ -130,13 +131,13 @@ bool Fetch::NeedStall() {
     // Conditions for a load / use hazard
     auto e_icode = PipelineRegister::Get(EXECUTE, assets::I_CODE);
     auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
-    auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
-    auto d_src_a = Decode::GetSrcA(d_icode);
-    auto d_src_b = Decode::GetSrcB(d_icode);
+    auto d_src_a = Decode::src_a();
+    auto d_src_b = Decode::src_b();
     if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
         ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
         return true;
     // Stalling at fetch while ret passes through pipeline
+    auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
     auto m_icode = PipelineRegister::Get(MEMORY, assets::I_CODE);
     if (ValueIsInArray(static_cast<uint64_t>(IRET),
                        {d_icode, e_icode, m_icode}))

@@ -31,14 +31,14 @@ int main(int argc, char** argv) {
     while (status == assets::SAOK) {
         status = stages::WriteBack::Do();
         stages::Memory::Do();
-        // stages::Bubble::UpdateWriteBackStage();
         stages::Execute::Do();
-        // stages::Bubble::UpdateMemoryStage();
         stages::Decode::Do();
-        // stages::Bubble::UpdateExecuteStage();
         stages::Fetch::Do(input);
-        // stages::Bubble::UpdateDecodeStage();
         // stages::Bubble::UpdateFetchStage();
+        // stages::Bubble::UpdateDecodeStage();
+        // stages::Bubble::UpdateExecuteStage();
+        // stages::Bubble::UpdateMemoryStage();
+        // stages::Bubble::UpdateWriteBackStage();
         stages::Bubble::UpdateAll();
         ++clock;
         std::cout << "Cycle " << std::dec << clock << ":\n";

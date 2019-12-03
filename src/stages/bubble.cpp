@@ -1,5 +1,7 @@
 #include "bubble.h"
 
+#include <iostream>
+
 #include "../assets/register.h"
 #include "decode.h"
 #include "execute.h"
@@ -19,15 +21,16 @@ using assets::WRITE_BACK;
 namespace stages {
 
 bool Bubble::UpdateAll() {
-    UpdateWriteBackStage();
-    UpdateMemoryStage();
-    UpdateExecuteStage();
-    UpdateDecodeStage();
     UpdateFetchStage();
+    UpdateDecodeStage();
+    UpdateExecuteStage();
+    UpdateMemoryStage();
+    UpdateWriteBackStage();
     return true;
 }
 
 bool Bubble::UpdateFetchStage() {
+    PipelineRegister::Set(FETCH, assets::VAL_P, Fetch::pc_);
     if (Fetch::NeedBubble())
         PipelineRegister::Clear(FETCH);
     else if (!Fetch::NeedStall())

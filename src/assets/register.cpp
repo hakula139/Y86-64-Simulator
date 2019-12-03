@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "../stages/instruction.h"
 #include "../utils/utility.h"
 
 using std::string;
@@ -61,7 +62,24 @@ bool PipelineRegister::Set(int stage_num, int register_num, uint64_t value) {
 }
 
 bool PipelineRegister::Clear(int stage_num) {
-    for (auto&& value : data_[stage_num]) value = 0;
+    auto& stage_data       = data_.at(stage_num);
+    stage_data.at(PRED_PC) = 0;
+    stage_data.at(STAT)    = SBUB;
+    stage_data.at(I_CODE)  = stages::INOP;
+    stage_data.at(I_FUN)   = 0;
+    stage_data.at(R_A)     = 0;
+    stage_data.at(R_B)     = 0;
+    stage_data.at(VAL_C)   = 0;
+    stage_data.at(VAL_P)   = 0;
+    stage_data.at(VAL_A)   = 0;
+    stage_data.at(VAL_B)   = 0;
+    stage_data.at(VAL_E)   = 0;
+    stage_data.at(VAL_M)   = 0;
+    stage_data.at(SRC_A)   = RNONE;
+    stage_data.at(SRC_B)   = RNONE;
+    stage_data.at(DST_E)   = RNONE;
+    stage_data.at(DST_M)   = RNONE;
+    stage_data.at(CND)     = 0;
     return true;
 }
 
