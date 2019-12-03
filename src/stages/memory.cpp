@@ -43,7 +43,7 @@ bool Memory::Do() {
 }
 
 uint8_t Memory::GetStat() {
-    if (Fetch::mem_error()) return assets::SADR;
+    if (Fetch::mem_error() && !Fetch::reach_eof()) return assets::SADR;
     return PipelineRegister::Get(MEMORY, assets::STAT);
 }
 

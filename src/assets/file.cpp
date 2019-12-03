@@ -1,5 +1,6 @@
 #include "file.h"
 
+#include <algorithm>
 #include <cstdint>
 #include <fstream>
 #include <iostream>
@@ -40,6 +41,7 @@ bool File::ReadInstructions() {
         auto address =
             static_cast<uint64_t>(std::stoi(address_str, nullptr, 16));
         instructions_.insert(std::make_pair(address, instruction));
+        max_address_ = std::max(address, max_address_);
     }
     return true;
 }
@@ -52,12 +54,13 @@ bool File::PrintRawData() const {
 std::vector<uint8_t> File::GetInstruction(uint64_t address,
                                           bool*    mem_error) const {
     if (!instructions_.count(address)) {
-        // PrintErrorMessage(3);
         *mem_error = true;
         return {};
     }
     return instructions_.at(address);
 }
+
+bool File::ReachEOF(uint64_t address) const { return address > max_address_; }
 
 bool File::PrintInstruction(uint64_t address) const {
     if (!instructions_.count(address)) {

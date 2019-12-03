@@ -40,6 +40,7 @@ public:
     static bool NeedStall();
 
     static bool mem_error() { return mem_error_; }
+    static bool reach_eof() { return reach_eof_; }
 
 protected:
     static bool PrintErrorMessage(const int error_code);
@@ -47,7 +48,7 @@ protected:
     static std::vector<uint8_t> instruction_;
     static uint64_t             pc_, pred_pc_, val_c_;
     static uint8_t              icode_, ifun_, stat_, r_a_, r_b_;
-    static bool                 mem_error_;
+    static bool                 mem_error_, reach_eof_;
 };
 
 }  // namespace stages

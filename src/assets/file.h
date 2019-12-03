@@ -17,6 +17,7 @@ public:
     bool                 ReadInstructions();
     std::vector<uint8_t> GetInstruction(uint64_t address,
                                         bool*    mem_error) const;
+    bool                 ReachEOF(uint64_t address) const;
 
     bool PrintRawData() const;
     bool PrintInstruction(uint64_t address) const;
@@ -27,6 +28,7 @@ protected:
 
     std::string              input_file_;
     std::vector<std::string> raw_data_;
+    uint64_t                 max_address_ = 0ull;
     // stores the address and the instruction code
     std::map<uint64_t, std::vector<uint8_t>> instructions_;
 };

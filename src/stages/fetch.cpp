@@ -30,10 +30,12 @@ uint8_t              Fetch::stat_;
 uint8_t              Fetch::r_a_;
 uint8_t              Fetch::r_b_;
 bool                 Fetch::mem_error_ = false;
+bool                 Fetch::reach_eof_ = false;
 
 bool Fetch::Do(const File& input) {
     pc_          = GetPC();
     auto cur_pc  = pc_;
+    reach_eof_   = input.ReachEOF(pc_);
     instruction_ = input.GetInstruction(pc_, &mem_error_);
     icode_       = GetICode();
     ifun_        = GetIFun();
@@ -50,7 +52,6 @@ bool Fetch::Do(const File& input) {
         val_c_ = GetValC(pc_ - cur_pc);
         pc_ += 8;
     }
-    std::cout << pc_ << '\n';
     return true;
 }
 
@@ -75,11 +76,6 @@ uint64_t Fetch::GetPredPC() {
 
 uint8_t Fetch::GetICode() {
     if (mem_error_) return INOP;
-    if (instruction_.empty()) {
-        // Fetch::PrintErrorMessage(1);
-        mem_error_ = true;
-        return INOP;
-    }
     return (instruction_[0] >> 4) & 0xF;  // the first 4 bits
 }
 
@@ -89,7 +85,10 @@ uint8_t Fetch::GetIFun() {
 }
 
 uint8_t Fetch::GetStat() {
-    if (mem_error_) return assets::SADR;
+    if (mem_error_ && !reach_eof_) {
+        // Fetch::PrintErrorMessage(1);
+        return assets::SADR;
+    }
     auto ins_valid = InstructionIsValid();
     if (!ins_valid) {
         Fetch::PrintErrorMessage(2);
