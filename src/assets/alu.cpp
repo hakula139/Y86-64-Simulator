@@ -13,7 +13,7 @@ int64_t ArithmeticLogicUnit::Add(int64_t num1, int64_t num2) {
 }
 
 int64_t ArithmeticLogicUnit::Sub(int64_t num1, int64_t num2) {
-    return Add(num1, -num2);
+    return Add(-num1, num2);
 }
 
 int64_t ArithmeticLogicUnit::And(int64_t num1, int64_t num2) {

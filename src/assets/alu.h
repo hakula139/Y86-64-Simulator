@@ -20,9 +20,9 @@ enum ConditionMap : int {
 // Provides basic operations for integers and sets condition codes respectively
 class ArithmeticLogicUnit {
 public:
-    // Adds 'num2' to 'num1'
+    // Adds 'num1' to 'num2'
     static int64_t Add(int64_t num1, int64_t num2);
-    // Subtracts 'num2' from 'num1'
+    // Subtracts 'num1' from 'num2'
     static int64_t Sub(int64_t num1, int64_t num2);
     // Does the bitwise AND on 'num1' and 'num2'
     static int64_t And(int64_t num1, int64_t num2);
