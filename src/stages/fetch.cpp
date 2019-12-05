@@ -107,7 +107,7 @@ uint8_t Fetch::GetRB() { return instruction_[1] & 0xF; }
 uint64_t Fetch::GetValC(uint64_t pos) {
     uint64_t val_c = 0;
     // Read 8 bytes from instruction
-    for (size_t i = 0; i < 8; ++i) val_c += instruction_[pos + i] << (i << 3);
+    for (size_t i = 0; i < 8; ++i) val_c |= instruction_[pos + i] << (i << 3);
     return val_c;
 }
 
