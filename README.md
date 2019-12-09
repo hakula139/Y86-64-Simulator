@@ -6,7 +6,7 @@ A Y86-64 processor simulator written in C++11.
 
 ### 0. Prerequisites
 
-- [CMake](https://cmake.org/download) 3.2 or above
+- [CMake](https://cmake.org/download) 2.8 or above
 - [GNU make](https://www.gnu.org/software/make) 4.0 or above
 - [GCC](https://gcc.gnu.org/releases.html) 4.8 or above
 
