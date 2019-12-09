@@ -1,2 +1,2 @@
 rm -rf ./build
-rm ./sim
+rm ./memory.txt
