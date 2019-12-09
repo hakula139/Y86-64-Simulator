@@ -1,6 +1,6 @@
 # ./CMakeLists.txt
 
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 2.8)
 
 project(Y86-64-Simulator)
 set(Y86-64-Simulator_VERSION_MAJOR 3)
