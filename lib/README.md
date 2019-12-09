@@ -43,13 +43,13 @@ You may check the manual simply by passing no argument.
 #### 2.1 Windows
 
 ```bash
-./sim.exe "./test/objects/prog1.yo"
+./sim.exe "../test/objects/prog1.yo"
 ```
 
 #### 2.2 Linux
 
 ```bash
-./sim "./test/objects/prog1.yo"
+./sim "../test/objects/prog1.yo"
 ```
 
 ### 3. Clean
