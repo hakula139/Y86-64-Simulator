@@ -2,14 +2,15 @@
   "name": "ui",
   "version": "1.0.0",
   "description": "An interface for Y86-64 Simulator built in Node.js",
-  "main": "index.js",
+  "main": "src/index.js",
   "dependencies": {
-    "formidable": "^1.2.1"
+    "formidable": "^1.2.1",
+    "webpack": "^4.41.2"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: No test specified.\" && exit 1",
-    "start": "node server.js"
+    "start": "node src/index.js"
   },
   "author": "Hakula",
   "license": "GPL-3.0"
