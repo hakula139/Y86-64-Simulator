@@ -1,15 +1,30 @@
-#object-code {
+#speed-controller {
+    width: 10%;
+    overflow: visible
+}
+
+#object-code, #memory-state {
     height: 300px
 }
 
-#object-code pre {
+#object-code pre, #memory-state pre {
     height: 200px
 }
 
-#fetch, #decode, #execute, #memory, #writeback {
-    width: 100%
+.mdui-list-item>h1 {
+    min-width: 32px;
+    text-align: center;
+    padding-right: 20px
 }
 
-.mdui-list-item h1 {
-    min-width: 48px
+.mdui-list-item>.output-list {
+    width: calc(100% + 20px)
+}
+
+.mdui-card {
+    border-radius: 20px
+}
+
+.mdui-textfield-input {
+    height: 24px
 }

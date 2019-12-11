@@ -13,80 +13,155 @@
 <body class="mdui-theme-primary-indigo mdui-theme-accent-deep-purple mdui-theme-layout-dark">
   <header class="mdui-appbar mdui-color-theme mdui-m-b-2">
     <div class="mdui-toolbar mdui-container-fluid">
-      <a href="/" class="mdui-typo-headline mdui-text-truncate">Y86-64 Simulator</a>
-      <a href="https://github.com/hakula139/Y86-64-Simulator" class="mdui-btn mdui-btn-icon">
+      <a href="/" class="mdui-typo-headline mdui-text-truncate mdui-m-r-1">Y86-64</a>
+      <a href="/" class="mdui-typo-headline mdui-text-truncate mdui-m-l-0 mdui-hidden-sm-down">Simulator</a>
+      <div class="mdui-toolbar-spacer"></div>
+      <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Upload'}">
+        <i class="mdui-icon material-icons">&#xe2c6;</i>
+      </a>
+      <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Previous'}">
+        <i class="mdui-icon material-icons">&#xe5cb;</i>
+      </a>
+      <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Run'}">
+        <i class="mdui-icon material-icons">&#xe037;</i>
+      </a>
+      <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Next'}">
+        <i class="mdui-icon material-icons">&#xe5cc;</i>
+      </a>
+      <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Restart'}">
+        <i class="mdui-icon material-icons">&#xe042;</i>
+      </a>
+      <label class="mdui-slider mdui-m-l-3 mdui-m-r-3 mdui-hidden-xs" id="speed-controller">
+        <input type="range" step="1" min="0" max="20" />
+      </label>
+      <div class="mdui-toolbar-spacer"></div>
+      <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Day mode'}">
+        <i class="mdui-icon material-icons">&#xe430;</i>
+      </a>
+      <a href="https://github.com/hakula139/Y86-64-Simulator" class="mdui-btn mdui-btn-icon mdui-ripple"
+        mdui-tooltip="{content: 'Source'}">
         <i class="mdui-icon fab fa-github"></i>
       </a>
     </div>
   </header>
 
-  <div class="mdui-container-fluid mdui-m-l-1 mdui-m-r-1">
-    <div class="mdui-row">
-      <div class="mdui-col-xs-12 mdui-col-sm-8 mdui-col-md-6">
-        <!-- OBJECT CODE -->
-        <div class="mdui-row">
-          <div class="mdui-card mdui-m-a-2" id="object-code">
-            <div class="mdui-p-t-2 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate">OBJECT CODE</div>
-            <div class="mdui-card-content">
-              <div class="mdui-typo">
-                <pre class="mdui-m-b-0">Hello World</pre>
+  <content>
+    <div class="mdui-container-fluid mdui-m-l-1 mdui-m-r-1">
+      <div class="mdui-row">
+        <div class="mdui-col-xs-12 mdui-col-sm-6 mdui-col-md-8">
+          <!-- OBJECT CODE -->
+          <div class="mdui-row">
+            <div class="mdui-card mdui-m-a-2" id="object-code">
+              <div class="mdui-p-t-2 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate">OBJECT CODE</div>
+              <div class="mdui-card-content">
+                <div class="mdui-typo">
+                  <pre class="mdui-m-b-0">Hello World</pre>
+                </div>
               </div>
             </div>
           </div>
+          <!-- / OBJECT CODE -->
         </div>
-        <!-- / OBJECT CODE -->
-      </div>
-    </div>
-    <div class="mdui-row">
-      <div class="mdui-col-xs-12">
-        <!-- PIPELINE REGISTER -->
-        <div class="mdui-row">
-          <div class="mdui-card mdui-m-a-2" id="pipeline-register">
-            <div class="mdui-p-t-2 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate">PIPELINE REGISTER</div>
-            <div class="mdui-card-content">
-              <ul class="mdui-list">
-                <!-- FETCH -->
-                <li class="mdui-list-item mdui-ripple">
-                  <h1>F</h1>
-                  <div class="mdui-row-xs-3 mdui-row-sm-5 mdui-row-md-10" id="fetch"></div>
-                </li>
-                <!-- DECODE -->
-                <li class="mdui-list-item mdui-ripple">
-                  <h1>D</h1>
-                  <div class="mdui-row-xs-3 mdui-row-sm-5 mdui-row-md-10" id="decode"></div>
-                </li>
-                <!-- EXECUTE -->
-                <li class="mdui-list-item mdui-ripple">
-                  <h1>E</h1>
-                  <div class="mdui-row-xs-3 mdui-row-sm-5 mdui-row-md-10" id="execute"></div>
-                </li>
-                <!-- MEMORY -->
-                <li class="mdui-list-item mdui-ripple">
-                  <h1>M</h1>
-                  <div class="mdui-row-xs-3 mdui-row-sm-5 mdui-row-md-10" id="memory"></div>
-                </li>
-                <!-- WRITE BACK -->
-                <li class="mdui-list-item mdui-ripple">
-                  <h1>W</h1>
-                  <div class="mdui-row-xs-3 mdui-row-sm-5 mdui-row-md-10" id="writeback"></div>
-                </li>
-                <!-- template -->
-                <div id="list-template" style="display: none">
-                  <div class="mdui-col">
-                    <div class="mdui-textfield mdui-p-t-1" id={$registerId}>
-                      <label class="mdui-textfield-label mdui-text-truncate">{$registerLabel}</label>
-                      <input class="mdui-textfield-input" type="text" disabled />
-                    </div>
-                  </div>
+        <div class="mdui-col-xs-12 mdui-col-sm-6 mdui-col-md-4">
+          <!-- MEMORY STATE -->
+          <div class="mdui-row">
+            <div class="mdui-card mdui-m-a-2" id="memory-state">
+              <div class="mdui-p-t-2 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate">MEMORY</div>
+              <div class="mdui-card-content">
+                <div class="mdui-typo">
+                  <pre class="mdui-m-b-0">Memory dump</pre>
                 </div>
-              </ul>
+              </div>
             </div>
           </div>
+          <!-- / MEMORY STATE -->
         </div>
-        <!-- / PIPELINE REGISTER -->
+      </div>
+      <div class="mdui-row">
+        <div class="mdui-col-xs-12 mdui-col-sm-9">
+          <!-- PROCESSOR REGISTER SECTION -->
+          <div class="mdui-row">
+            <div class="mdui-card mdui-m-a-2" id="register-card">
+              <div class="mdui-p-t-2 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate">REGISTER</div>
+              <div class="mdui-card-content">
+                <ul class="mdui-list">
+                  <!-- template -->
+                  <div id="list-template" style="display: none">
+                    <div class="mdui-col mdui-ripple">
+                      <div class="mdui-textfield mdui-p-t-1" id={$registerId}>
+                        <label class="mdui-textfield-label mdui-text-truncate">{$registerLabel}</label>
+                        <input class="mdui-textfield-input" type="text" />
+                      </div>
+                    </div>
+                  </div>
+                  <!-- PROCESSOR REGISTER -->
+                  <li class="mdui-list-item">
+                    <div class="mdui-row-xs-3 mdui-row-md-8 output-list" id="register"></div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- / PROCESSOR REGISTER SECTION -->
+        </div>
+        <div class="mdui-col-xs-12 mdui-col-sm-3">
+          <!-- CONDITION CODE SECTION -->
+          <div class="mdui-row">
+            <div class="mdui-card mdui-m-a-2" id="condition-code-card">
+              <div class="mdui-p-t-2 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate">CONDITION CODE</div>
+              <div class="mdui-card-content">
+                <ul class="mdui-list">
+                  <!-- CONDITION CODE -->
+                  <li class="mdui-list-item">
+                    <div class="mdui-row-xs-3 mdui-row-sm-1 mdui-row-md-3 output-list" id="condition-code"></div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- / CONDITION CODE SECTION -->
+        </div>
+        <div class="mdui-col-xs-12">
+          <!-- PIPELINE REGISTER SECTION -->
+          <div class="mdui-row">
+            <div class="mdui-card mdui-m-a-2" id="pipeline-register-card">
+              <div class="mdui-p-t-2 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate">PIPELINE REGISTER</div>
+              <div class="mdui-card-content">
+                <ul class="mdui-list">
+                  <!-- FETCH -->
+                  <li class="mdui-list-item">
+                    <h1>F</h1>
+                    <div class="mdui-row-xs-3 mdui-row-sm-5 mdui-row-md-10 output-list" id="fetch"></div>
+                  </li>
+                  <!-- DECODE -->
+                  <li class="mdui-list-item">
+                    <h1>D</h1>
+                    <div class="mdui-row-xs-3 mdui-row-sm-5 mdui-row-md-10 output-list" id="decode"></div>
+                  </li>
+                  <!-- EXECUTE -->
+                  <li class="mdui-list-item">
+                    <h1>E</h1>
+                    <div class="mdui-row-xs-3 mdui-row-sm-5 mdui-row-md-10 output-list" id="execute"></div>
+                  </li>
+                  <!-- MEMORY -->
+                  <li class="mdui-list-item">
+                    <h1>M</h1>
+                    <div class="mdui-row-xs-3 mdui-row-sm-5 mdui-row-md-10 output-list" id="memory"></div>
+                  </li>
+                  <!-- WRITE BACK -->
+                  <li class="mdui-list-item">
+                    <h1>W</h1>
+                    <div class="mdui-row-xs-3 mdui-row-sm-5 mdui-row-md-10 output-list" id="writeback"></div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- / PIPELINE REGISTER SECTION -->
+        </div>
       </div>
     </div>
-  </div>
+  </content>
 
   <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.3/js/mdui.min.js"></script>
   <script src="bundle.js"></script>

@@ -2,6 +2,8 @@
 
 An interface for Y86-64 Simulator built in Node.js.
 
+[Demo](https://sim.hakula.xyz)
+
 ## Getting Started
 
 ### 0. Prerequisites
@@ -10,7 +12,15 @@ An interface for Y86-64 Simulator built in Node.js.
 
 ### 1. Building
 
+```bash
+npm run dev
+```
+
 ### 2. Usage
+
+```bash
+./dist/index.html
+```
 
 ## Contributors
 

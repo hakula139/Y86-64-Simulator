@@ -42,7 +42,7 @@ let writeback = [
     { 'id': 'dste', 'label': 'DST_E' },
     { 'id': 'dstm', 'label': 'DST_M' }
 ];
-let pipeline = [
+let pipelineRegister = [
     { 'stage': fetch, 'id': '#fetch' },
     { 'stage': decode, 'id': '#decode' },
     { 'stage': execute, 'id': '#execute' },
@@ -50,17 +50,49 @@ let pipeline = [
     { 'stage': writeback, 'id': '#writeback' }
 ];
 
+let processorRegister = [
+    { 'id': 'rax', 'label': '%RAX' },
+    { 'id': 'rcx', 'label': '%RCX' },
+    { 'id': 'rdx', 'label': '%RDX' },
+    { 'id': 'rbx', 'label': '%RBX' },
+    { 'id': 'rsp', 'label': '%RSP' },
+    { 'id': 'rbp', 'label': '%RBP' },
+    { 'id': 'rsi', 'label': '%RSI' },
+    { 'id': 'rdi', 'label': '%RDI' },
+    { 'id': 'r8', 'label': '%R8' },
+    { 'id': 'r9', 'label': '%R9' },
+    { 'id': 'r10', 'label': '%R10' },
+    { 'id': 'r11', 'label': '%R11' },
+    { 'id': 'r12', 'label': '%R12' },
+    { 'id': 'r13', 'label': '%R13' },
+    { 'id': 'r14', 'label': '%R14' }
+];
+
+let conditionCode = [
+    { 'id': 'of', 'label': 'OF' },
+    { 'id': 'sf', 'label': 'SF' },
+    { 'id': 'zf', 'label': 'ZF' }
+];
+
 let template = $$('#list-template').html();
+let replaceLabels = function (register, id) {
+    let list = template;
+    list = list.replace(/\{\$registerId\}/gi, register.id);
+    list = list.replace(/\{\$registerLabel\}/gi, register.label);
+    $$(id).append(list);
+};
 (function () {
-    let list;
-    pipeline.forEach(function (stageItem) {
+    pipelineRegister.forEach(function (stageItem) {
         let stage = stageItem.stage;
         let stageId = stageItem.id;
         stage.forEach(function (register) {
-            list = template;
-            list = list.replace(/\{\$registerId\}/gi, register.id);
-            list = list.replace(/\{\$registerLabel\}/gi, register.label);
-            $$(stageId).append(list);
+            replaceLabels(register, stageId);
         });
+    });
+    processorRegister.forEach(function (register) {
+        replaceLabels(register, '#register');
+    });
+    conditionCode.forEach(function (register) {
+        replaceLabels(register, '#condition-code');
     });
 })();
