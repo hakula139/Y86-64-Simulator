@@ -2,7 +2,7 @@ const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const NodeExternals = require('webpack-node-externals');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const rootPath = path.resolve(__dirname);
 const srcPath = path.resolve(rootPath, 'src');
@@ -14,8 +14,12 @@ module.exports = {
     path: distPath,
     filename: 'bundle.js'
   },
-  target: 'node',
-  externals: [NodeExternals()],
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin()
+    ]
+  },
   devServer: {
     historyApiFallback: true,
     hot: true,
@@ -43,12 +47,10 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              publicPath: (resourcePath, context) => {
-                return path.relative(path.dirname(resourcePath), context) + '/';
-              }
-            },
+              publicPath: '../'
+            }
           },
-          'css-loader',
+          'css-loader'
         ],
       },
       {

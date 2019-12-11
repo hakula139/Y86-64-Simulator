@@ -1,0 +1,15 @@
+#object-code {
+    height: 300px
+}
+
+#object-code pre {
+    height: 200px
+}
+
+#fetch, #decode, #execute, #memory, #writeback {
+    width: 100%
+}
+
+.mdui-list-item h1 {
+    min-width: 48px
+}

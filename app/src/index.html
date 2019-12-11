@@ -5,20 +5,90 @@
   <meta charset="UTF-8">
   <title>Y86-64 Simulator</title>
   <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/mdui/0.4.3/css/mdui.min.css" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.12.0-1/css/all.min.css"
+    crossorigin="anonymous">
   <link rel="stylesheet" href="main.css">
 </head>
 
 <body class="mdui-theme-primary-indigo mdui-theme-accent-deep-purple mdui-theme-layout-dark">
-  <header class="mdui-appbar mdui-color-theme">
-    <div class="mdui-toolbar mdui-container">
-      <a href="/" class="mdui-typo-headline">Y86-64 Simulator</a>
+  <header class="mdui-appbar mdui-color-theme mdui-m-b-2">
+    <div class="mdui-toolbar mdui-container-fluid">
+      <a href="/" class="mdui-typo-headline mdui-text-truncate">Y86-64 Simulator</a>
       <a href="https://github.com/hakula139/Y86-64-Simulator" class="mdui-btn mdui-btn-icon">
         <i class="mdui-icon fab fa-github"></i>
       </a>
     </div>
   </header>
-  <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.3/js/mdui.min.js" crossorigin="anonymous"></script>
+
+  <div class="mdui-container-fluid mdui-m-l-1 mdui-m-r-1">
+    <div class="mdui-row">
+      <div class="mdui-col-xs-12 mdui-col-sm-8 mdui-col-md-6">
+        <!-- OBJECT CODE -->
+        <div class="mdui-row">
+          <div class="mdui-card mdui-m-a-2" id="object-code">
+            <div class="mdui-p-t-2 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate">OBJECT CODE</div>
+            <div class="mdui-card-content">
+              <div class="mdui-typo">
+                <pre class="mdui-m-b-0">Hello World</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- / OBJECT CODE -->
+      </div>
+    </div>
+    <div class="mdui-row">
+      <div class="mdui-col-xs-12">
+        <!-- PIPELINE REGISTER -->
+        <div class="mdui-row">
+          <div class="mdui-card mdui-m-a-2" id="pipeline-register">
+            <div class="mdui-p-t-2 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate">PIPELINE REGISTER</div>
+            <div class="mdui-card-content">
+              <ul class="mdui-list">
+                <!-- FETCH -->
+                <li class="mdui-list-item mdui-ripple">
+                  <h1>F</h1>
+                  <div class="mdui-row-xs-3 mdui-row-sm-5 mdui-row-md-10" id="fetch"></div>
+                </li>
+                <!-- DECODE -->
+                <li class="mdui-list-item mdui-ripple">
+                  <h1>D</h1>
+                  <div class="mdui-row-xs-3 mdui-row-sm-5 mdui-row-md-10" id="decode"></div>
+                </li>
+                <!-- EXECUTE -->
+                <li class="mdui-list-item mdui-ripple">
+                  <h1>E</h1>
+                  <div class="mdui-row-xs-3 mdui-row-sm-5 mdui-row-md-10" id="execute"></div>
+                </li>
+                <!-- MEMORY -->
+                <li class="mdui-list-item mdui-ripple">
+                  <h1>M</h1>
+                  <div class="mdui-row-xs-3 mdui-row-sm-5 mdui-row-md-10" id="memory"></div>
+                </li>
+                <!-- WRITE BACK -->
+                <li class="mdui-list-item mdui-ripple">
+                  <h1>W</h1>
+                  <div class="mdui-row-xs-3 mdui-row-sm-5 mdui-row-md-10" id="writeback"></div>
+                </li>
+                <!-- template -->
+                <div id="list-template" style="display: none">
+                  <div class="mdui-col">
+                    <div class="mdui-textfield mdui-p-t-1" id={$registerId}>
+                      <label class="mdui-textfield-label mdui-text-truncate">{$registerLabel}</label>
+                      <input class="mdui-textfield-input" type="text" disabled />
+                    </div>
+                  </div>
+                </div>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- / PIPELINE REGISTER -->
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.3/js/mdui.min.js"></script>
   <script src="bundle.js"></script>
 </body>
 
