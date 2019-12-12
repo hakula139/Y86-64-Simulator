@@ -1,6 +1,8 @@
 import './style.css'
 let $$ = mdui.JQ;
 
+// Initializes pipeline register section
+
 let fetch = [
     { 'id': 'predpc', 'label': 'PRED_PC' }
 ];
@@ -97,6 +99,17 @@ let replaceLabels = function (register, id) {
     });
 })();
 
-let navbarHeight = $$('.mdui-appbar').height();
-let marginTop = navbarHeight + 16;
-$$('#main').css('margin-top', marginTop + 'px');
+// Monitors the buttons
+
+let displayMode = $$('#display-mode');
+let displayModeIcon = $$('#display-mode-icon');
+displayMode.on('click', function (error) {
+    $$('body').toggleClass('mdui-theme-layout-dark');
+    displayMode.attr('mdui-tooltip',
+        displayMode.attr('mdui-tooltip') === '{content: \'Day mode\'}' ?
+            '{content: \'Night mode\'}' : '{content: \'Day mode\'}'
+    );
+    displayModeIcon.html(
+        displayModeIcon.html() === 'brightness_7' ? 'brightness_2' : 'brightness_7'
+    );
+})

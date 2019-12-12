@@ -1,16 +1,3 @@
-#speed-controller {
-    width: 10%;
-    overflow: visible
-}
-
-#object-code pre, #memory-state pre {
-    height: 200px
-}
-
-#main {
-    margin-top: 80px
-}
-
 .mdui-appbar {
     width: 100%;
     position: fixed;
@@ -18,10 +5,35 @@
     z-index: 9999
 }
 
+#main {
+    margin-top: 72px
+}
+
+@media (min-width: 600px) {
+    #main {
+        margin-top: 5pc
+    }
+}
+
+@media (max-width: 959px) and (orientation: landscape) {
+    #main {
+        margin-top: 4pc
+    }
+}
+
+#speed-controller {
+    overflow: visible;
+    width: 10%
+}
+
+#memory-state pre, #object-code pre {
+    height: 200px
+}
+
 .mdui-list-item>h1 {
-    min-width: 32px;
-    text-align: center;
-    padding-right: 20px
+    padding-right: 20px;
+    min-width: 2pc;
+    text-align: center
 }
 
 .mdui-list-item>.output-list {
