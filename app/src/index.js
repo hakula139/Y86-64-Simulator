@@ -113,3 +113,15 @@ displayMode.on('click', function (error) {
         displayModeIcon.html() === 'brightness_7' ? 'brightness_2' : 'brightness_7'
     );
 })
+
+let runStatus = $$('#run-status');
+let runStatusIcon = $$('#run-status-icon');
+runStatus.on('click', function (error) {
+    runStatus.attr('mdui-tooltip',
+        runStatus.attr('mdui-tooltip') === '{content: \'Run\'}' ?
+            '{content: \'Pause\'}' : '{content: \'Run\'}'
+    );
+    runStatusIcon.html(
+        runStatusIcon.html() === 'play_arrow' ? 'pause' : 'play_arrow'
+    );
+})
