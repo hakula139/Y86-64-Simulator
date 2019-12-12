@@ -40,8 +40,8 @@
     width: calc(100% + 20px)
 }
 
-.mdui-card {
-    border-radius: 20px
+.mdui-card, .mdui-panel-item, .mdui-panel-item-header {
+    border-radius: 16px
 }
 
 .mdui-textfield-input {
