@@ -1,3 +1,5 @@
+'use strict';
+
 import './style.css'
 let $$ = mdui.JQ;
 
@@ -117,6 +119,7 @@ displayMode.on('click', function (error) {
 let runStatus = $$('#run-status');
 let runStatusIcon = $$('#run-status-icon');
 runStatus.on('click', function (error) {
+    if (runStatus.attr('disabled') === '') return;
     runStatus.attr('mdui-tooltip',
         runStatus.attr('mdui-tooltip') === '{content: \'Run\'}' ?
             '{content: \'Pause\'}' : '{content: \'Run\'}'
