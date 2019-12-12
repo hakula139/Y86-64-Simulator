@@ -46,37 +46,7 @@
   </header>
 
   <content>
-    <div class="mdui-container-fluid mdui-m-l-1 mdui-m-r-1">
-      <div class="mdui-row">
-        <div class="mdui-col-xs-12 mdui-col-sm-6 mdui-col-md-8">
-          <!-- OBJECT CODE -->
-          <div class="mdui-row">
-            <div class="mdui-card mdui-m-a-2" id="object-code">
-              <div class="mdui-p-t-2 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate">OBJECT CODE</div>
-              <div class="mdui-card-content">
-                <div class="mdui-typo">
-                  <pre class="mdui-m-b-0">Hello World</pre>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- / OBJECT CODE -->
-        </div>
-        <div class="mdui-col-xs-12 mdui-col-sm-6 mdui-col-md-4">
-          <!-- MEMORY STATE -->
-          <div class="mdui-row">
-            <div class="mdui-card mdui-m-a-2" id="memory-state">
-              <div class="mdui-p-t-2 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate">MEMORY</div>
-              <div class="mdui-card-content">
-                <div class="mdui-typo">
-                  <pre class="mdui-m-b-0">Memory dump</pre>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- / MEMORY STATE -->
-        </div>
-      </div>
+    <div class="mdui-container-fluid mdui-m-l-1 mdui-m-r-1" id="main">
       <div class="mdui-row">
         <div class="mdui-col-xs-12 mdui-col-sm-9">
           <!-- PROCESSOR REGISTER SECTION -->
@@ -158,6 +128,38 @@
             </div>
           </div>
           <!-- / PIPELINE REGISTER SECTION -->
+        </div>
+        <div class="mdui-col-xs-12 mdui-col-sm-6 mdui-col-md-8">
+          <!-- OBJECT CODE -->
+          <div class="mdui-row">
+            <div class="mdui-panel" id="object-code" mdui-panel>
+              <div class="mdui-panel-item mdui-m-a-2">
+                <div class="mdui-panel-item-header">OBJECT CODE</div>
+                <div class="mdui-panel-item-body">
+                  <div class="mdui-typo mdui-m-t-2">
+                    <pre class="mdui-m-b-0">Hello World</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- / OBJECT CODE -->
+        </div>
+        <div class="mdui-col-xs-12 mdui-col-sm-6 mdui-col-md-4">
+          <!-- MEMORY STATE -->
+          <div class="mdui-row">
+            <div class="mdui-panel" id="memory-state" mdui-panel>
+              <div class="mdui-panel-item mdui-m-a-2">
+                <div class="mdui-panel-item-header">MEMORY</div>
+                <div class="mdui-panel-item-body">
+                  <div class="mdui-typo mdui-m-t-2">
+                    <pre class="mdui-m-b-0">Memory dump</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- / MEMORY STATE -->
         </div>
       </div>
     </div>

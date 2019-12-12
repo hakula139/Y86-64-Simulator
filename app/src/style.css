@@ -3,12 +3,19 @@
     overflow: visible
 }
 
-#object-code, #memory-state {
-    height: 300px
-}
-
 #object-code pre, #memory-state pre {
     height: 200px
+}
+
+#main {
+    margin-top: 80px
+}
+
+.mdui-appbar {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 9999
 }
 
 .mdui-list-item>h1 {

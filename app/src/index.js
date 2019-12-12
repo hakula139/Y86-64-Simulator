@@ -96,3 +96,7 @@ let replaceLabels = function (register, id) {
         replaceLabels(register, '#condition-code');
     });
 })();
+
+let navbarHeight = $$('.mdui-appbar').height();
+let marginTop = navbarHeight + 16;
+$$('#main').css('margin-top', marginTop + 'px');
