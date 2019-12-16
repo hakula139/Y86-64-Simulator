@@ -15,7 +15,9 @@ fileSelect.on('change', (error) => {
     const fileNameLength = fileName.length;
     if (!fileNameLength) return;
     if (fileName.substring(fileNameLength - 3) != '.yo') {
-        alert('Currently only .yo files are accepted.');
+        mdui.snackbar({
+            message: 'Currently only .yo files are accepted.'
+        });
         return;
     }
 
@@ -31,13 +33,21 @@ fileSelect.on('change', (error) => {
             console.log(data);
         },
         error: () => {
-            console.log('Cannot connect to server.');
+            mdui.snackbar({
+                message: 'Cannot connect to server.'
+            });
         },
         complete: (xhr, textStatus) => {
             if (textStatus === 'success') {
                 $$('.controller').removeAttr('disabled');
+                mdui.snackbar({
+                    message: 'Successfully uploaded.'
+                });
             } else {
                 $$('.controller').attr('disabled', '');
+                mdui.snackbar({
+                    message: 'Fail to upload.'
+                });
             }
         }
     });
