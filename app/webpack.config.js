@@ -41,6 +41,7 @@ module.exports = {
       inject: true | 'body',
       hash: true,
       template: './src/index.html',
+      favicon: './favicon/favicon.ico',
       filename: 'index.html'
     }),
     new MiniCssExtractPlugin({
@@ -80,6 +81,12 @@ module.exports = {
             publicPath: 'font/',
             outputPath: 'font/'
           }
+        }]
+      },
+      {
+        test: /\.(ico)$/,
+        use: [{
+          loader: 'file-loader?name=[name].[ext]'
         }]
       },
       {

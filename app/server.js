@@ -2,10 +2,13 @@
 
 const express = require('express');
 const formidable = require('formidable');
+const favicon = require('serve-favicon');
+
 
 let app = express();
 let distPath = __dirname + '/dist/';
 app.use(express.static(distPath));
+app.use(favicon(distPath + '/favicon.ico'));
 
 app.get('/', (request, response, next) => {
     response.sendFile(distPath + '/index.html');

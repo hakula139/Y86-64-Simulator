@@ -1,6 +1,7 @@
 'use strict';
 
 import './style.css'
+import '../favicon/favicon.ico';
 let $$ = mdui.JQ;
 
 // Initializes pipeline register section
