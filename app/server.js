@@ -7,14 +7,16 @@ let app = express();
 let distPath = __dirname + '/dist/';
 app.use(express.static(distPath));
 
-app.get('/', (request, response) => {
+app.get('/', (request, response, next) => {
     response.sendFile(distPath + '/index.html');
 });
 
-app.post('/upload', (request, response) => {
+app.post('/upload', (request, response, next) => {
     let form = new formidable.IncomingForm();
     let index, filename;
-    form.parse(request);
+    form.parse(request, (error) => {
+        if (error) next(error);
+    });
     form.on('field', (name, value) => {
         if (name == 'index') index = value;
     });
@@ -26,7 +28,6 @@ app.post('/upload', (request, response) => {
     });
     form.on('end', () => {
         response.json({
-            code: 200,
             index: index,
             filename: filename
         });

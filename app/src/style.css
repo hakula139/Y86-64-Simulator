@@ -47,3 +47,8 @@
 .mdui-textfield-input {
     height: 24px
 }
+
+#uploadForm {
+    visibility: hidden;
+    position: absolute;
+}
