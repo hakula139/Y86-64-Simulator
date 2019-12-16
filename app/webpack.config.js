@@ -9,16 +9,26 @@ const srcPath = path.resolve(rootPath, 'src');
 const distPath = path.resolve(rootPath, 'dist');
 
 module.exports = {
-  entry: srcPath,
+  entry: {
+    index: srcPath,
+    upload: path.resolve(srcPath, 'upload.js')
+  },
   output: {
     path: distPath,
-    filename: 'bundle.js'
+    filename: 'js/[name].js'
+  },
+  node: {
+    fs: 'empty',
+    net: 'empty'
   },
   optimization: {
     minimize: true,
     minimizer: [
       new TerserPlugin()
-    ]
+    ],
+    splitChunks: {
+      chunks: 'all'
+    }
   },
   devServer: {
     historyApiFallback: true,
@@ -28,14 +38,14 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      inject: false,
+      inject: true | 'body',
       hash: true,
       template: './src/index.html',
       filename: 'index.html'
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[id].css',
+      filename: 'css/[name].css',
+      chunkFilename: 'css/[id].css',
       ignoreOrder: false
     })
   ],
@@ -67,8 +77,8 @@ module.exports = {
           options: {
             name: '[name].[hash:5].[ext]',
             limit: 3000,
-            publicPath: "font/",
-            outputPath: "font/"
+            publicPath: 'font/',
+            outputPath: 'font/'
           }
         }]
       },
@@ -79,8 +89,8 @@ module.exports = {
           options: {
             name: '[name].[hash:5].[ext]',
             limit: 10000,
-            publicPath: "img/",
-            outputPath: "img/"
+            publicPath: 'img/',
+            outputPath: 'img/'
           }
         }]
       }

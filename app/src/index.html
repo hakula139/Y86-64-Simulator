@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/mdui/0.4.3/css/mdui.min.css" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/font-awesome/5.12.0-1/css/all.min.css"
     crossorigin="anonymous">
-  <link rel="stylesheet" href="main.css">
 </head>
 
 <body class="mdui-theme-primary-indigo mdui-theme-accent-deep-purple mdui-theme-layout-dark">
@@ -16,7 +15,8 @@
       <a href="/" class="mdui-typo-headline mdui-text-truncate mdui-m-r-1">Y86-64</a>
       <a href="/" class="mdui-typo-headline mdui-text-truncate mdui-m-l-0 mdui-hidden-sm-down">Simulator</a>
       <div class="mdui-toolbar-spacer"></div>
-      <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Upload'}">
+      <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple" id="uploader"
+        mdui-tooltip="{content: 'Upload'}">
         <i class="mdui-icon material-icons">file_upload</i>
       </a>
       <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Previous'}" disabled>
@@ -32,7 +32,7 @@
       <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Restart'}" disabled>
         <i class="mdui-icon material-icons">replay</i>
       </a>
-      <label class="mdui-slider mdui-m-l-3 mdui-m-r-3 mdui-hidden-xs" id="speed-controller" disabled>
+      <label class="mdui-slider mdui-m-l-3 mdui-m-r-3 mdui-hidden-xs" id="speed-controller">
         <input type="range" step="1" min="0" max="20" />
       </label>
       <div class="mdui-toolbar-spacer"></div>
@@ -167,8 +167,14 @@
     </div>
   </content>
 
-  <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.3/js/mdui.min.js"></script>
-  <script src="bundle.js"></script>
+  <!-- Uploader -->
+  <form id="uploadForm" enctype="multipart/form-data" action="/upload" method="post">
+    <input type="file" name="upload" />
+    <input type="submit" value="Upload" name="submit">
+    <span id="status"></span>
+  </form>
+
+  <script type="text/javascript" src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.3/js/mdui.min.js"></script>
 </body>
 
 </html>

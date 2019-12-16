@@ -79,33 +79,34 @@ let conditionCode = [
 ];
 
 let template = $$('#list-template').html();
-let replaceLabels = function (register, id) {
+let replaceLabels = (register, id) => {
     let list = template;
     list = list.replace(/\{\$registerId\}/gi, register.id);
     list = list.replace(/\{\$registerLabel\}/gi, register.label);
     $$(id).append(list);
 };
-(function () {
-    pipelineRegister.forEach(function (stageItem) {
+(() => {
+    pipelineRegister.forEach((stageItem) => {
         let stage = stageItem.stage;
         let stageId = stageItem.id;
-        stage.forEach(function (register) {
+        stage.forEach((register) => {
             replaceLabels(register, stageId);
         });
     });
-    processorRegister.forEach(function (register) {
+    processorRegister.forEach((register) => {
         replaceLabels(register, '#register');
     });
-    conditionCode.forEach(function (register) {
+    conditionCode.forEach((register) => {
         replaceLabels(register, '#condition-code');
     });
 })();
 
 // Monitors the buttons
 
+// Display mode
 let displayMode = $$('#display-mode');
 let displayModeIcon = $$('#display-mode-icon');
-displayMode.on('click', function (error) {
+displayMode.on('click', (error) => {
     $$('body').toggleClass('mdui-theme-layout-dark');
     displayMode.attr('mdui-tooltip',
         displayMode.attr('mdui-tooltip') === '{content: \'Day mode\'}' ?
@@ -116,9 +117,10 @@ displayMode.on('click', function (error) {
     );
 })
 
+// Run status
 let runStatus = $$('#run-status');
 let runStatusIcon = $$('#run-status-icon');
-runStatus.on('click', function (error) {
+runStatus.on('click', (error) => {
     if (runStatus.attr('disabled') === '') return;
     runStatus.attr('mdui-tooltip',
         runStatus.attr('mdui-tooltip') === '{content: \'Run\'}' ?

@@ -13,6 +13,7 @@ An interface for Y86-64 Simulator built in Node.js.
 ### 1. Building
 
 ```bash
+npm install
 npm run dev
 ```
 
