@@ -11,16 +11,9 @@ $$('#uploader').on('click', (error) => {
         contentType: false,
         processData: false,
         success: (data) => {
-            if (data[code] === 200) {
-                $$('#status').html('Success');
-                console.log('Upload success: ', data[filename]);
-            } else {
-                $$('#status').html('Failed');
-                console.log('Upload failed.');
-            }
+            console.log(data);
         },
         error: () => {
-            $$('#status').html('Disconnected');
             console.log('Cannot connect to server.');
         }
     });
