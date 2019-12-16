@@ -1,8 +1,8 @@
 # Y86-64 Simulator UI
 
-An interface for Y86-64 Simulator built in Node.js.
+An interface for Y86-64 Simulator built in Javascript.
 
-[Demo](https://sim.hakula.xyz)
+Here's a [Demo](https://sim.hakula.xyz).
 
 ## Getting Started
 
@@ -14,13 +14,13 @@ An interface for Y86-64 Simulator built in Node.js.
 
 ```bash
 npm install
-npm run dev
+npm run build
 ```
 
 ### 2. Usage
 
 ```bash
-./dist/index.html
+npm run start
 ```
 
 ## Contributors
