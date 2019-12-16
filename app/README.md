@@ -1,6 +1,6 @@
 # Y86-64 Simulator UI
 
-An interface for Y86-64 Simulator built in Javascript.
+An interface for Y86-64 Simulator written in Javascript.
 
 Here's a [Demo](https://sim.hakula.xyz).
 
