@@ -147,4 +147,5 @@ dist
 .vs
 build
 memory.txt
+lib/json
 uploads
