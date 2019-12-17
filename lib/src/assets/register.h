@@ -85,7 +85,7 @@ public:
     // 'stage_num' is required only when 'mode' is set to PIP.
     static bool Set(const Change& change, int mode, int stage_num = 0);
     static nlohmann::json GetAllInJson(
-        const std::map<uint64_t, std::vector<Change>>& all_changes);
+        const std::map<uint64_t, std::vector<Change>>& all_changes, int mode);
     // Prints all changes in several json files
     static bool PrintAllInJson();
     static bool PrintRegister();
