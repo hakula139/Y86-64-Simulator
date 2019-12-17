@@ -1,6 +1,5 @@
-Remove-Item -Path build -Recurse -Force -ErrorAction Ignore
 Remove-Item -Path sim.exe -Force -ErrorAction Ignore
-New-Item -Path build -ItemType directory | Out-Null
+New-Item -Path build -ItemType directory -ErrorAction Ignore | Out-Null
 Set-Location -Path build
 cmake .. -G "MinGW Makefiles"
 mingw32-make
