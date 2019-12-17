@@ -4,6 +4,7 @@
 
 #include "config.h"
 
+#include "assets/cpu_clock.h"
 #include "assets/file.h"
 #include "assets/memory.h"
 #include "assets/register.h"
@@ -27,8 +28,8 @@ int main(int argc, char** argv) {
     input.PrintAllInstructions();
 #endif
 
-    uint8_t  status = assets::SAOK;
-    uint64_t clock  = 0ull;
+    assets::cpu_clock = 0ull;
+    uint8_t status    = assets::SAOK;
     while (status == assets::SAOK) {
         status = stages::WriteBack::Do();
         stages::Memory::Do();
@@ -36,22 +37,30 @@ int main(int argc, char** argv) {
         stages::Decode::Do();
         stages::Fetch::Do(input);
         stages::Bubble::UpdateAll();
-        ++clock;
-        std::cout << "Cycle " << std::dec << clock << ":\n";
+        ++assets::cpu_clock;
 
+#if !HAS_GUI
+        std::cout << "Cycle " << std::dec << assets::cpu_clock << ":\n";
         assets::PipelineRegister::Print(assets::FETCH);
         assets::PipelineRegister::Print(assets::DECODE);
         assets::PipelineRegister::Print(assets::EXECUTE);
         assets::PipelineRegister::Print(assets::MEMORY);
         assets::PipelineRegister::Print(assets::WRITE_BACK);
         assets::Memory::Dump();
-
         assets::Register::Print();
         assets::ConditionCode::Print();
+#endif
+
 #if SIM_DEBUG
         std::cout << "Press Enter to continue, Ctrl + C to exit.\n";
         std::getchar();
 #endif
     }
-    std::cout << "Program Exit: Clock cycles = " << std::dec << clock << '\n';
+
+#if HAS_GUI
+    assets::ChangesHandler::PrintAllInJson();
+#else
+    std::cout << "Program Exit: Clock cycles = " << std::dec
+              << assets::cpu_clock << '\n';
+#endif
 }

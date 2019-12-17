@@ -2,7 +2,10 @@
 #define SRC_ASSETS_REGISTER_H_
 
 #include <cstdint>
+#include <map>
 #include <vector>
+
+#include "../include/json.hpp"
 
 namespace assets {
 
@@ -63,22 +66,38 @@ enum StatusMap : uint8_t {
     SHLT = 0x4
 };
 
-// Manages the value of Program Counter, which contains the address of the
-// instruction being executed at the current time
-class ProgramCounter {
-public:
-    static uint64_t Get() { return current_address_; }
-    static bool     Set(uint64_t value);
-    static bool     Clear();
-    static bool     Print();
+enum ModeMap : int { REG = 0x0, PIP = 0x1, CC = 0x2 };
 
-protected:
-    static uint64_t current_address_;
+struct Change {
+    Change() {}
+    Change(int _register_num, uint64_t _old_value, uint64_t _new_value)
+        : register_num(_register_num),
+          old_value(_old_value),
+          new_value(_new_value) {}
+    int      register_num;
+    uint64_t old_value, new_value;
+};
+
+// Handles changes in registers
+class ChangesHandler {
+public:
+    // 'mode' selects the register class to operate (see ModeMap for details);
+    // 'stage_num' is required only when 'mode' is set to PIP.
+    static bool Set(const Change& change, int mode, int stage_num = 0);
+    static nlohmann::json GetAllInJson(
+        const std::map<uint64_t, std::vector<Change>>& all_changes);
+    // Prints all changes in several json files
+    static bool PrintAllInJson();
+    static bool PrintRegister();
+    static bool PrintPipelineRegister();
+    static bool PrintConditionCode();
 };
 
 // Manages the value in each register
 class Register {
 public:
+    friend class ChangesHandler;
+
     static uint64_t Get(int register_num) { return data_.at(register_num); }
     static bool     Set(int register_num, uint64_t value);
     static bool     Clear();
@@ -87,11 +106,16 @@ public:
 protected:
     static constexpr size_t      kTotal_ = 16;
     static std::vector<uint64_t> data_;
+    // collects all changes occurred at each clock cycle
+    // usage: changes_[cpu_clock].push_back(change);
+    static std::map<uint64_t, std::vector<Change>> changes_;
 };
 
 // Manages the value in each pipeline register
 class PipelineRegister {
 public:
+    friend class ChangesHandler;
+
     static uint64_t Get(int stage_num, int register_num) {
         return data_.at(stage_num).at(register_num);
     }
@@ -103,11 +127,15 @@ protected:
     static constexpr size_t                   kTotal_      = 17;
     static constexpr size_t                   kStageCount_ = 5;
     static std::vector<std::vector<uint64_t>> data_;
+    // usage: changes_[stage_num][cpu_clock].push_back(change);
+    static std::vector<std::map<uint64_t, std::vector<Change>>> changes_;
 };
 
 // Manages the value in each condition code
 class ConditionCode {
 public:
+    friend class ChangesHandler;
+
     static bool Get(int register_num) { return data_.at(register_num); }
     static bool Set(int register_num, bool value);
     static bool Clear();
@@ -116,6 +144,8 @@ public:
 protected:
     static constexpr size_t  kTotal_ = 3;
     static std::vector<bool> data_;
+    // usage: changes_[cpu_clock].push_back(change);
+    static std::map<uint64_t, std::vector<Change>> changes_;
 };
 
 }  // namespace assets
