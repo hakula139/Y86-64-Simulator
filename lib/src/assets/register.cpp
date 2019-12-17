@@ -109,6 +109,7 @@ json ChangesHandler::GetAllInJson(
 #endif
             changes_json[reg_name] = {{"old", old_value}, {"new", new_value}};
         }
+        if (changes_json.is_null()) continue;
         all_changes_json[clock] = move(changes_json);
     }
     return move(all_changes_json);
