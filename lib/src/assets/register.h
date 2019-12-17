@@ -5,7 +5,7 @@
 #include <map>
 #include <vector>
 
-#include "../include/json.hpp"
+#include "json.hpp"
 
 namespace assets {
 

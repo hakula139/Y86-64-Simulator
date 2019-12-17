@@ -8,10 +8,10 @@
 #include <utility>
 #include <vector>
 
-#include "../include/json.hpp"
 #include "../stages/instruction.h"
 #include "../utils/utility.h"
 #include "cpu_clock.h"
+#include "json.hpp"
 
 using nlohmann::json;
 using std::map;
@@ -28,12 +28,15 @@ vector<vector<uint64_t>> PipelineRegister::data_(kStageCount_,
 vector<bool>             ConditionCode::data_(kTotal_);
 
 map<uint64_t, vector<Change>>         Register::changes_;
-vector<map<uint64_t, vector<Change>>> PipelineRegister::changes_;
+vector<map<uint64_t, vector<Change>>> PipelineRegister::changes_(kStageCount_);
 map<uint64_t, vector<Change>>         ConditionCode::changes_;
 
 static const vector<string> register_name{"RAX", "RCX", "RDX", "RBX", "RSP",
                                           "RBP", "RSI", "RDI", "R8 ", "R9 ",
                                           "R10", "R11", "R12", "R13", "R14"};
+
+static const vector<int> all_register_num{
+    RAX, RCX, RDX, RBX, RSP, RBP, RSI, RDI, R8, R9, R10, R11, R12, R13, R14};
 
 static const vector<string> stage_name{"FETCH", "DECODE", "EXECUTE", "MEMORY",
                                        "WRITEBACK"};
@@ -62,9 +65,11 @@ static const vector<vector<int>> stage_register_num{
 
 static const vector<string> condition_code_name{"OF", "SF", "ZF"};
 
+static const vector<int> all_condition_code_num{OF, SF, ZF};
+
 static const char* output_path = "json/";
 
-bool ChangesHandler::Set(const Change& change, int mode, int stage_num = 0) {
+bool ChangesHandler::Set(const Change& change, int mode, int stage_num) {
     switch (mode) {
         case REG: Register::changes_[cpu_clock].push_back(change); break;
         case PIP:
@@ -116,8 +121,7 @@ bool ChangesHandler::PrintPipelineRegister() {
     ofstream output;
     for (auto&& stage_num : {FETCH, DECODE, EXECUTE, MEMORY, WRITE_BACK}) {
         auto file_name = stage_name[stage_num];
-        std::transform(file_name.begin(), file_name.end(), file_name.begin(),
-                       [](unsigned char c) { return std::tolower(c); });
+        for (auto&& c : file_name) c = std::tolower(c);
         file_name = output_path + file_name + "Changes.json";
         output.open(file_name, ofstream::out | ofstream::trunc);
         if (!output) return false;
@@ -141,7 +145,7 @@ bool ChangesHandler::PrintConditionCode() {
 bool Register::Set(int register_num, uint64_t value) {
     auto old_value = data_.at(register_num);
     if (value != old_value) {
-        Change change({cpu_clock, old_value, value});
+        Change change{register_num, old_value, value};
         ChangesHandler::Set(move(change), REG);
         data_[register_num] = value;
     }
@@ -149,11 +153,12 @@ bool Register::Set(int register_num, uint64_t value) {
 }
 
 bool Register::Clear() {
-    for (auto&& value : data_) {
-        if (value) {
-            Change change({cpu_clock, value, 0ull});
+    for (auto&& register_num : all_register_num) {
+        auto old_value = data_.at(register_num);
+        if (old_value) {
+            Change change{register_num, old_value, 0ull};
             ChangesHandler::Set(move(change), REG);
-            value = 0ull;
+            data_[register_num] = 0ull;
         }
     }
     return true;
@@ -161,7 +166,7 @@ bool Register::Clear() {
 
 bool Register::Print() {
     std::cout << string(5, '=') << " REGISTER " << string(5, '=') << '\n';
-    for (size_t i = 0; i < kTotal_ - 1; ++i) {
+    for (auto&& i : all_register_num) {
         std::cout << '%' << register_name[i] << " = 0x";
         utility::SetOutputHexWidth(16);
         std::cout << Get(i) << '\n';
@@ -172,7 +177,7 @@ bool Register::Print() {
 bool PipelineRegister::Set(int stage_num, int register_num, uint64_t value) {
     auto old_value = data_.at(stage_num).at(register_num);
     if (value != old_value) {
-        Change change({cpu_clock, old_value, value});
+        Change change{register_num, old_value, value};
         ChangesHandler::Set(move(change), PIP, stage_num);
         data_[stage_num][register_num] = value;
     }
@@ -181,13 +186,13 @@ bool PipelineRegister::Set(int stage_num, int register_num, uint64_t value) {
 
 bool PipelineRegister::Clear(int stage_num) {
     auto& stage_data = data_.at(stage_num);
-    for (auto&& i : all_stage_register_num) {
-        auto old_value = stage_data.at(i);
-        auto new_value = all_stage_register_init.at(i);
+    for (auto&& register_num : all_stage_register_num) {
+        auto old_value = stage_data.at(register_num);
+        auto new_value = all_stage_register_init.at(register_num);
         if (new_value != old_value) {
-            Change change({cpu_clock, old_value, new_value});
+            Change change{register_num, old_value, new_value};
             ChangesHandler::Set(move(change), PIP, stage_num);
-            stage_data[i] = new_value;
+            stage_data[register_num] = new_value;
         }
     }
     return true;
@@ -207,7 +212,7 @@ bool PipelineRegister::Print(int stage_num) {
 bool ConditionCode::Set(int register_num, bool value) {
     auto old_value = data_.at(register_num);
     if (value != old_value) {
-        Change change({cpu_clock, old_value, value});
+        Change change{register_num, old_value, value};
         ChangesHandler::Set(move(change), CC);
         data_[register_num] = value;
     }
@@ -215,11 +220,12 @@ bool ConditionCode::Set(int register_num, bool value) {
 }
 
 bool ConditionCode::Clear() {
-    for (auto&& value : data_) {
-        if (value) {
-            Change change({cpu_clock, value, 0ull});
+    for (auto&& register_num : all_condition_code_num) {
+        auto old_value = data_.at(register_num);
+        if (old_value) {
+            Change change{register_num, old_value, 0};
             ChangesHandler::Set(move(change), REG);
-            value = 0;
+            data_[register_num] = 0;
         }
     }
     return true;
