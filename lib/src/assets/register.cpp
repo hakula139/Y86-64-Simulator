@@ -99,6 +99,7 @@ json ChangesHandler::GetAllInJson(
         auto clock = std::to_string(clock_changes.first);
         json changes_json;
         for (auto&& change : clock_changes.second) {
+            if (mode == REG && change.register_num == RNONE) continue;
             auto reg_name  = p_name->at(change.register_num);
             auto old_value = change.old_value;
             auto new_value = change.new_value;
