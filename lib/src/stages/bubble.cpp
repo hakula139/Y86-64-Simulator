@@ -21,11 +21,12 @@ using assets::WRITE_BACK;
 namespace stages {
 
 bool Bubble::UpdateAll() {
-    UpdateFetchStage();
-    UpdateDecodeStage();
-    UpdateExecuteStage();
-    UpdateMemoryStage();
-    UpdateWriteBackStage();
+    bool status = true;
+    status &= UpdateFetchStage();
+    status &= UpdateDecodeStage();
+    status &= UpdateExecuteStage();
+    status &= UpdateMemoryStage();
+    status &= UpdateWriteBackStage();
     return true;
 }
 
