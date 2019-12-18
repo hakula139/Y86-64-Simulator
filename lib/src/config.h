@@ -6,6 +6,6 @@
 
 constexpr int kSimVersionMajor = 3;
 constexpr int kSimVersionMinor = 1;
-constexpr int kSimVersionPatch = 3;
+constexpr int kSimVersionPatch = 4;
 
 #endif  // SRC_CONFIG_H_
