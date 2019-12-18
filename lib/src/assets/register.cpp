@@ -158,6 +158,16 @@ bool ChangesHandler::PrintConditionCode() {
     return true;
 }
 
+bool ChangesHandler::PrintEnd() {
+    ofstream output;
+    auto     file_name = string(output_path) + "end.json";
+    output.open(file_name, ofstream::out | ofstream::trunc);
+    if (!output) return false;
+    output << std::setw(4) << json{{"end", cpu_clock}};
+    output.close();
+    return true;
+}
+
 bool Register::Set(int register_num, uint64_t value) {
     auto old_value = Get(register_num);
     if (value != old_value) {
@@ -170,6 +180,7 @@ bool Register::Set(int register_num, uint64_t value) {
 
 bool Register::Clear() {
     for (auto&& register_num : all_register_num) {
+        if (register_num == RNONE) continue;
         auto old_value = Get(register_num);
         if (old_value) {
             Change change{register_num, old_value, 0ull};
@@ -183,6 +194,7 @@ bool Register::Clear() {
 bool Register::Print() {
     std::cout << string(5, '=') << " REGISTER " << string(5, '=') << '\n';
     for (auto&& register_num : all_register_num) {
+        if (register_num == RNONE) continue;
         std::cout << '%' << register_name[register_num] << " = 0x";
         utility::SetOutputHexWidth(16);
         std::cout << Get(register_num) << '\n';

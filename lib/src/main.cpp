@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
         ++cpu_clock;
 
 #if !HAS_GUI
-        std::cout << "Cycle " << std::dec << cpu_clock << ":\n";
+        std::cout << "\nCycle " << std::dec << cpu_clock << ":\n";
         assets::PipelineRegister::Print(assets::FETCH);
         assets::PipelineRegister::Print(assets::DECODE);
         assets::PipelineRegister::Print(assets::EXECUTE);
@@ -62,8 +62,9 @@ int main(int argc, char** argv) {
 
 #if HAS_GUI
     assets::ChangesHandler::PrintAllInJson();
+    assets::ChangesHandler::PrintEnd();
 #else
-    std::cout << "Program Exit: Clock cycles = " << std::dec << cpu_clock
+    std::cout << "\nProgram Exit: Clock cycles = " << std::dec << cpu_clock
               << '\n';
 #endif
 }

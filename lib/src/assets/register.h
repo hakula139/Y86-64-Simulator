@@ -91,6 +91,8 @@ public:
     static bool PrintRegister();
     static bool PrintPipelineRegister();
     static bool PrintConditionCode();
+    // Generates a file designating the end of clock cycles.
+    static bool PrintEnd();
 };
 
 // Manages the value in each register
