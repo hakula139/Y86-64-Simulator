@@ -71,7 +71,7 @@ static const vector<string> condition_code_name{"OF", "SF", "ZF"};
 
 static const vector<int> all_condition_code_num{OF, SF, ZF};
 
-static const char* output_path = "/json/";
+static const char* json_folder = "/";
 
 bool ChangesHandler::Set(const Change& change, int mode, int stage_num) {
     switch (mode) {
@@ -118,9 +118,12 @@ json ChangesHandler::GetAllInJson(
 
 bool ChangesHandler::PrintAllInOneJson(const string& output_dir) {
     ofstream output;
-    auto     file_name = output_dir + output_path + "changes.json";
+    auto     file_name = output_dir + json_folder + "changes.json";
     output.open(file_name, ofstream::out | ofstream::trunc);
-    if (!output) return false;
+    if (!output) {
+        PrintErrorMessage(1);
+        return false;
+    }
     json all_changes;
     all_changes["register"]       = GetRegister();
     all_changes["fetch"]          = GetPipelineRegister(FETCH);
@@ -146,9 +149,12 @@ bool ChangesHandler::PrintAllInJson(const string& output_dir) {
 
 bool ChangesHandler::PrintRegister(const string& output_dir) {
     ofstream output;
-    auto     file_name = output_dir + output_path + "registerChanges.json";
+    auto     file_name = output_dir + json_folder + "registerChanges.json";
     output.open(file_name, ofstream::out | ofstream::trunc);
-    if (!output) return false;
+    if (!output) {
+        PrintErrorMessage(1);
+        return false;
+    }
     output << GetRegister();
     output.close();
     return true;
@@ -159,9 +165,12 @@ bool ChangesHandler::PrintPipelineRegister(const string& output_dir) {
     for (auto&& stage_num : {FETCH, DECODE, EXECUTE, MEMORY, WRITE_BACK}) {
         auto file_name = stage_name[stage_num];
         for (auto&& c : file_name) c = std::tolower(c);
-        file_name = output_dir + output_path + file_name + "Changes.json";
+        file_name = output_dir + json_folder + file_name + "Changes.json";
         output.open(file_name, ofstream::out | ofstream::trunc);
-        if (!output) return false;
+        if (!output) {
+            PrintErrorMessage(1);
+            return false;
+        }
         output << GetPipelineRegister(stage_num);
         output.close();
     }
@@ -170,9 +179,12 @@ bool ChangesHandler::PrintPipelineRegister(const string& output_dir) {
 
 bool ChangesHandler::PrintConditionCode(const string& output_dir) {
     ofstream output;
-    auto     file_name = output_dir + output_path + "conditionCodeChanges.json";
+    auto     file_name = output_dir + json_folder + "conditionCodeChanges.json";
     output.open(file_name, ofstream::out | ofstream::trunc);
-    if (!output) return false;
+    if (!output) {
+        PrintErrorMessage(1);
+        return false;
+    }
     output << GetConditionCode();
     output.close();
     return true;
@@ -180,11 +192,23 @@ bool ChangesHandler::PrintConditionCode(const string& output_dir) {
 
 bool ChangesHandler::PrintEnd(const string& output_dir) {
     ofstream output;
-    auto     file_name = output_dir + output_path + "end.json";
+    auto     file_name = output_dir + json_folder + "end.json";
     output.open(file_name, ofstream::out | ofstream::trunc);
-    if (!output) return false;
+    if (!output) {
+        PrintErrorMessage(1);
+        return false;
+    }
     output << GetEnd();
     output.close();
+    return true;
+}
+
+bool ChangesHandler::PrintErrorMessage(const int error_code) {
+    std::cerr << "Changes Handler Error ";
+    switch (error_code) {
+        case 1: std::cerr << "1: Cannot write file.\n"; break;
+        default: std::cerr << "X: An unknown error occurs.\n"; break;
+    }
     return true;
 }
 

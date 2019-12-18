@@ -164,6 +164,9 @@ public:
     static bool PrintConditionCode(const std::string& output_dir);
     // Generates a file designating the end of clock cycles.
     static bool PrintEnd(const std::string& output_dir);
+
+protected:
+    static bool PrintErrorMessage(const int error_code);
 };
 
 }  // namespace assets
