@@ -147,5 +147,6 @@ dist
 .vs
 build
 memory.txt
-lib/json
+*[Cc]hanges.json
+end.json
 uploads
