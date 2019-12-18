@@ -34,22 +34,20 @@ chmod +x install.sh
 
 ### 2. Usage
 
-You may check the manual simply by passing no argument.
-
 ```bash
-./sim
+./sim "<file_name>.yo"
 ```
 
-#### 2.1 Windows
-
-```bash
-./sim.exe "../test/objects/prog1.yo"
-```
-
-#### 2.2 Linux
+Example:
 
 ```bash
 ./sim "../test/objects/prog1.yo"
+```
+
+Check the manual simply by passing no argument.
+
+```bash
+./sim
 ```
 
 ### 3. Clean
@@ -68,8 +66,8 @@ You may check the manual simply by passing no argument.
 
 ## Contributors
 
-- **Hakula Chen** - Fudan University
-- **Jiaqi Dai** - Fudan University
+- [**Hakula Chen**](https://github.com/hakula139)<[i@hakula.xyz](mailto:i@hakula.xyz)> - Fudan University
+- [**Jiaqi Dai**](https://github.com/jqdai) - Fudan University
 
 ## License
 

@@ -25,7 +25,7 @@ npm run start
 
 ## Contributors
 
-- **Hakula Chen** - Fudan University
+- [**Hakula Chen**](https://github.com/hakula139)<[i@hakula.xyz](mailto:i@hakula.xyz)> - Fudan University
 
 ## License
 
