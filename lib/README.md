@@ -46,7 +46,7 @@ chmod +x install.sh
 
 ##### 2.1.2 output_dir
 
-*Optional.* `output_dir` is the directory for all outputs. Please make sure it exists. By default it will be set to the root folder of the executable `sim`.
+*Optional.* `output_dir` is the directory for all outputs, which is set to the root folder of executable `sim` by default. Please make sure the directory already exists.
 
 #### 2.2 Examples
 
