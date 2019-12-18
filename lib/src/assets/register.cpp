@@ -128,7 +128,7 @@ bool ChangesHandler::PrintRegister() {
     auto     file_name = string(output_path) + "registerChanges.json";
     output.open(file_name, ofstream::out | ofstream::trunc);
     if (!output) return false;
-    output << std::setw(4) << GetAllInJson(Register::changes_, REG);
+    output << GetAllInJson(Register::changes_, REG);
     output.close();
     return true;
 }
@@ -141,8 +141,7 @@ bool ChangesHandler::PrintPipelineRegister() {
         file_name = output_path + file_name + "Changes.json";
         output.open(file_name, ofstream::out | ofstream::trunc);
         if (!output) return false;
-        output << std::setw(4)
-               << GetAllInJson(PipelineRegister::changes_[stage_num], PIP);
+        output << GetAllInJson(PipelineRegister::changes_[stage_num], PIP);
         output.close();
     }
     return true;
@@ -153,7 +152,7 @@ bool ChangesHandler::PrintConditionCode() {
     auto     file_name = string(output_path) + "conditionCodeChanges.json";
     output.open(file_name, ofstream::out | ofstream::trunc);
     if (!output) return false;
-    output << std::setw(4) << GetAllInJson(ConditionCode::changes_, CC);
+    output << GetAllInJson(ConditionCode::changes_, CC);
     output.close();
     return true;
 }
@@ -163,7 +162,7 @@ bool ChangesHandler::PrintEnd() {
     auto     file_name = string(output_path) + "end.json";
     output.open(file_name, ofstream::out | ofstream::trunc);
     if (!output) return false;
-    output << std::setw(4) << json{{"end", cpu_clock}};
+    output << json{{"end", cpu_clock}};
     output.close();
     return true;
 }
