@@ -38,17 +38,17 @@ chmod +x install.sh
 ./sim input_file [output_dir]
 ```
 
-#### Arguments
+#### 2.1 Arguments
 
-##### input_file
+##### 2.1.1 input_file
 
 `input_file` is the path to your input file. Currently only .yo files are accepted.
 
-##### output_dir
+##### 2.1.2 output_dir
 
 *Optional.* `output_dir` is the directory for all outputs. Please make sure it exists. By default it will be set to the root folder of the executable `sim`.
 
-#### Examples
+#### 2.2 Examples
 
 ```bash
 ./sim "../test/objects/prog1.yo"
@@ -58,7 +58,7 @@ chmod +x install.sh
 ./sim "../test/objects/asum.yo" "./temp"
 ```
 
-#### Manual
+#### 2.3 Manual
 
 Check the manual simply by passing no argument.
 
