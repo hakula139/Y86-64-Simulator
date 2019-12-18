@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
     }
 
 #if HAS_GUI
-    assets::ChangesHandler::PrintAllInOneJson();
+    assets::ChangesHandler::PrintAllInOneJson(args.output_dir());
 #else
     std::cout << "\nProgram Exit: Clock cycles = " << std::dec << cpu_clock
               << '\n';

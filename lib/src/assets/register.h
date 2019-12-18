@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <map>
+#include <string>
 #include <vector>
 
 #include "cpu_clock.h"
@@ -155,14 +156,14 @@ public:
     static nlohmann::json GetEnd() { return {{"end", cpu_clock}}; }
 
     // Prints all changes in a single json file
-    static bool PrintAllInOneJson();
+    static bool PrintAllInOneJson(const std::string& output_dir);
     // Prints all changes in several json files
-    static bool PrintAllInJson();
-    static bool PrintRegister();
-    static bool PrintPipelineRegister();
-    static bool PrintConditionCode();
+    static bool PrintAllInJson(const std::string& output_dir);
+    static bool PrintRegister(const std::string& output_dir);
+    static bool PrintPipelineRegister(const std::string& output_dir);
+    static bool PrintConditionCode(const std::string& output_dir);
     // Generates a file designating the end of clock cycles.
-    static bool PrintEnd();
+    static bool PrintEnd(const std::string& output_dir);
 };
 
 }  // namespace assets
