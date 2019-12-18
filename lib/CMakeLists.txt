@@ -3,8 +3,8 @@
 cmake_minimum_required(VERSION 2.8)
 
 project(Y86-64-Simulator)
-set(Y86-64-Simulator_VERSION_MAJOR 3)
-set(Y86-64-Simulator_VERSION_MINOR 3)
+set(Y86-64-Simulator_VERSION_MAJOR 4)
+set(Y86-64-Simulator_VERSION_MINOR 0)
 set(Y86-64-Simulator_VERSION_PATCH 0)
 
 set(CMAKE_BUILD_TYPE "Release")
