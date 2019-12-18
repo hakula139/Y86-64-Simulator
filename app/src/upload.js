@@ -23,14 +23,32 @@ fileSelect.on('change', (error) => {
 
     // AJAX upload
     let formData = new FormData($$('#uploadForm')[0]);
+    let filename;
     $$.ajax({
         method: 'POST',
         url: 'upload',
         data: formData,
         contentType: false,
         processData: false,
-        success: (data) => {
-            console.log(data);
+        success: (data, textStatus, xhr) => {
+            filename = JSON.parse(data)['file'];
+            console.log('Uploaded ' + filename);
+            // Operates the uploaded file
+            $$.ajax({
+                method: 'POST',
+                url: 'execute',
+                data: JSON.stringify({ 'filename': filename }),
+                contentType: 'application/json; charset=utf-8',
+                processData: true,
+                success: (data) => {
+                    console.log(data);
+                },
+                error: () => {
+                    mdui.snackbar({
+                        message: 'Cannot connect to server.'
+                    });
+                }
+            });
         },
         error: () => {
             mdui.snackbar({
