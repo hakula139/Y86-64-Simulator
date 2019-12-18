@@ -33,22 +33,7 @@ fileSelect.on('change', (error) => {
         success: (data, textStatus, xhr) => {
             filename = JSON.parse(data)['file'];
             console.log('Uploaded ' + filename);
-            // Operates the uploaded file
-            $$.ajax({
-                method: 'POST',
-                url: 'execute',
-                data: JSON.stringify({ 'filename': filename }),
-                contentType: 'application/json; charset=utf-8',
-                processData: true,
-                success: (data) => {
-                    console.log(data);
-                },
-                error: () => {
-                    mdui.snackbar({
-                        message: 'Cannot connect to server.'
-                    });
-                }
-            });
+            operateFile(filename);
         },
         error: () => {
             mdui.snackbar({
@@ -69,4 +54,23 @@ fileSelect.on('change', (error) => {
             }
         }
     });
+
+    // Operates the uploaded file
+    let operateFile = (filename) => {
+        $$.ajax({
+            method: 'POST',
+            url: 'execute',
+            data: JSON.stringify({ 'filename': filename }),
+            contentType: 'application/json; charset=utf-8',
+            processData: true,
+            success: (data) => {
+                console.log(data);
+            },
+            error: () => {
+                mdui.snackbar({
+                    message: 'Cannot connect to server.'
+                });
+            }
+        });
+    };
 });

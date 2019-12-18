@@ -58,7 +58,7 @@ app.post('/execute', (request, response, next) => {
             if (error) next(error);
             fs.unlink(oldInputPath, (error) => {
                 if (error) next(error);
-                console.log('Removed ' + oldInputPath);
+                // console.log('Removed ' + oldInputPath);
             });
             let sim = execFile(program, [inputPath, outputDir], (error) => {
                 if (error) next(error);
