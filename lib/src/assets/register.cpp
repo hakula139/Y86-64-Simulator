@@ -120,7 +120,27 @@ bool ChangesHandler::PrintAllInJson() {
     status &= PrintRegister();
     status &= PrintPipelineRegister();
     status &= PrintConditionCode();
+    status &= PrintEnd();
     return status;
+}
+
+bool ChangesHandler::PrintAllInOneJson() {
+    ofstream output;
+    auto     file_name = string(output_path) + "changes.json";
+    output.open(file_name, ofstream::out | ofstream::trunc);
+    if (!output) return false;
+    json all_changes;
+    all_changes["register"]       = GetRegister();
+    all_changes["fetch"]          = GetPipelineRegister(FETCH);
+    all_changes["decode"]         = GetPipelineRegister(DECODE);
+    all_changes["execute"]        = GetPipelineRegister(EXECUTE);
+    all_changes["memory"]         = GetPipelineRegister(MEMORY);
+    all_changes["writeback"]      = GetPipelineRegister(WRITE_BACK);
+    all_changes["condition_code"] = GetConditionCode();
+    all_changes["end"]            = GetEnd();
+    output << all_changes;
+    output.close();
+    return true;
 }
 
 bool ChangesHandler::PrintRegister() {
@@ -128,7 +148,7 @@ bool ChangesHandler::PrintRegister() {
     auto     file_name = string(output_path) + "registerChanges.json";
     output.open(file_name, ofstream::out | ofstream::trunc);
     if (!output) return false;
-    output << GetAllInJson(Register::changes_, REG);
+    output << GetRegister();
     output.close();
     return true;
 }
@@ -141,7 +161,7 @@ bool ChangesHandler::PrintPipelineRegister() {
         file_name = output_path + file_name + "Changes.json";
         output.open(file_name, ofstream::out | ofstream::trunc);
         if (!output) return false;
-        output << GetAllInJson(PipelineRegister::changes_[stage_num], PIP);
+        output << GetPipelineRegister(stage_num);
         output.close();
     }
     return true;
@@ -152,7 +172,7 @@ bool ChangesHandler::PrintConditionCode() {
     auto     file_name = string(output_path) + "conditionCodeChanges.json";
     output.open(file_name, ofstream::out | ofstream::trunc);
     if (!output) return false;
-    output << GetAllInJson(ConditionCode::changes_, CC);
+    output << GetConditionCode();
     output.close();
     return true;
 }
@@ -162,7 +182,7 @@ bool ChangesHandler::PrintEnd() {
     auto     file_name = string(output_path) + "end.json";
     output.open(file_name, ofstream::out | ofstream::trunc);
     if (!output) return false;
-    output << json{{"end", cpu_clock}};
+    output << GetEnd();
     output.close();
     return true;
 }

@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 
+#include "cpu_clock.h"
 #include "json.hpp"
 
 namespace assets {
@@ -78,23 +79,6 @@ struct Change {
     uint64_t old_value, new_value;
 };
 
-// Handles changes in registers
-class ChangesHandler {
-public:
-    // 'mode' selects the register class to operate (see ModeMap for details);
-    // 'stage_num' is required only when 'mode' is set to PIP.
-    static bool Set(const Change& change, int mode, int stage_num = 0);
-    static nlohmann::json GetAllInJson(
-        const std::map<uint64_t, std::vector<Change>>& all_changes, int mode);
-    // Prints all changes in several json files
-    static bool PrintAllInJson();
-    static bool PrintRegister();
-    static bool PrintPipelineRegister();
-    static bool PrintConditionCode();
-    // Generates a file designating the end of clock cycles.
-    static bool PrintEnd();
-};
-
 // Manages the value in each register
 class Register {
 public:
@@ -148,6 +132,37 @@ protected:
     static std::vector<bool> data_;
     // usage: changes_[cpu_clock].push_back(change);
     static std::map<uint64_t, std::vector<Change>> changes_;
+};
+
+// Handles changes in registers
+class ChangesHandler {
+public:
+    // 'mode' selects the register class to operate (see ModeMap for details);
+    // 'stage_num' is required only when 'mode' is set to PIP.
+    static bool Set(const Change& change, int mode, int stage_num = 0);
+
+    static nlohmann::json GetAllInJson(
+        const std::map<uint64_t, std::vector<Change>>& all_changes, int mode);
+    static nlohmann::json GetRegister() {
+        return GetAllInJson(Register::changes_, REG);
+    }
+    static nlohmann::json GetPipelineRegister(int stage_num) {
+        return GetAllInJson(PipelineRegister::changes_[stage_num], PIP);
+    }
+    static nlohmann::json GetConditionCode() {
+        return GetAllInJson(ConditionCode::changes_, CC);
+    }
+    static nlohmann::json GetEnd() { return {{"end", cpu_clock}}; }
+
+    // Prints all changes in a single json file
+    static bool PrintAllInOneJson();
+    // Prints all changes in several json files
+    static bool PrintAllInJson();
+    static bool PrintRegister();
+    static bool PrintPipelineRegister();
+    static bool PrintConditionCode();
+    // Generates a file designating the end of clock cycles.
+    static bool PrintEnd();
 };
 
 }  // namespace assets
