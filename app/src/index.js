@@ -10,45 +10,45 @@ let $$ = mdui.JQ;
 // Initializes pipeline register section
 
 let fetch = [
-    { 'id': 'predpc', 'label': 'PRED_PC' }
+    { 'id': '_PRED_PC', 'label': 'PRED_PC' }
 ];
 let decode = [
-    { 'id': 'stat', 'label': 'STAT' },
-    { 'id': 'icode', 'label': 'I_CODE' },
-    { 'id': 'ifun', 'label': 'I_FUN' },
-    { 'id': 'ra', 'label': 'R_A' },
-    { 'id': 'rb', 'label': 'R_B' },
-    { 'id': 'valc', 'label': 'VAL_C' },
-    { 'id': 'valp', 'label': 'VAL_P' }
+    { 'id': '_STAT', 'label': 'STAT' },
+    { 'id': '_I_CODE', 'label': 'I_CODE' },
+    { 'id': '_I_FUN', 'label': 'I_FUN' },
+    { 'id': '_R_A', 'label': 'R_A' },
+    { 'id': '_R_B', 'label': 'R_B' },
+    { 'id': '_VAL_C', 'label': 'VAL_C' },
+    { 'id': '_VAL_P', 'label': 'VAL_P' }
 ];
 let execute = [
-    { 'id': 'stat', 'label': 'STAT' },
-    { 'id': 'icode', 'label': 'I_CODE' },
-    { 'id': 'ifun', 'label': 'I_FUN' },
-    { 'id': 'valc', 'label': 'VAL_C' },
-    { 'id': 'vala', 'label': 'VAL_A' },
-    { 'id': 'valb', 'label': 'VAL_B' },
-    { 'id': 'dste', 'label': 'DST_E' },
-    { 'id': 'dstm', 'label': 'DST_M' },
-    { 'id': 'srca', 'label': 'SRC_A' },
-    { 'id': 'srcb', 'label': 'SRC_B' }
+    { 'id': '_STAT', 'label': 'STAT' },
+    { 'id': '_I_CODE', 'label': 'I_CODE' },
+    { 'id': '_I_FUN', 'label': 'I_FUN' },
+    { 'id': '_VAL_C', 'label': 'VAL_C' },
+    { 'id': '_VAL_A', 'label': 'VAL_A' },
+    { 'id': '_VAL_B', 'label': 'VAL_B' },
+    { 'id': '_DST_E', 'label': 'DST_E' },
+    { 'id': '_DST_M', 'label': 'DST_M' },
+    { 'id': '_SRC_A', 'label': 'SRC_A' },
+    { 'id': '_SRC_B', 'label': 'SRC_B' }
 ];
 let memory = [
-    { 'id': 'stat', 'label': 'STAT' },
-    { 'id': 'icode', 'label': 'I_CODE' },
-    { 'id': 'cnd', 'label': 'CND' },
-    { 'id': 'vale', 'label': 'VAL_E' },
-    { 'id': 'vala', 'label': 'VAL_A' },
-    { 'id': 'dste', 'label': 'DST_E' },
-    { 'id': 'dstm', 'label': 'DST_M' }
+    { 'id': '_STAT', 'label': 'STAT' },
+    { 'id': '_I_CODE', 'label': 'I_CODE' },
+    { 'id': '_CND', 'label': 'CND' },
+    { 'id': '_VAL_E', 'label': 'VAL_E' },
+    { 'id': '_VAL_A', 'label': 'VAL_A' },
+    { 'id': '_DST_E', 'label': 'DST_E' },
+    { 'id': '_DST_M', 'label': 'DST_M' }
 ];
 let writeback = [
-    { 'id': 'stat', 'label': 'STAT' },
-    { 'id': 'icode', 'label': 'I_CODE' },
-    { 'id': 'vale', 'label': 'VAL_E' },
-    { 'id': 'valm', 'label': 'VAL_M' },
-    { 'id': 'dste', 'label': 'DST_E' },
-    { 'id': 'dstm', 'label': 'DST_M' }
+    { 'id': '_STAT', 'label': 'STAT' },
+    { 'id': '_I_CODE', 'label': 'I_CODE' },
+    { 'id': '_VAL_E', 'label': 'VAL_E' },
+    { 'id': '_VAL_M', 'label': 'VAL_M' },
+    { 'id': '_DST_E', 'label': 'DST_E' },
+    { 'id': '_DST_M', 'label': 'DST_M' }
 ];
 let pipelineRegister = [
     { 'stage': fetch, 'id': '#fetch' },
@@ -59,30 +59,28 @@ let pipelineRegister = [
 ];
 
 let processorRegister = [
-    { 'id': 'rax', 'label': '%RAX' },
-    { 'id': 'rcx', 'label': '%RCX' },
-    { 'id': 'rdx', 'label': '%RDX' },
-    { 'id': 'rbx', 'label': '%RBX' },
-    { 'id': 'rsp', 'label': '%RSP' },
-    { 'id': 'rbp', 'label': '%RBP' },
-    { 'id': 'rsi', 'label': '%RSI' },
-    { 'id': 'rdi', 'label': '%RDI' },
-    { 'id': 'r8', 'label': '%R8' },
-    { 'id': 'r9', 'label': '%R9' },
-    { 'id': 'r10', 'label': '%R10' },
-    { 'id': 'r11', 'label': '%R11' },
-    { 'id': 'r12', 'label': '%R12' },
-    { 'id': 'r13', 'label': '%R13' },
-    { 'id': 'r14', 'label': '%R14' }
+    { 'id': '_RAX', 'label': '%RAX' },
+    { 'id': '_RCX', 'label': '%RCX' },
+    { 'id': '_RDX', 'label': '%RDX' },
+    { 'id': '_RBX', 'label': '%RBX' },
+    { 'id': '_RSP', 'label': '%RSP' },
+    { 'id': '_RBP', 'label': '%RBP' },
+    { 'id': '_RSI', 'label': '%RSI' },
+    { 'id': '_RDI', 'label': '%RDI' },
+    { 'id': '_R8', 'label': '%R8' },
+    { 'id': '_R9', 'label': '%R9' },
+    { 'id': '_R10', 'label': '%R10' },
+    { 'id': '_R11', 'label': '%R11' },
+    { 'id': '_R12', 'label': '%R12' },
+    { 'id': '_R13', 'label': '%R13' },
+    { 'id': '_R14', 'label': '%R14' }
 ];
 
 let conditionCode = [
-    { 'id': 'of', 'label': 'OF' },
-    { 'id': 'sf', 'label': 'SF' },
-    { 'id': 'zf', 'label': 'ZF' }
+    { 'id': '_OF', 'label': 'OF' },
+    { 'id': '_SF', 'label': 'SF' },
+    { 'id': '_ZF', 'label': 'ZF' }
 ];
-
-export let clock = 0;
 
 let template = $$('#list-template').html();
 let replaceLabels = (register, id) => {
@@ -103,7 +101,7 @@ let replaceLabels = (register, id) => {
         replaceLabels(register, '#register');
     });
     conditionCode.forEach((register) => {
-        replaceLabels(register, '#condition-code');
+        replaceLabels(register, '#condition_code');
     });
     $$('.mdui-textfield-input').val(0);
 })();
@@ -137,6 +135,8 @@ runStatus.on('click', (error) => {
         runStatusIcon.html() === 'play_arrow' ? 'pause' : 'play_arrow'
     );
 })
+
+let clock = 0;
 
 // Previous
 let previous = $$('#previous');

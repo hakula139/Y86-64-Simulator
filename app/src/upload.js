@@ -1,7 +1,5 @@
 'use strict';
 
-import { clock } from './index';
-
 let $$ = mdui.JQ;
 
 let uploader = $$('#uploader');
@@ -48,9 +46,7 @@ let uploadFile = () => {
         complete: (xhr, textStatus) => {
             if (textStatus === 'success') {
                 $$('.controller').removeAttr('disabled');
-                if (!clock) {
-                    $$('#previous').attr('disabled', '');
-                }
+                $$('#previous').attr('disabled', '');
                 mdui.snackbar({
                     message: 'Successfully uploaded.'
                 });
