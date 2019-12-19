@@ -218,7 +218,7 @@ runStatus.on('click', (error) => {
         next.attr('disabled', '');
         (async () => {
             while (clock <= end) {
-                if (runStatusIcon.html() === 'play_arrow') return;
+                if (runStatusIcon.html() === 'play_arrow') break;
                 await sleep(sleepTime);
                 nextStep();
             }
