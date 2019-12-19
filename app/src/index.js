@@ -157,19 +157,25 @@ restart.on('click', (error) => {
 })
 
 // Previous
-previous.on('click', (error) => {
-    if (previous.attr('disabled') === '') return;
+let previousStep = () => {
     --clock;
     outputResult(clock, 0);
     setButton();
+}
+previous.on('click', (error) => {
+    if (previous.attr('disabled') === '') return;
+    previousStep();
 })
 
 // Next
-next.on('click', (error) => {
-    if (next.attr('disabled') === '') return;
+let nextStep = () => {
     outputResult(clock, 1);
     ++clock;
     setButton();
+}
+next.on('click', (error) => {
+    if (next.attr('disabled') === '') return;
+    nextStep();
 })
 
 let sleep = (ms) => {
@@ -195,7 +201,7 @@ runStatus.on('click', (error) => {
                 if (runStatusIcon.html() === 'play_arrow') return;
                 ++clock;
                 await sleep(100);
-                next.trigger('click');
+                nextStep();
             }
             runStatusIcon.html('play_arrow');
             previous.removeAttr('disabled');
