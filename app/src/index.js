@@ -152,6 +152,7 @@ displayMode.on('click', (error) => {
 // Restart
 let restart = $$('#restart');
 restart.on('click', (error) => {
+    if (restart.attr('disabled') === '') return;
     clearAll();
     setButton();
 })
@@ -160,22 +161,22 @@ restart.on('click', (error) => {
 let previousStep = () => {
     --clock;
     outputResult(clock, 0);
-    setButton();
 }
 previous.on('click', (error) => {
     if (previous.attr('disabled') === '') return;
     previousStep();
+    setButton();
 })
 
 // Next
 let nextStep = () => {
     outputResult(clock, 1);
     ++clock;
-    setButton();
 }
 next.on('click', (error) => {
     if (next.attr('disabled') === '') return;
     nextStep();
+    setButton();
 })
 
 // Sleep
@@ -189,12 +190,13 @@ let sleep = (ms) => {
 let runStatus = $$('#run-status');
 let runStatusIcon = $$('#run-status-icon');
 runStatus.on('click', (error) => {
+    if (runStatus.attr('disabled') === '') return;
     let result = data.val();
     let end = result['end']['end'];
-    if (runStatus.attr('disabled') === '') return;
     if (runStatusIcon.html() === 'play_arrow') {
         runStatus.attr('mdui-tooltip', '{content: \'Pause\'}');
         runStatusIcon.html('pause');
+        restart.attr('disabled', '');
         previous.attr('disabled', '');
         next.attr('disabled', '');
         (async () => {
@@ -205,8 +207,8 @@ runStatus.on('click', (error) => {
                 nextStep();
             }
             runStatusIcon.html('play_arrow');
-            previous.removeAttr('disabled');
-            next.removeAttr('disabled');
+            restart.removeAttr('disabled');
+            setButton();
         })();
     } else {
         runStatus.attr('mdui-tooltip', '{content: \'Run\'}');
