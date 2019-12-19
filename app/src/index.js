@@ -157,6 +157,20 @@ restart.on('click', (error) => {
     setButton();
 })
 
+// Speed controller
+let speedController = $$('#speed-controller');
+let sleepTime = 1000;
+let getSleepTime = () => {
+    let speedSliderFill = speedController.find('.mdui-slider-fill');
+    let maxWidth = speedController.width();
+    speedSliderFill.on('resize', (error) => {
+        let width = speedSliderFill.width();
+        let speed = (width / maxWidth).toPrecision(6) * 100;
+        speedController.attr('value', speed);
+        sleepTime = (10000 / speed).toPrecision(6);
+    })
+}
+
 // Previous
 let previousStep = () => {
     --clock;
@@ -203,7 +217,7 @@ runStatus.on('click', (error) => {
             while (clock <= end) {
                 if (runStatusIcon.html() === 'play_arrow') return;
                 ++clock;
-                await sleep(100);
+                await sleep(sleepTime());
                 nextStep();
             }
             runStatusIcon.html('play_arrow');
