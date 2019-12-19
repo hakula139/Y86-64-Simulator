@@ -69,7 +69,8 @@ let operateFile = (filename) => {
         contentType: 'application/json; charset=utf-8',
         processData: true,
         success: (data) => {
-            $$('#result').val(data);
+            $$('#result').val(JSON.parse(data));
+            $$('#restart').trigger('click');
         },
         error: (error) => {
             mdui.snackbar({

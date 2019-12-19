@@ -7,8 +7,12 @@ import { outputResult } from './output';
 
 let $$ = mdui.JQ;
 
-// Initializes pipeline register section
+// Initialize
 
+let data = $$('#result');
+let clock = 0;
+
+// Pipeline registers
 let fetch = [
     { 'id': '_PRED_PC', 'label': 'PRED_PC' }
 ];
@@ -58,6 +62,7 @@ let pipelineRegister = [
     { 'stage': writeback, 'id': '#writeback' }
 ];
 
+// Registers
 let processorRegister = [
     { 'id': '_RAX', 'label': '%RAX' },
     { 'id': '_RCX', 'label': '%RCX' },
@@ -76,11 +81,33 @@ let processorRegister = [
     { 'id': '_R14', 'label': '%R14' }
 ];
 
+// Condition code registers
 let conditionCode = [
     { 'id': '_OF', 'label': 'OF' },
     { 'id': '_SF', 'label': 'SF' },
     { 'id': '_ZF', 'label': 'ZF' }
 ];
+
+// Set buttons
+let previous = $$('#previous');
+let next = $$('#next');
+let setButton = () => {
+    let result = data.val();
+    let end = result['end']['end'];
+    if (clock)
+        previous.removeAttr('disabled');
+    else
+        previous.attr('disabled', '');
+    if (clock <= end)
+        next.removeAttr('disabled');
+    else
+        next.attr('disabled', '');
+}
+
+let clearAll = () => {
+    $$('.mdui-textfield-input').val(0);
+    clock = 0;
+}
 
 let template = $$('#list-template').html();
 let replaceLabels = (register, id) => {
@@ -103,10 +130,10 @@ let replaceLabels = (register, id) => {
     conditionCode.forEach((register) => {
         replaceLabels(register, '#condition_code');
     });
-    $$('.mdui-textfield-input').val(0);
+    clearAll();
 })();
 
-// Monitors the buttons
+// Monitor the buttons
 
 // Display mode
 let displayMode = $$('#display-mode');
@@ -122,35 +149,56 @@ displayMode.on('click', (error) => {
     );
 })
 
+// Restart
+let restart = $$('#restart');
+restart.on('click', (error) => {
+    clearAll();
+    setButton();
+})
+
+// Previous
+previous.on('click', (error) => {
+    if (previous.attr('disabled') === '') return;
+    --clock;
+    outputResult(clock, 0);
+    setButton();
+})
+
+// Next
+next.on('click', (error) => {
+    if (next.attr('disabled') === '') return;
+    outputResult(clock, 1);
+    ++clock;
+    setButton();
+})
+
+let sleep = (ms) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms)
+    });
+}
+
 // Run status
 let runStatus = $$('#run-status');
 let runStatusIcon = $$('#run-status-icon');
 runStatus.on('click', (error) => {
+    let result = data.val();
+    let end = result['end']['end'];
     if (runStatus.attr('disabled') === '') return;
-    runStatus.attr('mdui-tooltip',
-        runStatus.attr('mdui-tooltip') === '{content: \'Run\'}' ?
-            '{content: \'Pause\'}' : '{content: \'Run\'}'
-    );
-    runStatusIcon.html(
-        runStatusIcon.html() === 'play_arrow' ? 'pause' : 'play_arrow'
-    );
-})
-
-let clock = 0;
-
-// Previous
-let previous = $$('#previous');
-let previousIcon = $$('#previous-icon');
-previous.on('click', (error) => {
-    if (previous.attr('disabled') === '') return;
-    --clock;
-})
-
-// Next
-let next = $$('#next');
-let nextIcon = $$('#next-icon');
-next.on('click', (error) => {
-    if (next.attr('disabled') === '') return;
-    ++clock;
-    outputResult(clock);
+    if (runStatusIcon.html() === 'play_arrow') {
+        runStatus.attr('mdui-tooltip', '{content: \'Pause\'}');
+        runStatusIcon.html('pause');
+        (async () => {
+            while (clock <= end) {
+                if (runStatusIcon.html() === 'play_arrow') return;
+                ++clock;
+                await sleep(100);
+                next.trigger('click');
+            }
+            runStatusIcon.html('play_arrow');
+        })();
+    } else {
+        runStatus.attr('mdui-tooltip', '{content: \'Run\'}');
+        runStatusIcon.html('play_arrow');
+    }
 })

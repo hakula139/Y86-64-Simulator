@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "description": "An interface for Y86-64 Simulator written in Javascript",
   "dependencies": {
+    "@babel/runtime": "^7.7.7",
     "express": "^4.17.1",
     "formidable": "^1.2.1",
     "temp": "^0.9.1"
   },
   "devDependencies": {
     "@babel/core": "^7.7.5",
+    "@babel/plugin-transform-runtime": "^7.7.6",
     "@babel/preset-env": "^7.7.6",
     "babel-loader": "^8.0.6",
     "body-parser": "^1.19.0",
