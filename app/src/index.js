@@ -2,6 +2,9 @@
 
 import './style.css'
 import '../favicon/favicon.ico';
+
+import { outputResult } from './output';
+
 let $$ = mdui.JQ;
 
 // Initializes pipeline register section
@@ -79,6 +82,8 @@ let conditionCode = [
     { 'id': 'zf', 'label': 'ZF' }
 ];
 
+export let clock = 0;
+
 let template = $$('#list-template').html();
 let replaceLabels = (register, id) => {
     let list = template;
@@ -100,6 +105,7 @@ let replaceLabels = (register, id) => {
     conditionCode.forEach((register) => {
         replaceLabels(register, '#condition-code');
     });
+    $$('.mdui-textfield-input').val(0);
 })();
 
 // Monitors the buttons
@@ -130,4 +136,21 @@ runStatus.on('click', (error) => {
     runStatusIcon.html(
         runStatusIcon.html() === 'play_arrow' ? 'pause' : 'play_arrow'
     );
+})
+
+// Previous
+let previous = $$('#previous');
+let previousIcon = $$('#previous-icon');
+previous.on('click', (error) => {
+    if (previous.attr('disabled') === '') return;
+    --clock;
+})
+
+// Next
+let next = $$('#next');
+let nextIcon = $$('#next-icon');
+next.on('click', (error) => {
+    if (next.attr('disabled') === '') return;
+    ++clock;
+    outputResult(clock);
 })

@@ -1,5 +1,7 @@
 'use strict';
 
+import { clock } from './index';
+
 let $$ = mdui.JQ;
 
 let uploader = $$('#uploader');
@@ -11,17 +13,20 @@ uploader.on('click', (error) => {
 
 fileSelect.on('change', (error) => {
     // Check filename
-    const fileName = fileSelect.val();
-    const fileNameLength = fileName.length;
-    if (!fileNameLength) return;
-    if (fileName.substring(fileNameLength - 3) != '.yo') {
+    const filename = fileSelect.val();
+    const filenameLength = filename.length;
+    if (!filenameLength) return;
+    if (filename.substring(filenameLength - 3) != '.yo') {
         mdui.snackbar({
             message: 'Currently only .yo files are accepted.'
         });
         return;
     }
+    uploadFile();
+});
 
-    // AJAX upload
+// AJAX upload
+let uploadFile = () => {
     let formData = new FormData($$('#uploadForm')[0]);
     let filename;
     $$.ajax({
@@ -35,7 +40,7 @@ fileSelect.on('change', (error) => {
             console.log('Uploaded ' + filename);
             operateFile(filename);
         },
-        error: () => {
+        error: (error) => {
             mdui.snackbar({
                 message: 'Cannot connect to server.'
             });
@@ -43,6 +48,9 @@ fileSelect.on('change', (error) => {
         complete: (xhr, textStatus) => {
             if (textStatus === 'success') {
                 $$('.controller').removeAttr('disabled');
+                if (!clock) {
+                    $$('#previous').attr('disabled', '');
+                }
                 mdui.snackbar({
                     message: 'Successfully uploaded.'
                 });
@@ -54,23 +62,23 @@ fileSelect.on('change', (error) => {
             }
         }
     });
+}
 
-    // Operates the uploaded file
-    let operateFile = (filename) => {
-        $$.ajax({
-            method: 'POST',
-            url: 'execute',
-            data: JSON.stringify({ 'filename': filename }),
-            contentType: 'application/json; charset=utf-8',
-            processData: true,
-            success: (data) => {
-                console.log(data);
-            },
-            error: () => {
-                mdui.snackbar({
-                    message: 'Cannot connect to server.'
-                });
-            }
-        });
-    };
-});
+// Operates the uploaded file
+let operateFile = (filename) => {
+    $$.ajax({
+        method: 'POST',
+        url: 'execute',
+        data: JSON.stringify({ 'filename': filename }),
+        contentType: 'application/json; charset=utf-8',
+        processData: true,
+        success: (data) => {
+            $$('#result').val(data);
+        },
+        error: (error) => {
+            mdui.snackbar({
+                message: 'Cannot connect to server.'
+            });
+        }
+    });
+}

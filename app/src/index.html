@@ -25,20 +25,20 @@
       </a>
       <!-- / Uploader -->
       <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple controller" mdui-tooltip="{content: 'Previous'}"
-        disabled>
-        <i class="mdui-icon material-icons">chevron_left</i>
+        id="previous" disabled>
+        <i class="mdui-icon material-icons" id="previous-icon">chevron_left</i>
       </a>
       <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple controller" mdui-tooltip="{content: 'Run'}"
         id="run-status" disabled>
         <i class="mdui-icon material-icons" id="run-status-icon">play_arrow</i>
       </a>
       <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple controller" mdui-tooltip="{content: 'Next'}"
-        disabled>
-        <i class="mdui-icon material-icons">chevron_right</i>
+        id="next" disabled>
+        <i class="mdui-icon material-icons" id="next-icon">chevron_right</i>
       </a>
       <a href="javascript:;" class="mdui-btn mdui-btn-icon mdui-ripple controller" mdui-tooltip="{content: 'Restart'}"
-        disabled>
-        <i class="mdui-icon material-icons">replay</i>
+        id="restart" disabled>
+        <i class="mdui-icon material-icons" id="restart-icon">replay</i>
       </a>
       <label class="mdui-slider mdui-m-l-3 mdui-m-r-3 mdui-hidden-xs" id="speed-controller">
         <input type="range" step="1" min="0" max="20" />
@@ -173,6 +173,7 @@
         </div>
       </div>
     </div>
+    <span id="result"></span>
   </content>
 
   <script type="text/javascript" src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.3/js/mdui.min.js"></script>

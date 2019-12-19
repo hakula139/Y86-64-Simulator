@@ -48,7 +48,7 @@
     height: 24px
 }
 
-#uploadForm {
+#uploadForm, #result {
     visibility: hidden;
     position: absolute;
 }
