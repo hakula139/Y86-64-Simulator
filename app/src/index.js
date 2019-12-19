@@ -14,7 +14,8 @@ let clock = 0;
 
 // Pipeline registers
 let fetch = [
-    { 'id': '_PRED_PC', 'label': 'PRED_PC' }
+    { 'id': '_PRED_PC', 'label': 'PRED_PC' },
+    { 'id': '_CLOCK_CYCLE', 'label': 'CLOCK_CYCLE' }
 ];
 let decode = [
     { 'id': '_STAT', 'label': 'STAT' },
@@ -159,22 +160,23 @@ restart.on('click', (error) => {
 
 // Speed controller
 let speedController = $$('#speed-controller');
-let sleepTime = 1000;
-let getSleepTime = () => {
-    let speedSliderFill = speedController.find('.mdui-slider-fill');
-    let maxWidth = speedController.width();
-    speedSliderFill.on('resize', (error) => {
-        let width = speedSliderFill.width();
-        let speed = (width / maxWidth).toPrecision(6) * 100;
-        speedController.attr('value', speed);
-        sleepTime = (10000 / speed).toPrecision(6);
-    })
-}
+let sleepTime = 500;
+// let getSleepTime = () => {
+//     let speedSliderFill = speedController.find('.mdui-slider-fill');
+//     let maxWidth = speedController.width();
+//     speedSliderFill.on('resize', (error) => {
+//         let width = speedSliderFill.width();
+//         let speed = (width / maxWidth).toPrecision(6) * 100;
+//         speedController.attr('value', speed);
+//         sleepTime = (10000 / speed).toPrecision(6);
+//     })
+// }
 
 // Previous
 let previousStep = () => {
     --clock;
     outputResult(clock, 0);
+    $$('#_CLOCK_CYCLE').find('input').val(clock);
 }
 previous.on('click', (error) => {
     if (previous.attr('disabled') === '') return;
@@ -186,6 +188,7 @@ previous.on('click', (error) => {
 let nextStep = () => {
     outputResult(clock, 1);
     ++clock;
+    $$('#_CLOCK_CYCLE').find('input').val(clock);
 }
 next.on('click', (error) => {
     if (next.attr('disabled') === '') return;
@@ -216,8 +219,7 @@ runStatus.on('click', (error) => {
         (async () => {
             while (clock <= end) {
                 if (runStatusIcon.html() === 'play_arrow') return;
-                ++clock;
-                await sleep(sleepTime());
+                await sleep(sleepTime);
                 nextStep();
             }
             runStatusIcon.html('play_arrow');
