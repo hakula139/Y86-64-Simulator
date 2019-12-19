@@ -188,6 +188,8 @@ runStatus.on('click', (error) => {
     if (runStatusIcon.html() === 'play_arrow') {
         runStatus.attr('mdui-tooltip', '{content: \'Pause\'}');
         runStatusIcon.html('pause');
+        previous.attr('disabled', '');
+        next.attr('disabled', '');
         (async () => {
             while (clock <= end) {
                 if (runStatusIcon.html() === 'play_arrow') return;
@@ -196,6 +198,8 @@ runStatus.on('click', (error) => {
                 next.trigger('click');
             }
             runStatusIcon.html('play_arrow');
+            previous.removeAttr('disabled');
+            next.removeAttr('disabled');
         })();
     } else {
         runStatus.attr('mdui-tooltip', '{content: \'Run\'}');
