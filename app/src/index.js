@@ -94,14 +94,14 @@ let next = $$('#next');
 let setButton = () => {
     let result = data.val();
     let end = result['end']['end'];
-    if (clock)
-        previous.removeAttr('disabled');
-    else
+    if (clock == 0)
         previous.attr('disabled', '');
-    if (clock <= end)
-        next.removeAttr('disabled');
     else
+        previous.removeAttr('disabled');
+    if (clock > end)
         next.attr('disabled', '');
+    else
+        next.removeAttr('disabled');
 }
 
 let clearAll = () => {
@@ -178,6 +178,7 @@ next.on('click', (error) => {
     nextStep();
 })
 
+// Sleep
 let sleep = (ms) => {
     return new Promise((resolve) => {
         setTimeout(resolve, ms)

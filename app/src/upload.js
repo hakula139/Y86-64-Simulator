@@ -47,11 +47,13 @@ let uploadFile = () => {
             if (textStatus === 'success') {
                 $$('.controller').removeAttr('disabled');
                 $$('#previous').attr('disabled', '');
+                mdui.updateSliders();
                 mdui.snackbar({
                     message: 'Successfully uploaded.'
                 });
             } else {
                 $$('.controller').attr('disabled', '');
+                mdui.updateSliders();
                 mdui.snackbar({
                     message: 'Fail to upload.'
                 });
