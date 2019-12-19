@@ -23,7 +23,7 @@ app.get('/', (request, response, next) => {
 
 app.post('/upload', (request, response, next) => {
     let form = new formidable.IncomingForm();
-    let filename;
+    let fileName;
     form.parse(request, (error) => {
         if (error) next(error);
     });
@@ -31,25 +31,26 @@ app.post('/upload', (request, response, next) => {
         file.path = path.join(__dirname, 'uploads', file.name);
     });
     form.on('file', (name, file) => {
-        filename = file.name;
-    });
-    form.on('end', () => {
-        response.status(200).json({
-            'file': filename
+        fileName = file.name;
+        fs.readFile(file.path, "utf8", (error, buffer) => {
+            if (error) next(error);
+            let data = buffer.toString();
+            response.status(200).json({
+                fileName: fileName,
+                fileData: data
+            });
         });
     });
     form.on('error', () => {
-        response.status(503).end(
-            'Something went wrong on the server side.'
-        );
+        response.status(503).end('Something went wrong on the server side.');
     });
 });
 
 app.post('/execute', (request, response, next) => {
     const execFile = childProcess.execFile;
     const program = '../lib/sim';
-    let filename = request.body.filename;
-    let oldInputPath = path.join(__dirname, 'uploads', filename);
+    let fileName = request.body.fileName;
+    let oldInputPath = path.join(__dirname, 'uploads', fileName);
     temp.mkdir('y86-64_sim', (error, tempPath) => {
         let inputPath = path.join(tempPath, 'input.yo');
         let outputDir = tempPath;
@@ -66,6 +67,14 @@ app.post('/execute', (request, response, next) => {
                     if (error) next(error);
                     response.setHeader('Content-Type', 'application/json');
                     response.end(data.toString());
+                    fs.unlink(inputPath, (error) => {
+                        if (error) next(error);
+                        // console.log('Removed ' + inputPath);
+                    });
+                    fs.unlink(outputPath, (error) => {
+                        if (error) next(error);
+                        // console.log('Removed ' + outputPath);
+                    });
                 });
             });
         });
