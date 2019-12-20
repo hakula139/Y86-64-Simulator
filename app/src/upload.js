@@ -36,7 +36,6 @@ let uploadFile = () => {
         processData: false,
         success: (data, textStatus, xhr) => {
             let dataJson = JSON.parse(data);
-            console.log(dataJson);
             fileName = dataJson.fileName;
             fileData = dataJson.fileData;
             console.log('Uploaded ' + fileName);
