@@ -166,7 +166,7 @@ let getSleepTime = () => {
     return sleepTime;
 }
 let sleep = (ms) => {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 // Previous
