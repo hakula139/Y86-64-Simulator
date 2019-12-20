@@ -15,7 +15,7 @@ let clock = 0;
 // Pipeline registers
 let fetch = [
     { 'id': '_PRED_PC', 'label': 'PRED_PC' },
-    { 'id': '_CLOCK_CYCLE', 'label': 'CLOCK_CYCLE' }
+    { 'id': '_CLOCK', 'label': 'CLOCK' }
 ];
 let decode = [
     { 'id': '_STAT', 'label': 'STAT' },
@@ -173,7 +173,7 @@ let sleep = (ms) => {
 let previousStep = () => {
     --clock;
     outputResult(clock, 0);
-    $$('#_CLOCK_CYCLE').find('input').val(clock);
+    $$('#_CLOCK').find('input').val(clock);
 }
 previous.on('click', (error) => {
     if (previous.attr('disabled') === '') return;
@@ -185,7 +185,7 @@ previous.on('click', (error) => {
 let nextStep = () => {
     outputResult(clock, 1);
     ++clock;
-    $$('#_CLOCK_CYCLE').find('input').val(clock);
+    $$('#_CLOCK').find('input').val(clock);
 }
 next.on('click', (error) => {
     if (next.attr('disabled') === '') return;
