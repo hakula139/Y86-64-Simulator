@@ -159,18 +159,15 @@ restart.on('click', (error) => {
 })
 
 // Speed controller
-let speedController = $$('#speed-controller');
-let sleepTime = 500;
-// let getSleepTime = () => {
-//     let speedSliderFill = speedController.find('.mdui-slider-fill');
-//     let maxWidth = speedController.width();
-//     speedSliderFill.on('resize', (error) => {
-//         let width = speedSliderFill.width();
-//         let speed = (width / maxWidth).toPrecision(6) * 100;
-//         speedController.attr('value', speed);
-//         sleepTime = (10000 / speed).toPrecision(6);
-//     })
-// }
+let speedController = $$('#speed-controller-slider');
+let getSleepTime = () => {
+    let speed = speedController.val();
+    let sleepTime = 10000 / speed;
+    return sleepTime;
+}
+let sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 // Previous
 let previousStep = () => {
@@ -196,13 +193,6 @@ next.on('click', (error) => {
     setButton();
 })
 
-// Sleep
-let sleep = (ms) => {
-    return new Promise((resolve) => {
-        setTimeout(resolve, ms)
-    });
-}
-
 // Run status
 let runStatus = $$('#run-status');
 let runStatusIcon = $$('#run-status-icon');
@@ -219,7 +209,7 @@ runStatus.on('click', (error) => {
         (async () => {
             while (clock <= end) {
                 if (runStatusIcon.html() === 'play_arrow') break;
-                await sleep(sleepTime);
+                await sleep(getSleepTime());
                 nextStep();
             }
             runStatusIcon.html('play_arrow');
