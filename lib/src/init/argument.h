@@ -11,16 +11,18 @@ public:
     bool Load(int argc, char** argv);
 
     std::string input_file() const { return input_file_; }
+    std::string output_dir() const { return output_dir_; }
 
 protected:
-    bool PrintInfo() const;
-    bool PrintErrorMessage(const int error_code) const;
-    bool PrintUsageMessage() const;
+    static bool PrintInfo();
+    static bool PrintErrorMessage(const int error_code);
+    static bool PrintUsageMessage();
 
-    bool FilenameIsValid(const std::string& file_name) const;
-    bool FileExists(const std::string& file_name) const;
+    static bool FilenameIsValid(const std::string& file_name);
+    static bool FileExists(const std::string& file_name);
 
     std::string input_file_;
+    std::string output_dir_;
 };
 
 }  // namespace initialize

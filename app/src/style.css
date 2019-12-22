@@ -1,0 +1,54 @@
+.mdui-appbar {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 9999
+}
+
+#main {
+    margin-top: 72px
+}
+
+@media (min-width: 600px) {
+    #main {
+        margin-top: 5pc
+    }
+}
+
+@media (max-width: 959px) and (orientation: landscape) {
+    #main {
+        margin-top: 4pc
+    }
+}
+
+#speed-controller {
+    overflow: visible;
+    width: 10%
+}
+
+#memory-state pre, #object-code pre {
+    height: 200px
+}
+
+.mdui-list-item>h1 {
+    padding-right: 20px;
+    min-width: 2pc;
+    text-align: center
+}
+
+.mdui-list-item>.output-list {
+    width: calc(100% + 20px)
+}
+
+.mdui-card, .mdui-panel-item, .mdui-panel-item-header {
+    border-radius: 16px
+}
+
+.mdui-textfield-input {
+    height: 24px
+}
+
+#uploadForm, #result {
+    visibility: hidden;
+    position: absolute;
+}

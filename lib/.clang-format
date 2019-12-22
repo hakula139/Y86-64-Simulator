@@ -136,7 +136,7 @@ ObjCSpaceAfterProperty: false
 # 在 ObjC 的 protocol 列表前添加一个空格
 ObjCSpaceBeforeProtocolList: true
 # 在 call( 后对函数调用换行的 penalty
-PenaltyBreakBeforeFirstCallParameter: 200
+PenaltyBreakBeforeFirstCallParameter: 20
 # 在一个注释中引入换行的 penalty
 PenaltyBreakComment: 100
 # 第一次在 << 前换行的 penalty

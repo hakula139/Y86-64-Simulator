@@ -4,6 +4,7 @@
 
 #include "config.h"
 
+#include "assets/cpu_clock.h"
 #include "assets/file.h"
 #include "assets/memory.h"
 #include "assets/register.h"
@@ -14,6 +15,8 @@
 #include "stages/fetch.h"
 #include "stages/memory.h"
 #include "stages/write_back.h"
+
+using assets::cpu_clock;
 
 int main(int argc, char** argv) {
     initialize::Argument args;
@@ -27,31 +30,40 @@ int main(int argc, char** argv) {
     input.PrintAllInstructions();
 #endif
 
-    uint8_t  status = assets::SAOK;
-    uint64_t clock  = 0ull;
-    while (status == assets::SAOK) {
+    uint8_t status           = assets::SAOK;
+    cpu_clock                = 0ull;
+    const uint64_t force_end = 1000ull;
+    while (status == assets::SAOK && cpu_clock < force_end) {
         status = stages::WriteBack::Do();
         stages::Memory::Do();
         stages::Execute::Do();
         stages::Decode::Do();
         stages::Fetch::Do(input);
         stages::Bubble::UpdateAll();
-        ++clock;
-        std::cout << "Cycle " << std::dec << clock << ":\n";
+        ++cpu_clock;
 
+#if !HAS_GUI
+        std::cout << "\nCycle " << std::dec << cpu_clock << ":\n";
         assets::PipelineRegister::Print(assets::FETCH);
         assets::PipelineRegister::Print(assets::DECODE);
         assets::PipelineRegister::Print(assets::EXECUTE);
         assets::PipelineRegister::Print(assets::MEMORY);
         assets::PipelineRegister::Print(assets::WRITE_BACK);
         assets::Memory::Dump();
-
         assets::Register::Print();
         assets::ConditionCode::Print();
+#endif
+
 #if SIM_DEBUG
         std::cout << "Press Enter to continue, Ctrl + C to exit.\n";
         std::getchar();
 #endif
     }
-    std::cout << "Program Exit: Clock cycles = " << std::dec << clock << '\n';
+
+#if HAS_GUI
+    assets::ChangesHandler::PrintAllInOneJson(args.output_dir());
+#else
+    std::cout << "\nProgram Exit: Clock cycles = " << std::dec << cpu_clock
+              << '\n';
+#endif
 }

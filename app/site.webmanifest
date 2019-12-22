@@ -1,0 +1,20 @@
+{
+    "name": "Y86-64 Simulator",
+    "short_name": "Y86-64",
+    "icons": [
+        {
+            "src": "/favicon/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicon/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#202020",
+    "background_color": "#202020",
+    "start_url": "https://sim.hakula.xyz",
+    "display": "standalone"
+}
