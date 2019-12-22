@@ -2,8 +2,6 @@
 
 An interface for Y86-64 Simulator written in Javascript.
 
-Here's a [Demo](https://sim.hakula.xyz).
-
 ## Getting Started
 
 ### 0. Prerequisites

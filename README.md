@@ -2,6 +2,8 @@
 
 A Y86-64 processor simulator written in Javascript and C++11.
 
+Here's a [Demo](https://sim.hakula.xyz).
+
 ## Getting Started
 
 ### 0. Prerequisites
