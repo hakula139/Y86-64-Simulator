@@ -57,7 +57,7 @@ cd app
 node server.js
 ```
 
-Then check the website at <localhost:7273>.
+Then check the website at <http://localhost:7273>.
 
 ### 3. Clean
 
