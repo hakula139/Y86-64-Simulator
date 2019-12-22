@@ -20,7 +20,7 @@ npm run build
 ### 2. Usage
 
 ```bash
-npm run start
+node server.js
 ```
 
 ## Contributors
