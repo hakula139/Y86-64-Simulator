@@ -23,6 +23,8 @@ npm run build
 node server.js
 ```
 
+Then check the website at <localhost:7273>.
+
 ## Contributors
 
 - [**Hakula Chen**](https://github.com/hakula139)<[i@hakula.xyz](mailto:i@hakula.xyz)> - Fudan University
