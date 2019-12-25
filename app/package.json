@@ -1,6 +1,6 @@
 {
   "name": "ui",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "An interface for Y86-64 Simulator written in Javascript",
   "dependencies": {
     "@babel/runtime": "^7.7.7",
@@ -18,6 +18,7 @@
     "file-loader": "^5.0.2",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.8.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
     "serve-favicon": "^2.5.0",
     "style-loader": "^1.0.1",
     "terser-webpack-plugin": "^2.2.3",
