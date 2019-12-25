@@ -53,7 +53,7 @@
 }
 
 .mdui-list .mdui-col {
-    transition: background .2s ease-out
+    transition: .2s ease-out
 }
 
 .mdui-list .mdui-textfield-input {
