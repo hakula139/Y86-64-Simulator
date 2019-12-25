@@ -200,9 +200,10 @@ let sleep = (ms) => {
 
 // Previous
 let previousStep = () => {
+    let clockDiv = $$('#_CLOCK');
     --clock;
     outputResult(clock, 0);
-    $$('#_CLOCK').children('input').val(clock);
+    clockDiv.children('input').val(clock);
 }
 previous.on('click', (error) => {
     if (previous.attr('disabled') === '') return;
@@ -212,9 +213,10 @@ previous.on('click', (error) => {
 
 // Next
 let nextStep = () => {
+    let clockDiv = $$('#_CLOCK');
     outputResult(clock, 1);
     ++clock;
-    $$('#_CLOCK').children('input').val(clock);
+    clockDiv.children('input').val(clock);
 }
 next.on('click', (error) => {
     if (next.attr('disabled') === '') return;
