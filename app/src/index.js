@@ -141,13 +141,13 @@ let displayMode = $$('#display-mode');
 let displayModeIcon = $$('#display-mode-icon');
 displayMode.on('click', (error) => {
     $$('body').toggleClass('mdui-theme-layout-dark');
-    displayMode.attr('mdui-tooltip',
-        displayMode.attr('mdui-tooltip') === '{content: \'Day mode\'}' ?
-            '{content: \'Night mode\'}' : '{content: \'Day mode\'}'
-    );
-    displayModeIcon.html(
-        displayModeIcon.html() === 'brightness_7' ? 'brightness_2' : 'brightness_7'
-    );
+    if (displayModeIcon.html() === 'brightness_7') {
+        displayMode.attr('mdui-tooltip', '{content: \'Night mode\'}');
+        displayModeIcon.html('brightness_2');
+    } else {
+        displayMode.attr('mdui-tooltip', '{content: \'Day mode\'}');
+        displayModeIcon.html('brightness_7');
+    }
 })
 
 // Restart
