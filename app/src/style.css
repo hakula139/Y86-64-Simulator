@@ -26,6 +26,14 @@
     width: 10%
 }
 
+#base-mode-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 20px;
+    transform: translateX(-50%) translateY(-50%);
+}
+
 #memory-state pre, #object-code pre {
     height: 200px
 }

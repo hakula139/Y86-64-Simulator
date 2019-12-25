@@ -3,6 +3,7 @@
 let $$ = mdui.JQ;
 
 let data = $$('#result');
+let baseModeText = $$('#base-mode-text');
 export let outputResult = (clock, mode) => {
     let result = data.val();
     for (let key in result) {
@@ -11,7 +12,8 @@ export let outputResult = (clock, mode) => {
         for (let register in section) {
             let regid = id.find('#_' + register).children('input');
             let runMode = mode ? 'new' : 'old';
-            regid.val(section[register][runMode]);
+            let value = section[register][runMode];
+            regid.val(baseModeText.html() === 'HEX' ? value : '0x' + value.toString(16));
         }
     }
 }

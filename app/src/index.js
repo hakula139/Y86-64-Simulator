@@ -5,12 +5,24 @@ import '../favicon/favicon.ico';
 
 import { outputResult } from './output';
 
-let $$ = mdui.JQ;
+/* Variables */
 
-// Initialize
+let $$ = mdui.JQ;
 
 let data = $$('#result');
 let clock = 0;
+let template = $$('#list-template').html();
+
+let baseMode = $$('#base-mode');
+let baseModeText = $$('#base-mode-text');
+let displayMode = $$('#display-mode');
+let displayModeIcon = $$('#display-mode-icon');
+let previous = $$('#previous');
+let runStatus = $$('#run-status');
+let runStatusIcon = $$('#run-status-icon');
+let next = $$('#next');
+let restart = $$('#restart');
+let speedController = $$('#speed-controller-slider');
 
 // Pipeline registers
 let fetch = [
@@ -89,9 +101,8 @@ let conditionCode = [
     { 'id': '_ZF', 'label': 'ZF' }
 ];
 
-// Set buttons
-let previous = $$('#previous');
-let next = $$('#next');
+/* Initialization */
+
 let setButton = () => {
     let result = data.val();
     let end = result['end']['end'];
@@ -106,17 +117,18 @@ let setButton = () => {
 }
 
 let clearAll = () => {
-    $$('.mdui-textfield-input').val(0);
+    $$('.mdui-textfield-input').val(baseModeText.html() === 'HEX' ? 0 : '0x0');
+    $$('#_CLOCK').children('input').val(0);
     clock = 0;
 }
 
-let template = $$('#list-template').html();
 let replaceLabels = (register, id) => {
     let list = template;
     list = list.replace(/\{\$registerId\}/gi, register.id);
     list = list.replace(/\{\$registerLabel\}/gi, register.label);
     $$(id).append(list);
 };
+
 (() => {
     pipelineRegister.forEach((stageItem) => {
         let stage = stageItem.stage;
@@ -134,11 +146,30 @@ let replaceLabels = (register, id) => {
     clearAll();
 })();
 
-// Monitor the buttons
+/* Controllers */
+
+// Base mode
+baseMode.on('click', (error) => {
+    let textfieldInputs = $$('.mdui-textfield-input').not((i, element) => {
+        return $$(element).parent().attr('id') === '_CLOCK';
+    });
+    if (baseModeText.html() === 'HEX') {
+        textfieldInputs.each((i, element) => {
+            let textfieldInput = $$(element);
+            let value = parseInt(textfieldInput.val(), 10);
+            textfieldInput.val('0x' + value.toString(16));
+        })
+        baseModeText.html('DEC');
+    } else {
+        textfieldInputs.each((i, element) => {
+            let textfieldInput = $$(element);
+            textfieldInput.val(parseInt(textfieldInput.val(), 16));
+        })
+        baseModeText.html('HEX');
+    }
+})
 
 // Display mode
-let displayMode = $$('#display-mode');
-let displayModeIcon = $$('#display-mode-icon');
 displayMode.on('click', (error) => {
     $$('body').toggleClass('mdui-theme-layout-dark');
     if (displayModeIcon.html() === 'brightness_7') {
@@ -151,7 +182,6 @@ displayMode.on('click', (error) => {
 })
 
 // Restart
-let restart = $$('#restart');
 restart.on('click', (error) => {
     if (restart.attr('disabled') === '') return;
     clearAll();
@@ -159,7 +189,6 @@ restart.on('click', (error) => {
 })
 
 // Speed controller
-let speedController = $$('#speed-controller-slider');
 let getSleepTime = () => {
     let speed = speedController.val();
     let sleepTime = 10000 / speed;
@@ -173,7 +202,7 @@ let sleep = (ms) => {
 let previousStep = () => {
     --clock;
     outputResult(clock, 0);
-    $$('#_CLOCK').find('input').val(clock);
+    $$('#_CLOCK').children('input').val(clock);
 }
 previous.on('click', (error) => {
     if (previous.attr('disabled') === '') return;
@@ -185,7 +214,7 @@ previous.on('click', (error) => {
 let nextStep = () => {
     outputResult(clock, 1);
     ++clock;
-    $$('#_CLOCK').find('input').val(clock);
+    $$('#_CLOCK').children('input').val(clock);
 }
 next.on('click', (error) => {
     if (next.attr('disabled') === '') return;
@@ -194,8 +223,6 @@ next.on('click', (error) => {
 })
 
 // Run status
-let runStatus = $$('#run-status');
-let runStatusIcon = $$('#run-status-icon');
 runStatus.on('click', (error) => {
     if (runStatus.attr('disabled') === '') return;
     let result = data.val();
