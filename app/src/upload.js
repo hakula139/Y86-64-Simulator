@@ -75,7 +75,7 @@ let operateFile = (fileName) => {
     contentType: 'application/json; charset=utf-8',
     processData: true,
     success: (data) => {
-      $$('#result').val(JSON.parse(data));
+      $$('#result').val(data);
       $$('#restart').trigger('click');
     },
     error: (error) => {
