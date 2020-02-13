@@ -2,7 +2,7 @@ const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 const rootPath = path.resolve(__dirname);
@@ -11,33 +11,18 @@ const distPath = path.resolve(rootPath, 'dist');
 
 module.exports = {
   entry: {
-    index: srcPath,
+    index: path.resolve(srcPath, 'index.js'),
     output: path.resolve(srcPath, 'output.js'),
     upload: path.resolve(srcPath, 'upload.js'),
   },
   output: {
     path: distPath,
-    filename: 'js/[name].js'
+    filename: 'js/[name].js',
+    publicPath: '/assets/'
   },
   node: {
     fs: 'empty',
     net: 'empty'
-  },
-  optimization: {
-    minimize: true,
-    minimizer: [
-      new OptimizeCSSAssetsPlugin(),
-      new TerserPlugin()
-    ],
-    splitChunks: {
-      chunks: 'all'
-    }
-  },
-  devServer: {
-    historyApiFallback: true,
-    hot: true,
-    inline: true,
-    progress: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -53,16 +38,23 @@ module.exports = {
       ignoreOrder: false
     })
   ],
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new OptimizeCSSAssetsPlugin(),
+      new TerserPlugin()
+    ],
+    splitChunks: {
+      chunks: 'all'
+    }
+  },
   module: {
     rules: [
       {
         test: /\.css$/,
         use: [
           {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: '../'
-            }
+            loader: MiniCssExtractPlugin.loader
           },
           'css-loader'
         ],
@@ -70,40 +62,42 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: [{
+        use: {
           loader: 'babel-loader'
-        }]
+        }
       },
       {
-        test: /\.(eot|woff2?|ttf|svg)$/,
-        use: [{
+        test: /\.(eot|woff2?|ttf)$/,
+        use: {
           loader: 'url-loader',
           options: {
-            name: '[name].[hash:5].[ext]',
-            limit: 3000,
-            publicPath: 'font/',
-            outputPath: 'font/'
+            name: 'font/[name].[ext]',
+            limit: 4096
           }
-        }]
+        }
       },
       {
         test: /\.(ico)$/,
-        use: [{
+        use: {
           loader: 'file-loader?name=[name].[ext]'
-        }]
+        }
       },
       {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        use: [{
+        test: /\.(png|jpe?g|gif|svg)$/,
+        use: {
           loader: 'url-loader',
           options: {
-            name: '[name].[hash:5].[ext]',
-            limit: 10000,
-            publicPath: 'img/',
-            outputPath: 'img/'
+            name: 'img/[name].[ext]',
+            limit: 10240
           }
-        }]
+        }
       }
     ]
+  },
+  devServer: {
+    historyApiFallback: true,
+    hot: true,
+    inline: true,
+    progress: true,
   }
 };
