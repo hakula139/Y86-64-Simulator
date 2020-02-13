@@ -82,10 +82,14 @@ app.post('/execute', (req, res, next) => {
       execFile(program, [inputPath, tempPath], (err) => {
         if (err) next(err);
         const readStream = fs.createReadStream(outputPath);
+        res.setHeader('Content-Type', 'application/json');
         readStream.pipe(res);
-        fs.rmdir(tempPath, { recursive: true }, (err) => {
-          if (err) next(err);
-          // console.log('Removed ' + tempPath);
+        readStream.once('error', next);
+        readStream.once('end', () => {
+          fs.rmdir(tempPath, { recursive: true }, (err) => {
+            if (err) next(err);
+            // console.log('Removed ' + tempPath);
+          });
         });
       });
     });
