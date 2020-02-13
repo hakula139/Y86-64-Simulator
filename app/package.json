@@ -1,9 +1,10 @@
 {
-  "name": "ui",
-  "version": "1.1.0",
-  "description": "An interface for Y86-64 Simulator written in Javascript",
+  "name": "sim_ui",
+  "version": "2.0.0",
+  "description": "An interface for Y86-64 Simulator written in JavaScript + Node.js",
   "dependencies": {
     "@babel/runtime": "^7.7.7",
+    "compression": "^1.7.4",
     "express": "^4.17.1",
     "formidable": "^1.2.1",
     "temp": "^0.9.1"
@@ -31,9 +32,12 @@
   "scripts": {
     "test": "webpack-dev-server --hot --inline",
     "dev": "webpack --mode development",
-    "build": "webpack --mode production",
-    "start": "node server.js"
+    "build": "webpack --mode production"
   },
   "author": "Hakula",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hakula139/Y86-64-Simulator.git"
+  },
   "license": "GPL-3.0"
 }
