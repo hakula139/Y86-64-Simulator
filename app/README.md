@@ -1,6 +1,6 @@
 # Y86-64 Simulator UI
 
-An interface for Y86-64 Simulator written in Javascript.
+An interface for Y86-64 Simulator written in JavaScript + Node.js.
 
 ## Getting Started
 
@@ -18,7 +18,7 @@ npm run build
 ### 2. Usage
 
 ```bash
-node server.js
+node server
 ```
 
 Then check the website at <http://localhost:7273>.

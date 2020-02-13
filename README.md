@@ -1,6 +1,6 @@
 # Y86-64 Simulator
 
-A Y86-64 processor simulator written in Javascript and C++11.
+A Y86-64 processor simulator written in JavaScript, Node.js and C++11.
 
 Here's a [Demo](https://sim.hakula.xyz).
 
@@ -56,7 +56,7 @@ npm run build
 
 ```bash
 cd app
-node server.js
+node server
 ```
 
 Then check the website at <http://localhost:7273>.
