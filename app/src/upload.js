@@ -1,9 +1,9 @@
 'use strict';
 
-let $$ = mdui.JQ;
+let $ = mdui.JQ;
 
-let uploader = $$('#uploader');
-let fileSelect = $$('#fileSelect');
+let uploader = $('#uploader');
+let fileSelect = $('#fileSelect');
 
 uploader.on('click', (error) => {
   fileSelect.trigger('click');
@@ -25,10 +25,10 @@ fileSelect.on('change', (error) => {
 
 // AJAX upload
 let uploadFile = () => {
-  let formData = new FormData($$('#uploadForm')[0]);
+  let formData = new FormData($('#uploadForm')[0]);
   let fileName;
   let fileData;
-  $$.ajax({
+  $.ajax({
     method: 'POST',
     url: 'upload',
     data: formData,
@@ -39,7 +39,7 @@ let uploadFile = () => {
       fileName = dataJson.fileName;
       fileData = dataJson.fileData;
       console.log('Uploaded ' + fileName);
-      $$('#object-code').find('pre').text(fileData);
+      $('#object-code').find('pre').text(fileData);
       operateFile(fileName);
     },
     error: (error) => {
@@ -49,14 +49,14 @@ let uploadFile = () => {
     },
     complete: (xhr, textStatus) => {
       if (textStatus === 'success') {
-        $$('.controller').removeAttr('disabled');
-        $$('#previous').attr('disabled', '');
+        $('.controller').removeAttr('disabled');
+        $('#previous').attr('disabled', '');
         mdui.updateSliders();
         mdui.snackbar({
           message: 'Successfully uploaded.'
         });
       } else {
-        $$('.controller').attr('disabled', '');
+        $('.controller').attr('disabled', '');
         mdui.updateSliders();
         mdui.snackbar({
           message: 'Fail to upload.'
@@ -68,15 +68,16 @@ let uploadFile = () => {
 
 // Operates the uploaded file
 let operateFile = (fileName) => {
-  $$.ajax({
+  $.ajax({
     method: 'POST',
     url: 'execute',
     data: JSON.stringify({ 'fileName': fileName }),
     contentType: 'application/json; charset=utf-8',
     processData: true,
     success: (data) => {
-      $$('#result').val(data);
-      $$('#restart').trigger('click');
+      window.result = data;
+      window.end = data.end.end + 1;
+      $('#restart').trigger('click');
     },
     error: (error) => {
       mdui.snackbar({

@@ -1,252 +1,199 @@
 'use strict';
 
-import './style.css'
+import './style.css';
 import '../favicon/favicon.ico';
 
+import { registers, conditionCodes, pipelineRegisters } from './registers';
 import { outputResult } from './output';
 
-/* Variables */
+const $ = mdui.JQ;
 
-let $$ = mdui.JQ;
+/* Selectors */
 
-let data = $$('#result');
-let clock = 0;
-let template = $$('#list-template').html();
+const body = $('body');
+const progress = $('#progress');
+const upload = $('#upload');
+const previous = $('#previous');
+const run = $('#run');
+const next = $('#next');
+const restart = $('#restart');
+const speed = $('#speed');
+const displayMode = $('#display_mode');
+const base = $('#base');
+let registerValues;
 
-let baseMode = $$('#base-mode');
-let baseModeText = $$('#base-mode-text');
-let displayMode = $$('#display-mode');
-let displayModeIcon = $$('#display-mode-icon');
-let previous = $$('#previous');
-let runStatus = $$('#run-status');
-let runStatusIcon = $$('#run-status-icon');
-let next = $$('#next');
-let restart = $$('#restart');
-let speedController = $$('#speed-controller-slider');
+/* Templates */
 
-// Pipeline registers
-let fetch = [
-  { 'id': '_PRED_PC', 'label': 'PRED_PC' },
-  { 'id': '_CLOCK', 'label': 'CLOCK' }
-];
-let decode = [
-  { 'id': '_STAT', 'label': 'STAT' },
-  { 'id': '_I_CODE', 'label': 'I_CODE' },
-  { 'id': '_I_FUN', 'label': 'I_FUN' },
-  { 'id': '_R_A', 'label': 'R_A' },
-  { 'id': '_R_B', 'label': 'R_B' },
-  { 'id': '_VAL_C', 'label': 'VAL_C' },
-  { 'id': '_VAL_P', 'label': 'VAL_P' }
-];
-let execute = [
-  { 'id': '_STAT', 'label': 'STAT' },
-  { 'id': '_I_CODE', 'label': 'I_CODE' },
-  { 'id': '_I_FUN', 'label': 'I_FUN' },
-  { 'id': '_VAL_C', 'label': 'VAL_C' },
-  { 'id': '_VAL_A', 'label': 'VAL_A' },
-  { 'id': '_VAL_B', 'label': 'VAL_B' },
-  { 'id': '_DST_E', 'label': 'DST_E' },
-  { 'id': '_DST_M', 'label': 'DST_M' },
-  { 'id': '_SRC_A', 'label': 'SRC_A' },
-  { 'id': '_SRC_B', 'label': 'SRC_B' }
-];
-let memory = [
-  { 'id': '_STAT', 'label': 'STAT' },
-  { 'id': '_I_CODE', 'label': 'I_CODE' },
-  { 'id': '_CND', 'label': 'CND' },
-  { 'id': '_VAL_E', 'label': 'VAL_E' },
-  { 'id': '_VAL_A', 'label': 'VAL_A' },
-  { 'id': '_DST_E', 'label': 'DST_E' },
-  { 'id': '_DST_M', 'label': 'DST_M' }
-];
-let writeback = [
-  { 'id': '_STAT', 'label': 'STAT' },
-  { 'id': '_I_CODE', 'label': 'I_CODE' },
-  { 'id': '_VAL_E', 'label': 'VAL_E' },
-  { 'id': '_VAL_M', 'label': 'VAL_M' },
-  { 'id': '_DST_E', 'label': 'DST_E' },
-  { 'id': '_DST_M', 'label': 'DST_M' }
-];
-let pipelineRegister = [
-  { 'stage': fetch, 'id': '#fetch' },
-  { 'stage': decode, 'id': '#decode' },
-  { 'stage': execute, 'id': '#execute' },
-  { 'stage': memory, 'id': '#memory' },
-  { 'stage': writeback, 'id': '#writeback' }
-];
-
-// Registers
-let processorRegister = [
-  { 'id': '_RAX', 'label': '%RAX' },
-  { 'id': '_RCX', 'label': '%RCX' },
-  { 'id': '_RDX', 'label': '%RDX' },
-  { 'id': '_RBX', 'label': '%RBX' },
-  { 'id': '_RSP', 'label': '%RSP' },
-  { 'id': '_RBP', 'label': '%RBP' },
-  { 'id': '_RSI', 'label': '%RSI' },
-  { 'id': '_RDI', 'label': '%RDI' },
-  { 'id': '_R8', 'label': '%R8' },
-  { 'id': '_R9', 'label': '%R9' },
-  { 'id': '_R10', 'label': '%R10' },
-  { 'id': '_R11', 'label': '%R11' },
-  { 'id': '_R12', 'label': '%R12' },
-  { 'id': '_R13', 'label': '%R13' },
-  { 'id': '_R14', 'label': '%R14' }
-];
-
-// Condition code registers
-let conditionCode = [
-  { 'id': '_OF', 'label': 'OF' },
-  { 'id': '_SF', 'label': 'SF' },
-  { 'id': '_ZF', 'label': 'ZF' }
-];
+const registerTemplate = $('#register_template').html();
+const pipelineTemplate = $('#pipeline_template').html();
 
 /* Initialization */
 
-let setButton = () => {
-  let result = data.val();
-  let end = result['end']['end'];
-  if (clock == 0)
-    previous.attr('disabled', '');
-  else
-    previous.removeAttr('disabled');
-  if (clock > end)
-    next.attr('disabled', '');
-  else
-    next.removeAttr('disabled');
-}
-
-let clearAll = () => {
-  $$('.mdui-textfield-input').val(baseModeText.html() === 'HEX' ? 0 : '0x0');
-  $$('#_CLOCK').children('input').val(0);
-  clock = 0;
-}
-
-let replaceLabels = (register, id) => {
-  let list = template;
-  list = list.replace(/\{\$registerId\}/gi, register.id);
-  list = list.replace(/\{\$registerLabel\}/gi, register.label);
-  $$(id).append(list);
+const appendRegister = (register, section) => {
+  let list = registerTemplate;
+  list = list.replace('{$register_label}', register);
+  section.append(list);
 };
 
-(() => {
-  pipelineRegister.forEach((stageItem) => {
-    let stage = stageItem.stage;
-    let stageId = stageItem.id;
-    stage.forEach((register) => {
-      replaceLabels(register, stageId);
+const initRegisters = () => {
+  const section = $('#register');
+  registers.forEach((register) => {
+    appendRegister(register, section);
+  });
+};
+
+const initConditionCodes = () => {
+  const section = $('#condition_code');
+  conditionCodes.forEach((register) => {
+    appendRegister(register, section);
+  });
+};
+
+const initPipelineRegisters = () => {
+  const section = $('#pipeline_stage');
+  pipelineRegisters.forEach((stage) => {
+    let list = pipelineTemplate;
+    list = list.replace('{$stage_title}', stage.title);
+    list = list.replace('{$stage_id}', stage.id);
+    section.append(list);
+    const stageSection = $(`#${stage.id}`);
+    stage.registers.forEach((register) => {
+      appendRegister(register, stageSection);
     });
   });
-  processorRegister.forEach((register) => {
-    replaceLabels(register, '#register');
-  });
-  conditionCode.forEach((register) => {
-    replaceLabels(register, '#condition_code');
-  });
-  clearAll();
-})();
+};
+
+const initAll = () => {
+  initRegisters();
+  initConditionCodes();
+  initPipelineRegisters();
+  registerValues = $('.value');
+};
+initAll();
 
 /* Controllers */
 
-// Base mode
-baseMode.on('click', (error) => {
-  let textfieldInputs = $$('.mdui-textfield-input').not((i, element) => {
-    return $$(element).parent().attr('id') === '_CLOCK';
-  });
-  if (baseModeText.html() === 'HEX') {
-    textfieldInputs.each((i, element) => {
-      let textfieldInput = $$(element);
-      let value = parseInt(textfieldInput.val(), 10);
-      textfieldInput.val('0x' + value.toString(16));
-    })
-    baseModeText.html('DEC');
-  } else {
-    textfieldInputs.each((i, element) => {
-      let textfieldInput = $$(element);
-      textfieldInput.val(parseInt(textfieldInput.val(), 16));
-    })
-    baseModeText.html('HEX');
-  }
-})
+let clock = 0;
 
-// Display mode
-displayMode.on('click', (error) => {
-  $$('body').toggleClass('mdui-theme-layout-dark');
-  if (displayModeIcon.html() === 'brightness_7') {
-    displayMode.attr('mdui-tooltip', '{content: \'Night mode\'}');
-    displayModeIcon.html('brightness_2');
-  } else {
-    displayMode.attr('mdui-tooltip', '{content: \'Day mode\'}');
-    displayModeIcon.html('brightness_7');
-  }
-})
+const reset = () => {
+  registerValues.val(base.attr('data-switch') == 0 ? 0 : '0x0');
+  clock = 0;
+};
+reset();
 
-// Restart
-restart.on('click', (error) => {
+const setButtons = () => {
+  previous.attr('disabled', clock === 0 ? '' : null);
+  next.attr('disabled', clock === window.end ? '' : null);
+};
+const disableButtons = () => {
+  upload.attr('disabled', '');
+  restart.attr('disabled', '');
+  previous.attr('disabled', '');
+  next.attr('disabled', '');
+};
+const enableButtons = () => {
+  upload.removeAttr('disabled');
+  restart.removeAttr('disabled');
+  setButtons();
+};
+
+base.on('click', () => {
+  const baseText = base.children();
+  if (base.attr('data-switch') == 0) {
+    // Switches to hexadecimal mode
+    registerValues.each((_, element) => {
+      const registerValue = $(element);
+      registerValue.val('0x' + parseInt(registerValue.val(), 10).toString(16));
+    })
+    baseText.text('DEC');
+    base.attr('data-switch', 1);
+  } else {
+    // Switches to decimal mode
+    registerValues.each((_, element) => {
+      const registerValue = $(element);
+      registerValue.val(parseInt(registerValue.val(), 16));
+    })
+    baseText.text('HEX');
+    base.attr('data-switch', 0);
+  }
+});
+
+displayMode.on('click', () => {
+  const displayModeIcon = displayMode.children();
+  body.toggleClass('mdui-theme-layout-dark');
+  if (displayMode.attr('data-switch') == 0) {
+    // Switches to night mode
+    displayModeIcon.text('brightness_2');
+    displayMode.attr({
+      'mdui-tooltip': `{content: 'Night mode'}`,
+      'data-switch': 1
+    });
+  } else {
+    // Switches to day mode
+    displayModeIcon.text('brightness_7');
+    displayMode.attr({
+      'mdui-tooltip': `{content: 'Day mode'}`,
+      'data-switch': 0
+    });
+  }
+});
+
+restart.on('click', () => {
   if (restart.attr('disabled') === '') return;
-  clearAll();
-  setButton();
-})
+  reset();
+  setButtons();
+});
 
-// Speed controller
-let getSleepTime = () => {
-  let speed = speedController.val();
-  let sleepTime = 10000 / speed;
-  return sleepTime;
-}
-let sleep = (ms) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+const getSleepTime = () => 10000 / speed.val();
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-// Previous
-let previousStep = () => {
-  let clockDiv = $$('#_CLOCK');
+const previousStep = () => {
   --clock;
   outputResult(clock, 0);
-  clockDiv.children('input').val(clock);
-}
-previous.on('click', (error) => {
+  progress.width(clock / window.end);
+};
+previous.on('click', () => {
   if (previous.attr('disabled') === '') return;
   previousStep();
-  setButton();
-})
+  setButtons();
+});
 
-// Next
-let nextStep = () => {
-  let clockDiv = $$('#_CLOCK');
+const nextStep = () => {
   outputResult(clock, 1);
   ++clock;
-  clockDiv.children('input').val(clock);
-}
-next.on('click', (error) => {
+  progress.width(clock / window.end);
+};
+next.on('click', () => {
   if (next.attr('disabled') === '') return;
   nextStep();
-  setButton();
-})
+  setButtons();
+});
 
-// Run status
-runStatus.on('click', (error) => {
-  if (runStatus.attr('disabled') === '') return;
-  let result = data.val();
-  let end = result['end']['end'];
-  if (runStatusIcon.html() === 'play_arrow') {
-    runStatus.attr('mdui-tooltip', '{content: \'Pause\'}');
-    runStatusIcon.html('pause');
-    restart.attr('disabled', '');
-    previous.attr('disabled', '');
-    next.attr('disabled', '');
+run.on('click', () => {
+  if (run.attr('disabled') === '') return;
+  const runIcon = run.children();
+  if (run.attr('data-switch') == 0) {
+    // Run
+    run.attr({
+      'mdui-tooltip': `{content: 'Pause'}`,
+      'data-switch': 1
+    });
+    runIcon.text('pause');
+    disableButtons();
     (async () => {
-      while (clock <= end) {
-        if (runStatusIcon.html() === 'play_arrow') break;
-        await sleep(getSleepTime());
+      while (clock < window.end) {
+        if (run.attr('data-switch') == 0) break; // Pause
         nextStep();
+        await sleep(getSleepTime());
       }
-      runStatusIcon.html('play_arrow');
-      restart.removeAttr('disabled');
-      setButton();
+      runIcon.text('play_arrow');
+      enableButtons();
     })();
   } else {
-    runStatus.attr('mdui-tooltip', '{content: \'Run\'}');
-    runStatusIcon.html('play_arrow');
+    // Pause
+    run.attr({
+      'mdui-tooltip': `{content: 'Run'}`,
+      'data-switch': 0
+    });
   }
-})
+});

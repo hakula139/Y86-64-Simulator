@@ -1,8 +1,14 @@
-.mdui-appbar {
-    width: 100%;
+.mdui-progress {
     position: fixed;
     top: 0;
     z-index: 9999
+}
+
+#nav {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 999
 }
 
 #main {
@@ -11,45 +17,45 @@
 
 @media (min-width: 600px) {
     #main {
-        margin-top: 5pc
+        margin-top: 80px
     }
 }
 
 @media (max-width: 959px) and (orientation: landscape) {
     #main {
-        margin-top: 4pc
+        margin-top: 64px
     }
 }
 
-#speed-controller {
+#speed_slider {
     overflow: visible;
     width: 10%
 }
 
-#base-mode-text {
+#base_text {
     position: absolute;
     top: 50%;
     left: 50%;
-    font-size: 20px;
+    font-size: 18px;
     transform: translateX(-50%) translateY(-50%)
 }
 
-#memory-state pre, #object-code pre {
+.mdui-card, .mdui-panel-item, .mdui-panel-item-header {
+    border-radius: 16px
+}
+
+pre {
     height: 200px
 }
 
-.mdui-list-item>h1 {
+.stage-title {
     padding-right: 20px;
     min-width: 2pc;
     text-align: center
 }
 
-.mdui-list-item>.output-list {
+.mdui-list-item>.output {
     width: calc(100% + 20px)
-}
-
-.mdui-card, .mdui-panel-item, .mdui-panel-item-header {
-    border-radius: 16px
 }
 
 .mdui-list .mdui-col {
@@ -58,9 +64,4 @@
 
 .mdui-list .mdui-textfield-input {
     height: 24px
-}
-
-#uploadForm, #result {
-    visibility: hidden;
-    position: absolute
 }
