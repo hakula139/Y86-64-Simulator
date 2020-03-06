@@ -17,9 +17,11 @@
       <a href="/" class="mdui-typo-headline mdui-text-truncate mdui-m-r-0">Y86-64</a>
       <a href="/" class="mdui-typo-headline mdui-text-truncate mdui-m-l-0 mdui-hidden-sm-down">&nbsp;Simulator</a>
       <div class="mdui-toolbar-spacer"></div>
+      <form id="upload_form" enctype="multipart/form-data" style="display:none">
+        <input type="file" name="upload" />
+      </form>
       <a href="javascript:;" id="upload" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Upload'}">
         <i class="mdui-icon material-icons">file_upload</i>
-        <form id="upload_form" enctype="multipart/form-data" style="display:none"><input type="file" name="upload" /></form>
       </a>
       <a href="javascript:;" id="previous" class="mdui-btn mdui-btn-icon mdui-ripple controller" mdui-tooltip="{content: 'Previous'}" disabled>
         <i class="mdui-icon material-icons">chevron_left</i>
@@ -68,32 +70,38 @@
     <div id="main" class="mdui-container-fluid mdui-m-l-1 mdui-m-r-1">
       <div class="mdui-row">
         <div class="mdui-col-xs-12 mdui-col-sm-9">
-          <div id="register_section" class="mdui-card mdui-m-a-2">
-            <h4 class="mdui-m-t-1 mdui-m-b-0 mdui-p-t-1 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate title">REGISTER</h4>
-            <div class="mdui-card-content">
-              <div id="register" class="mdui-row-xs-3 mdui-row-md-8 output">
-                <!-- register_template here -->
+          <div class="mdui-row">
+            <div id="register_section" class="mdui-card mdui-m-a-2">
+              <h4 class="mdui-m-t-1 mdui-m-b-0 mdui-p-t-1 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate title">REGISTER</h4>
+              <div class="mdui-card-content">
+                <div id="register" class="mdui-row-xs-3 mdui-row-md-8 output">
+                  <!-- register_template here -->
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div class="mdui-col-xs-12 mdui-col-sm-3">
-          <div id="condition_code_section" class="mdui-card mdui-m-a-2">
-            <h4 class="mdui-m-t-1 mdui-m-b-0 mdui-p-t-1 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate title">CONDITION CODE</h4>
-            <div class="mdui-card-content">
-              <div id="condition_code" class="mdui-row-xs-3 mdui-row-sm-1 mdui-row-md-3 output">
-                <!-- register_template here -->
+          <div class="mdui-row">
+            <div id="condition_code_section" class="mdui-card mdui-m-a-2">
+              <h4 class="mdui-m-t-1 mdui-m-b-0 mdui-p-t-1 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate title">CONDITION CODE</h4>
+              <div class="mdui-card-content">
+                <div id="condition_code" class="mdui-row-xs-3 mdui-row-sm-1 mdui-row-md-3 output">
+                  <!-- register_template here -->
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div class="mdui-col-xs-12">
-          <div id="pipeline_section" class="mdui-card mdui-m-a-2">
-            <h4 class="mdui-m-t-1 mdui-m-b-0 mdui-p-t-1 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate title">PIPELINE REGISTER</h4>
-            <div class="mdui-card-content">
-              <ul id="pipeline_stage" class="mdui-list">
-                <!-- pipeline_template here -->
-              </ul>
+          <div class="mdui-row">
+            <div id="pipeline_section" class="mdui-card mdui-m-a-2">
+              <h4 class="mdui-m-t-1 mdui-m-b-0 mdui-p-t-1 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate title">PIPELINE REGISTER</h4>
+              <div class="mdui-card-content">
+                <ul id="pipeline_stage" class="mdui-list">
+                  <!-- pipeline_template here -->
+                </ul>
+              </div>
             </div>
           </div>
         </div>
