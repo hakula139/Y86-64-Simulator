@@ -12,7 +12,6 @@ const $ = mdui.JQ;
 
 const body = $('body');
 const progress = $('#progress');
-const upload = $('#upload');
 const previous = $('#previous');
 const run = $('#run');
 const next = $('#next');
