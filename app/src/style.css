@@ -58,7 +58,7 @@ pre {
     width: calc(100% + 20px)
 }
 
-.mdui-list .mdui-col {
+.mdui-col {
     transition: .2s ease-out
 }
 
