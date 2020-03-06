@@ -88,6 +88,12 @@ cd app
 rm -r dist/*
 ```
 
+## TODO
+
+- [ ] Add a Clock at a **proper** position
+- [ ] Implement a CPI monitor
+- [ ] Implement a Memory Status section
+
 ## Contributors
 
 - [**Hakula Chen**](https://github.com/hakula139)<[i@hakula.xyz](mailto:i@hakula.xyz)> - Fudan University
