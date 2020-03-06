@@ -61,6 +61,8 @@ node server
 
 Then check the website at <http://localhost:7273>.
 
+To run the script on a server continuously, try [forever](https://www.npmjs.com/package/forever).
+
 ### 3. Clean
 
 #### 3.1 Back-end

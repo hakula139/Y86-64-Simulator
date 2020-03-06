@@ -23,6 +23,8 @@ node server
 
 Then check the website at <http://localhost:7273>.
 
+To run the script on a server continuously, try [forever](https://www.npmjs.com/package/forever).
+
 ## Contributors
 
 - [**Hakula Chen**](https://github.com/hakula139)<[i@hakula.xyz](mailto:i@hakula.xyz)> - Fudan University
