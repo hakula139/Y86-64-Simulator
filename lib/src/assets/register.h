@@ -153,7 +153,7 @@ public:
     static nlohmann::json GetConditionCode() {
         return GetAllInJson(ConditionCode::changes_, CC);
     }
-    static nlohmann::json GetEnd() { return {{"end", cpu_clock}}; }
+    static uint64_t GetEnd() { return cpu_clock + 1; }
 
     // Prints all changes in a single json file
     static bool PrintAllInOneJson(const std::string& output_dir);
