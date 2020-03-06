@@ -147,6 +147,7 @@ displayMode.on('click', () => {
 restart.on('click', () => {
   if (restart.attr('disabled') === '') return;
   resetAll();
+  setProgressBar();
   setButtons();
 });
 
@@ -158,10 +159,14 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function setProgressBar() {
+  progress.css('width', `${clock / window.end * 100}%`);
+}
+
 function previousStep() {
   --clock;
   outputResult(clock, 0);
-  progress.width(clock / window.end);
+  setProgressBar();
 }
 
 previous.on('click', () => {
@@ -173,7 +178,7 @@ previous.on('click', () => {
 function nextStep() {
   outputResult(clock, 1);
   ++clock;
-  progress.width(clock / window.end);
+  setProgressBar();
 }
 
 next.on('click', () => {
