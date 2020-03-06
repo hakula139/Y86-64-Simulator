@@ -4,29 +4,6 @@
     z-index: 9999
 }
 
-#nav {
-    width: 100%;
-    position: fixed;
-    top: 0;
-    z-index: 999
-}
-
-#main {
-    margin-top: 72px
-}
-
-@media (min-width: 600px) {
-    #main {
-        margin-top: 80px
-    }
-}
-
-@media (max-width: 959px) and (orientation: landscape) {
-    #main {
-        margin-top: 64px
-    }
-}
-
 #speed_slider {
     overflow: visible;
     width: 10%
