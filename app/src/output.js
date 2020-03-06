@@ -1,26 +1,32 @@
 'use strict';
 
-let $$ = mdui.JQ;
+const $ = mdui.JQ;
 
-let data = $$('#result');
-let baseModeText = $$('#base-mode-text');
-export let outputResult = (clock, mode) => {
-  let result = data.val();
-  for (let key in result) {
-    let id = $$('#' + key);
-    let section = result[key][clock];
-    for (let register in section) {
-      let regid = id.find('#_' + register);
-      let regidInput = regid.children('input');
-      let runMode = mode ? 'new' : 'old';
-      let value = section[register][runMode];
-      regidInput.val(baseModeText.html() === 'HEX' ? value : '0x' + value.toString(16));
+/* Selectors */
+
+const displayMode = $('#display_mode');
+const base = $('#base');
+
+/* Output */
+
+// mode: 0 for previous step, 1 for next step
+function outputResult(clock, mode) {
+  const result = window.result;
+  for (let section in result) {
+    const id = $(`#${section}`);
+    const updates = result[section][clock];
+    for (let regid in updates) {
+      const register = id.find(`.${regid}`);
+      const value = updates[regid][mode ? 'new' : 'old'];
+      register.val(base.attr('data-switch') == 0 ? value : `0x${value.toString(16)}`);
       // Animation
-      let block = regid.parent('.mdui-col');
-      block.css('background-color', '#88a');
+      const block = register.closest('.mdui-col');
+      block.css('background-color', displayMode.attr('data-switch') == 0 ? '#88a' : '#bbf');
       setTimeout(() => {
         block.css('background-color', 'initial');
       }, 200);
     }
   }
 }
+
+export { outputResult };
