@@ -12,8 +12,7 @@ const distPath = path.resolve(rootPath, 'dist');
 module.exports = {
   entry: {
     index: path.resolve(srcPath, 'index.js'),
-    output: path.resolve(srcPath, 'output.js'),
-    upload: path.resolve(srcPath, 'upload.js'),
+    upload: path.resolve(srcPath, 'upload.js')
   },
   output: {
     path: distPath,
