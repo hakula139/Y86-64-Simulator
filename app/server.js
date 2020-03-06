@@ -56,6 +56,7 @@ app.post('/execute', (req, res, next) => {
   const execFile = childProcess.execFile;
   const program = '../lib/sim';
   const fileName = req.body.fileName;
+  if (fileName === '') next();
   const oldInputPath = path.join(uploadPath, fileName);
   temp.mkdir('y86-64_sim_', (err, tempPath) => {
     if (err) next(err);
