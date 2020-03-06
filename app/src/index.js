@@ -18,6 +18,7 @@ const run = $('#run');
 const next = $('#next');
 const restart = $('#restart');
 const speed = $('#speed');
+const controllers = $('.controller');
 const displayMode = $('#display_mode');
 const base = $('#base');
 let registerValues;
@@ -29,27 +30,27 @@ const pipelineTemplate = $('#pipeline_template').html();
 
 /* Initialization */
 
-const appendRegister = (register, section) => {
+function appendRegister(register, section) {
   let list = registerTemplate;
   list = list.replace('{$register_label}', register);
   section.append(list);
-};
+}
 
-const initRegisters = () => {
+function initRegisters() {
   const section = $('#register');
   registers.forEach((register) => {
-    appendRegister(register, section);
+    appendRegister(`%${register}`, section);
   });
-};
+}
 
-const initConditionCodes = () => {
+function initConditionCodes() {
   const section = $('#condition_code');
   conditionCodes.forEach((register) => {
     appendRegister(register, section);
   });
-};
+}
 
-const initPipelineRegisters = () => {
+function initPipelineRegisters() {
   const section = $('#pipeline_stage');
   pipelineRegisters.forEach((stage) => {
     let list = pipelineTemplate;
@@ -61,41 +62,44 @@ const initPipelineRegisters = () => {
       appendRegister(register, stageSection);
     });
   });
-};
+}
 
-const initAll = () => {
+function initAll() {
   initRegisters();
   initConditionCodes();
   initPipelineRegisters();
   registerValues = $('.value');
-};
-initAll();
+}
+
+$(() => {
+  initAll();
+  resetAll();
+});
 
 /* Controllers */
 
 let clock = 0;
 
-const reset = () => {
+function resetAll() {
   registerValues.val(base.attr('data-switch') == 0 ? 0 : '0x0');
   clock = 0;
-};
-reset();
+}
 
-const setButtons = () => {
-  previous.attr('disabled', clock === 0 ? '' : null);
-  next.attr('disabled', clock === window.end ? '' : null);
-};
-const disableButtons = () => {
-  upload.attr('disabled', '');
+function setButtons() {
+  clock === 0 ? previous.attr('disabled', '') : previous.removeAttr('disabled');
+  clock === window.end ? next.attr('disabled', '') : next.removeAttr('disabled');
+}
+
+function disableButtons() {
   restart.attr('disabled', '');
   previous.attr('disabled', '');
   next.attr('disabled', '');
-};
-const enableButtons = () => {
-  upload.removeAttr('disabled');
-  restart.removeAttr('disabled');
+}
+
+function enableButtons() {
+  controllers.removeAttr('disabled');
   setButtons();
-};
+}
 
 base.on('click', () => {
   const baseText = base.children();
@@ -140,29 +144,36 @@ displayMode.on('click', () => {
 
 restart.on('click', () => {
   if (restart.attr('disabled') === '') return;
-  reset();
+  resetAll();
   setButtons();
 });
 
-const getSleepTime = () => 10000 / speed.val();
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+function getSleepTime() {
+  return 10000 / speed.val();
+}
 
-const previousStep = () => {
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function previousStep() {
   --clock;
   outputResult(clock, 0);
   progress.width(clock / window.end);
-};
+}
+
 previous.on('click', () => {
   if (previous.attr('disabled') === '') return;
   previousStep();
   setButtons();
 });
 
-const nextStep = () => {
+function nextStep() {
   outputResult(clock, 1);
   ++clock;
   progress.width(clock / window.end);
-};
+}
+
 next.on('click', () => {
   if (next.attr('disabled') === '') return;
   nextStep();
