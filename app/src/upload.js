@@ -7,7 +7,7 @@ const $ = mdui.JQ;
 const upload = $('#upload');
 const uploadForm = $('#upload_form');
 const fileSelect = $('input[name="upload"]');
-const objectCode = $('#object-code');
+const objectCode = $('#object_code');
 const restart = $('#restart');
 const controllers = $('.controller');
 
@@ -44,7 +44,7 @@ function uploadFile() {
       const fileName = dataJson.fileName;
       const fileData = dataJson.fileData;
       console.log(fileName + ' uploaded.');
-      objectCode.find('pre').text(fileData);
+      objectCode.text(fileData);
       execute(fileName);
     }
   });
