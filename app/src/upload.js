@@ -1,20 +1,27 @@
 'use strict';
 
-let $ = mdui.JQ;
+const $ = mdui.JQ;
 
-let uploader = $('#uploader');
-let fileSelect = $('#fileSelect');
+/* Selectors */
 
-uploader.on('click', (error) => {
+const upload = $('#upload');
+const uploadForm = $('#upload_form');
+const fileSelect = $('input[name="upload"]');
+const objectCode = $('#object-code');
+const restart = $('#restart');
+const controllers = $('.controller');
+
+/* Controllers */
+
+upload.on('click', () => {
   fileSelect.trigger('click');
 });
 
-fileSelect.on('change', (error) => {
-  // Check filename
+fileSelect.on('change', () => {
+  // Check if fileName is valid
   const fileName = fileSelect.val();
-  const fileNameLength = fileName.length;
-  if (!fileNameLength) return;
-  if (fileName.substring(fileNameLength - 3) != '.yo') {
+  if (!fileName.length) return;
+  if (fileName.substring(fileName.length - 3) !== '.yo') {
     mdui.snackbar({
       message: 'Currently only .yo files are accepted.'
     });
@@ -24,50 +31,27 @@ fileSelect.on('change', (error) => {
 });
 
 // AJAX upload
-let uploadFile = () => {
-  let formData = new FormData($('#uploadForm')[0]);
-  let fileName;
-  let fileData;
+function uploadFile() {
+  const formData = new FormData(uploadForm[0]);
   $.ajax({
     method: 'POST',
     url: 'upload',
     data: formData,
     contentType: false,
     processData: false,
-    success: (data, textStatus, xhr) => {
-      let dataJson = JSON.parse(data);
-      fileName = dataJson.fileName;
-      fileData = dataJson.fileData;
-      console.log('Uploaded ' + fileName);
-      $('#object-code').find('pre').text(fileData);
-      operateFile(fileName);
-    },
-    error: (error) => {
-      mdui.snackbar({
-        message: 'Cannot connect to server.'
-      });
-    },
-    complete: (xhr, textStatus) => {
-      if (textStatus === 'success') {
-        $('.controller').removeAttr('disabled');
-        $('#previous').attr('disabled', '');
-        mdui.updateSliders();
-        mdui.snackbar({
-          message: 'Successfully uploaded.'
-        });
-      } else {
-        $('.controller').attr('disabled', '');
-        mdui.updateSliders();
-        mdui.snackbar({
-          message: 'Fail to upload.'
-        });
-      }
+    success: (data) => {
+      const dataJson = JSON.parse(data);
+      const fileName = dataJson.fileName;
+      const fileData = dataJson.fileData;
+      console.log(fileName + ' uploaded.');
+      objectCode.find('pre').text(fileData);
+      execute(fileName);
     }
   });
 }
 
-// Operates the uploaded file
-let operateFile = (fileName) => {
+// Receives the result from server side
+function execute(fileName) {
   $.ajax({
     method: 'POST',
     url: 'execute',
@@ -75,14 +59,24 @@ let operateFile = (fileName) => {
     contentType: 'application/json; charset=utf-8',
     processData: true,
     success: (data) => {
-      window.result = data;
-      window.end = data.end.end + 1;
-      $('#restart').trigger('click');
-    },
-    error: (error) => {
+      window.result = JSON.parse(data);
+      window.end = window.result.end;
+      controllers.removeAttr('disabled');
+      restart.removeAttr('disabled');
+      restart.trigger('click');
+      mdui.updateSliders();
       mdui.snackbar({
-        message: 'Cannot connect to server.'
+        message: 'Successfully uploaded.'
       });
     }
   });
 }
+
+$(document).ajaxError(() => {
+  console.log('Failed to upload.');
+  controllers.attr('disabled', '');
+  mdui.updateSliders();
+  mdui.snackbar({
+    message: 'Cannot connect to server.'
+  });
+});
