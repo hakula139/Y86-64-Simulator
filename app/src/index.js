@@ -82,11 +82,11 @@ $(() => {
 
 /* Controllers */
 
-let clockCycle = 0;
+let clockTime = 0;
 let instructionCount = 0;
 
 function resetAll() {
-  clockCycle = 0;
+  clockTime = 0;
   clock.val(0);
   instructionCount = 0;
   instruction.val(0);
@@ -95,8 +95,8 @@ function resetAll() {
 }
 
 function setButtons() {
-  clockCycle === 0 ? previous.attr('disabled', '') : previous.removeAttr('disabled');
-  clockCycle === window.end ? next.attr('disabled', '') : next.removeAttr('disabled');
+  clockTime === 0 ? previous.attr('disabled', '') : previous.removeAttr('disabled');
+  clockTime === window.end ? next.attr('disabled', '') : next.removeAttr('disabled');
 }
 
 function disableButtons() {
@@ -174,20 +174,20 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function setClock(clockCycle) {
-  clock.val(clockCycle);
+function setClock(clockTime) {
+  clock.val(clockTime);
   instruction.val(instructionCount);
-  cpi.val(instructionCount === 0 ? 'N/A' : clockCycle / instructionCount);
+  cpi.val(instructionCount === 0 ? 'N/A' : clockTime / instructionCount);
 }
 
 function setProgressBar() {
-  progress.css('width', `${clockCycle / window.end * 100}%`);
+  progress.css('width', `${clockTime / window.end * 100}%`);
 }
 
 function previousStep() {
-  --clockCycle;
-  outputResult(clockCycle, 0);
-  setClock(clockCycle);
+  --clockTime;
+  outputResult(clockTime, 0);
+  setClock(clockTime);
   setProgressBar();
 }
 
@@ -198,9 +198,9 @@ previous.on('click', () => {
 });
 
 function nextStep() {
-  outputResult(clockCycle, 1);
-  ++clockCycle;
-  setClock(clockCycle);
+  outputResult(clockTime, 1);
+  ++clockTime;
+  setClock(clockTime);
   setProgressBar();
 }
 
@@ -222,7 +222,7 @@ run.on('click', () => {
     runIcon.text('pause');
     disableButtons();
     (async () => {
-      while (clockCycle < window.end) {
+      while (clockTime < window.end) {
         if (run.attr('data-switch') == 0) break; // Pause
         nextStep();
         await sleep(getSleepTime());
