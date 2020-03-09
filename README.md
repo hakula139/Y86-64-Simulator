@@ -2,11 +2,17 @@
 
 A Y86-64 processor simulator written in JavaScript, Node.js and C++11.
 
+![Y86-64 Simulator](./screenshot.png)
+
+Y86-64 Simulator is a well-designed coursework project attached to Chap. 4 of *Computer Systems: A Programmer's Perspective, Third Edition*. For more details, please refer to *[CS:APP3e Guide to Y86-64 Processor Simulators](http://csapp.cs.cmu.edu/3e/simguide.pdf)*.
+
 Here's a [Demo](https://sim.hakula.xyz).
 
 ## Getting Started
 
 ### 0. Prerequisites
+
+To set up the environment, you need to have the following dependencies installed.
 
 #### 0.1 Back-end
 
@@ -61,7 +67,9 @@ node server
 
 Then check the website at <http://localhost:7273>.
 
-To run the script on a server continuously, try [forever](https://www.npmjs.com/package/forever).
+To deploy and run the project on a server continuously, try [forever](https://www.npmjs.com/package/forever).
+
+To use a command line version, see the document [here](./lib/README.md).
 
 ### 3. Clean
 
@@ -90,9 +98,9 @@ rm -r dist/*
 
 ## TODO
 
-- [ ] Add a Clock at a **proper** position
-- [ ] Implement a CPI monitor
-- [ ] Implement a Memory Status section
+- [x] Add a clock at a **proper** position
+- [x] Implement a CPI monitor
+- [ ] Implement a memory status section
 
 ## Contributors
 

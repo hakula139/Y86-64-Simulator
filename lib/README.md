@@ -1,8 +1,10 @@
-# Y86-64 Simulator
+# Y86-64 Simulator CLI
 
 A Y86-64 processor simulator written in C++11.
 
 ## Getting Started
+
+To set up the environment, you need to have the following dependencies installed.
 
 ### 0. Prerequisites
 

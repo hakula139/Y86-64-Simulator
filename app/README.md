@@ -4,6 +4,8 @@ An interface for Y86-64 Simulator written in JavaScript + Node.js.
 
 ## Getting Started
 
+To set up the environment, you need to have the following dependencies installed.
+
 ### 0. Prerequisites
 
 - [Node.js](https://nodejs.org/en/download) 12 or above
@@ -23,7 +25,7 @@ node server
 
 Then check the website at <http://localhost:7273>.
 
-To run the script on a server continuously, try [forever](https://www.npmjs.com/package/forever).
+To deploy and run the project on a server continuously, try [forever](https://www.npmjs.com/package/forever).
 
 ## Contributors
 
