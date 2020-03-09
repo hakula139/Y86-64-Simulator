@@ -20,29 +20,29 @@
       <form id="upload_form" enctype="multipart/form-data" style="display:none">
         <input type="file" name="upload" />
       </form>
-      <a href="javascript:;" id="upload" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Upload'}">
+      <a href="javascript:;" id="upload" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Upload', delay: '1000'}">
         <i class="mdui-icon material-icons">file_upload</i>
       </a>
-      <a href="javascript:;" id="previous" class="mdui-btn mdui-btn-icon mdui-ripple controller" mdui-tooltip="{content: 'Previous'}" disabled>
+      <a href="javascript:;" id="previous" class="mdui-btn mdui-btn-icon mdui-ripple controller" mdui-tooltip="{content: 'Previous', delay: '1000'}" disabled>
         <i class="mdui-icon material-icons">chevron_left</i>
       </a>
-      <a href="javascript:;" id="run" class="mdui-btn mdui-btn-icon mdui-ripple controller" mdui-tooltip="{content: 'Run'}" data-switch="0" disabled>
+      <a href="javascript:;" id="run" class="mdui-btn mdui-btn-icon mdui-ripple controller" mdui-tooltip="{content: 'Run', delay: '1000'}" data-switch="0" disabled>
         <i class="mdui-icon material-icons">play_arrow</i>
       </a>
-      <a href="javascript:;" id="next" class="mdui-btn mdui-btn-icon mdui-ripple controller" mdui-tooltip="{content: 'Next'}" disabled>
+      <a href="javascript:;" id="next" class="mdui-btn mdui-btn-icon mdui-ripple controller" mdui-tooltip="{content: 'Next', delay: '1000'}" disabled>
         <i class="mdui-icon material-icons">chevron_right</i>
       </a>
-      <a href="javascript:;" id="restart" class="mdui-btn mdui-btn-icon mdui-ripple controller" mdui-tooltip="{content: 'Restart'}" disabled>
+      <a href="javascript:;" id="restart" class="mdui-btn mdui-btn-icon mdui-ripple controller" mdui-tooltip="{content: 'Restart', delay: '1000'}" disabled>
         <i class="mdui-icon material-icons">replay</i>
       </a>
       <label id="speed_slider" class="mdui-slider mdui-m-l-2 mdui-m-r-2 mdui-hidden-xs">
         <input id="speed" class="controller" type="range" step="5" min="10" max="200" value="40" disabled />
       </label>
       <div class="mdui-toolbar-spacer"></div>
-      <a href="javascript:;" id="display_mode" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Day mode'}" data-switch="0">
+      <a href="javascript:;" id="display_mode" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Day mode', delay: '1000'}" data-switch="0">
         <i class="mdui-icon material-icons">brightness_7</i>
       </a>
-      <a href="https://github.com/hakula139/Y86-64-Simulator" id="source" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Source'}">
+      <a href="https://github.com/hakula139/Y86-64-Simulator" id="source" class="mdui-btn mdui-btn-icon mdui-ripple" mdui-tooltip="{content: 'Source', delay: '1000'}">
         <i class="mdui-icon fab fa-github"></i>
       </a>
     </div>
@@ -69,24 +69,53 @@
   <content>
     <div id="main" class="mdui-container-fluid mdui-m-l-1 mdui-m-r-1 mdui-p-t-2">
       <div class="mdui-row">
-        <div class="mdui-col-xs-12 mdui-col-sm-9">
+        <div class="mdui-col-xs-12 mdui-col-sm-2">
+          <div class="mdui-row">
+            <div id="clock_section" class="mdui-card mdui-m-a-2">
+              <h4 class="mdui-m-t-1 mdui-m-b-0 mdui-p-t-1 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate title">CLOCK</h4>
+              <div class="mdui-card-content">
+                <div class="mdui-row-xs-3 mdui-row-sm-1 output">
+                  <div class="mdui-col mdui-ripple">
+                    <div class="mdui-textfield mdui-p-t-1">
+                      <label class="mdui-textfield-label mdui-text-truncate">CLK</label>
+                      <input id="clock" class="mdui-textfield-input stat" type="text" />
+                    </div>
+                  </div>
+                  <div class="mdui-col mdui-ripple">
+                    <div class="mdui-textfield mdui-p-t-1">
+                      <label class="mdui-textfield-label mdui-text-truncate">INST</label>
+                      <input id="instruction" class="mdui-textfield-input stat" type="text" />
+                    </div>
+                  </div>
+                  <div class="mdui-col mdui-ripple">
+                    <div class="mdui-textfield mdui-p-t-1">
+                      <label class="mdui-textfield-label mdui-text-truncate">CPI</label>
+                      <input id="cpi" class="mdui-textfield-input stat" type="text" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mdui-col-xs-12 mdui-col-sm-8">
           <div class="mdui-row">
             <div id="register_section" class="mdui-card mdui-m-a-2">
               <h4 class="mdui-m-t-1 mdui-m-b-0 mdui-p-t-1 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate title">REGISTER</h4>
               <div class="mdui-card-content">
-                <div id="register" class="mdui-row-xs-3 mdui-row-md-8 output">
+                <div id="register" class="mdui-row-xs-3 mdui-row-md-5 output">
                   <!-- register_template here -->
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="mdui-col-xs-12 mdui-col-sm-3">
+        <div class="mdui-col-xs-12 mdui-col-sm-2">
           <div class="mdui-row">
             <div id="condition_code_section" class="mdui-card mdui-m-a-2">
-              <h4 class="mdui-m-t-1 mdui-m-b-0 mdui-p-t-1 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate title">CONDITION CODE</h4>
+              <h4 class="mdui-m-t-1 mdui-m-b-0 mdui-p-t-1 mdui-p-l-2 mdui-p-r-2 mdui-text-truncate title" mdui-tooltip="{content: 'CONDITION CODE'}">CC</h4>
               <div class="mdui-card-content">
-                <div id="condition_code" class="mdui-row-xs-3 mdui-row-sm-1 mdui-row-md-3 output">
+                <div id="condition_code" class="mdui-row-xs-3 mdui-row-sm-1 output">
                   <!-- register_template here -->
                 </div>
               </div>
@@ -108,7 +137,7 @@
         <div class="mdui-col-xs-12 mdui-col-md-12">
           <div class="mdui-row">
             <div id="object_code_section" class="mdui-panel" mdui-panel>
-              <div class="mdui-panel-item mdui-m-a-2">
+              <div class="mdui-panel-item mdui-panel-item-open mdui-m-a-2">
                 <h4 class="mdui-panel-item-header mdui-m-b-0 title">OBJECT CODE</h4>
                 <div class="mdui-panel-item-body">
                   <div class="mdui-typo mdui-m-t-2">
@@ -121,7 +150,7 @@
         </div>
       </div>
     </div>
-    <button id="base" class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent" data-switch="0">
+    <button id="base" class="mdui-fab mdui-fab-fixed mdui-ripple mdui-color-theme-accent" mdui-tooltip="{content: 'Switch to HEX', delay: '1000'}" data-switch="0">
       <span>HEX</span>
     </button>
   </content>

@@ -20,6 +20,10 @@ const speed = $('#speed');
 const controllers = $('.controller');
 const displayMode = $('#display_mode');
 const base = $('#base');
+const stats = $('.stat');
+const clock = $('#clock');
+const instruction = $('#instruction');
+const cpi = $('#cpi');
 let values;
 
 /* Templates */
@@ -78,16 +82,21 @@ $(() => {
 
 /* Controllers */
 
-let clock = 0;
+let clockCycle = 0;
+let instructionCount = 0;
 
 function resetAll() {
+  clockCycle = 0;
+  clock.val(0);
+  instructionCount = 0;
+  instruction.val(0);
+  cpi.val('N/A');
   values.val(base.attr('data-switch') == 0 ? 0 : '0x0');
-  clock = 0;
 }
 
 function setButtons() {
-  clock === 0 ? previous.attr('disabled', '') : previous.removeAttr('disabled');
-  clock === window.end ? next.attr('disabled', '') : next.removeAttr('disabled');
+  clockCycle === 0 ? previous.attr('disabled', '') : previous.removeAttr('disabled');
+  clockCycle === window.end ? next.attr('disabled', '') : next.removeAttr('disabled');
 }
 
 function disableButtons() {
@@ -111,7 +120,10 @@ base.on('click', () => {
       value.val(`0x${hexValue}`);
     })
     baseText.text('DEC');
-    base.attr('data-switch', 1);
+    base.attr({
+      'mdui-tooltip': `{content: 'Switch to DEC', delay: '1000'}`,
+      'data-switch': 1
+    });
   } else {
     // Switches to decimal mode
     values.each((_, element) => {
@@ -120,7 +132,10 @@ base.on('click', () => {
       value.val(decValue);
     })
     baseText.text('HEX');
-    base.attr('data-switch', 0);
+    base.attr({
+      'mdui-tooltip': `{content: 'Switch to HEX', delay: '1000'}`,
+      'data-switch': 0
+    });
   }
 });
 
@@ -131,14 +146,14 @@ displayMode.on('click', () => {
     // Switches to night mode
     displayModeIcon.text('brightness_2');
     displayMode.attr({
-      'mdui-tooltip': `{content: 'Night mode'}`,
+      'mdui-tooltip': `{content: 'Night mode', delay: '1000'}`,
       'data-switch': 1
     });
   } else {
     // Switches to day mode
     displayModeIcon.text('brightness_7');
     displayMode.attr({
-      'mdui-tooltip': `{content: 'Day mode'}`,
+      'mdui-tooltip': `{content: 'Day mode', delay: '1000'}`,
       'data-switch': 0
     });
   }
@@ -159,13 +174,20 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function setClock(clockCycle) {
+  clock.val(clockCycle);
+  instruction.val(instructionCount);
+  cpi.val(instructionCount === 0 ? 'N/A' : clockCycle / instructionCount);
+}
+
 function setProgressBar() {
-  progress.css('width', `${clock / window.end * 100}%`);
+  progress.css('width', `${clockCycle / window.end * 100}%`);
 }
 
 function previousStep() {
-  --clock;
-  outputResult(clock, 0);
+  --clockCycle;
+  outputResult(clockCycle, 0);
+  setClock(clockCycle);
   setProgressBar();
 }
 
@@ -176,8 +198,9 @@ previous.on('click', () => {
 });
 
 function nextStep() {
-  outputResult(clock, 1);
-  ++clock;
+  outputResult(clockCycle, 1);
+  ++clockCycle;
+  setClock(clockCycle);
   setProgressBar();
 }
 
@@ -193,13 +216,13 @@ run.on('click', () => {
   if (run.attr('data-switch') == 0) {
     // Run
     run.attr({
-      'mdui-tooltip': `{content: 'Pause'}`,
+      'mdui-tooltip': `{content: 'Pause', delay: '1000'}`,
       'data-switch': 1
     });
     runIcon.text('pause');
     disableButtons();
     (async () => {
-      while (clock < window.end) {
+      while (clockCycle < window.end) {
         if (run.attr('data-switch') == 0) break; // Pause
         nextStep();
         await sleep(getSleepTime());
@@ -211,7 +234,7 @@ run.on('click', () => {
   } else {
     // Pause
     run.attr({
-      'mdui-tooltip': `{content: 'Run'}`,
+      'mdui-tooltip': `{content: 'Run', delay: '1000'}`,
       'data-switch': 0
     });
   }
