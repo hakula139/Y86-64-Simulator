@@ -20,11 +20,11 @@ const speed = $('#speed');
 const controllers = $('.controller');
 const displayMode = $('#display_mode');
 const base = $('#base');
-const stats = $('.stat');
 const clock = $('#clock');
 const instruction = $('#instruction');
 const cpi = $('#cpi');
 let values;
+let icode;
 
 /* Templates */
 
@@ -73,6 +73,7 @@ function initAll() {
   initConditionCodes();
   initPipelineRegisters();
   values = $('.value');
+  icode = $('#writeback').find('.I_CODE');
 }
 
 $(() => {
@@ -84,12 +85,14 @@ $(() => {
 
 let clockTime = 0;
 let instructionCount = 0;
+let history = [0];  // the history of instruction count
 
 function resetAll() {
   clockTime = 0;
   clock.val(0);
   instructionCount = 0;
   instruction.val(0);
+  history = [0];
   cpi.val('N/A');
   values.val(base.attr('data-switch') == 0 ? 0 : '0x0');
 }
@@ -176,8 +179,29 @@ function sleep(ms) {
 
 function setClock(clockTime) {
   clock.val(clockTime);
-  instruction.val(instructionCount);
-  cpi.val(instructionCount === 0 ? 'N/A' : clockTime / instructionCount);
+}
+
+// mode: 0 for previous step, 1 for next step
+function setInstructionCountAndCpi(clockTime, mode) {
+  const lastInstruction = icode.val();
+  // true if the last instruction is I_HALT or I_NOP
+  // using '==' instead of '===' to implicitly convert the value to a decimal number
+  const isHalt = lastInstruction == 0 || lastInstruction == 1;
+  if (mode) {
+    instruction.val(instructionCount);
+    setCpi(clockTime, instructionCount);
+    history.push(instructionCount);
+    instructionCount += !isHalt;  // predicts next instruction count
+  } else {
+    instructionCount = history.pop();
+    const curInstructionCount = history[history.length - 1];  // current instruction count
+    instruction.val(curInstructionCount);
+    setCpi(clockTime, curInstructionCount);
+  }
+}
+
+function setCpi(clockTime, instructionCount) {
+  cpi.val(instructionCount ? clockTime / instructionCount : 'N/A');
 }
 
 function setProgressBar() {
@@ -188,6 +212,7 @@ function previousStep() {
   --clockTime;
   outputResult(clockTime, 0);
   setClock(clockTime);
+  setInstructionCountAndCpi(clockTime, 0);
   setProgressBar();
 }
 
@@ -201,6 +226,7 @@ function nextStep() {
   outputResult(clockTime, 1);
   ++clockTime;
   setClock(clockTime);
+  setInstructionCountAndCpi(clockTime, 1);
   setProgressBar();
 }
 

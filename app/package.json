@@ -1,6 +1,6 @@
 {
   "name": "sim_ui",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "An interface for Y86-64 Simulator written in JavaScript + Node.js",
   "dependencies": {
     "@babel/runtime": "^7.7.7",
