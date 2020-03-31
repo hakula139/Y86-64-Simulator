@@ -58,8 +58,8 @@ uint64_t Execute::GetAluA() {
 }
 
 uint64_t Execute::GetAluB() {
-    if (ValueIsInArray(icode_,
-                       {IRMMOVQ, IMRMOVQ, IOPQ, ICALL, IPUSHQ, IRET, IPOPQ}))
+    if (ValueIsInArray(
+            icode_, {IRMMOVQ, IMRMOVQ, IOPQ, ICALL, IPUSHQ, IRET, IPOPQ}))
         return PipelineRegister::Get(EXECUTE, assets::VAL_B);
     if (ValueIsInArray(icode_, {IRRMOVQ, IIRMOVQ})) return 0ull;
     return 0;  // Other instructions don’t need ALU
@@ -76,13 +76,13 @@ bool Execute::GetCondition() {
     auto of     = ConditionCode::Get(assets::OF);
     bool result = true;
     switch (ifun_) {
-        case assets::C_LE: result = zf || (sf && !of) || (!sf && of); break;
-        case assets::C_L: result = (sf && !of) || (!sf && of); break;
-        case assets::C_E: result = zf; break;
-        case assets::C_NE: result = !zf; break;
-        case assets::C_GE: result = (sf && of) || (!sf && !of); break;
-        case assets::C_G: result = !zf && ((sf && of) || (!sf && !of)); break;
-        default: break;
+    case assets::C_LE: result = zf || (sf && !of) || (!sf && of); break;
+    case assets::C_L: result = (sf && !of) || (!sf && of); break;
+    case assets::C_E: result = zf; break;
+    case assets::C_NE: result = !zf; break;
+    case assets::C_GE: result = (sf && of) || (!sf && !of); break;
+    case assets::C_G: result = !zf && ((sf && of) || (!sf && !of)); break;
+    default: break;
     }
     return result;
 }
@@ -93,19 +93,11 @@ uint64_t Execute::GetValE(uint64_t alu_a, uint64_t alu_b, uint64_t alu_func) {
     auto    num_b  = static_cast<int64_t>(alu_b);
     int64_t result = 0;
     switch (alu_func) {
-        case assets::ADDQ:
-            result = ArithmeticLogicUnit::Add(num_a, num_b);
-            break;
-        case assets::SUBQ:
-            result = ArithmeticLogicUnit::Sub(num_a, num_b);
-            break;
-        case assets::ANDQ:
-            result = ArithmeticLogicUnit::And(num_a, num_b);
-            break;
-        case assets::XORQ:
-            result = ArithmeticLogicUnit::Xor(num_a, num_b);
-            break;
-        default: break;
+    case assets::ADDQ: result = ArithmeticLogicUnit::Add(num_a, num_b); break;
+    case assets::SUBQ: result = ArithmeticLogicUnit::Sub(num_a, num_b); break;
+    case assets::ANDQ: result = ArithmeticLogicUnit::And(num_a, num_b); break;
+    case assets::XORQ: result = ArithmeticLogicUnit::Xor(num_a, num_b); break;
+    default: break;
     }
     return static_cast<uint64_t>(result);
 }
@@ -120,8 +112,8 @@ uint64_t Execute::GetDstE() {
 bool Execute::NeedUpdateCC() {
     if (icode_ != IOPQ) return false;
     // State changes only during normal operation
-    std::vector<uint8_t> mem_error_status{assets::SADR, assets::SINS,
-                                          assets::SHLT};
+    std::vector<uint8_t> mem_error_status{
+        assets::SADR, assets::SINS, assets::SHLT};
     if (ValueIsInArray(Memory::stat(), mem_error_status)) return false;
     auto w_stat = PipelineRegister::Get(WRITE_BACK, assets::STAT);
     if (ValueIsInArray(static_cast<uint8_t>(w_stat), mem_error_status))
@@ -138,18 +130,20 @@ bool Execute::NeedBubble() {
     auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
     auto d_src_a = Decode::src_a();
     auto d_src_b = Decode::src_b();
-    if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
-        ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
+    if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ})
+        && ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
         return true;
     return false;
 }
 
-bool Execute::NeedStall() { return false; }
+bool Execute::NeedStall() {
+    return false;
+}
 
 bool Execute::PrintErrorMessage(const int error_code) {
     std::cerr << "Execute Error ";
     switch (error_code) {
-        default: std::cerr << "X: An unknown error occurs.\n"; break;
+    default: std::cerr << "X: An unknown error occurs.\n"; break;
     }
     return true;
 }

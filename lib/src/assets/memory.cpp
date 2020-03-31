@@ -21,10 +21,8 @@ uint64_t Memory::Get(uint64_t address, size_t size, bool* mem_error) {
     return result;
 }
 
-bool Memory::Set(uint64_t address,
-                 uint64_t value,
-                 size_t   size,
-                 bool*    mem_error) {
+bool Memory::Set(
+    uint64_t address, uint64_t value, size_t size, bool* mem_error) {
     if (size > 8 || address >= kCapacity_ - size) {
         PrintErrorMessage(1);
         *mem_error = true;
@@ -67,9 +65,9 @@ bool Memory::Dump() {
 bool Memory::PrintErrorMessage(const int error_code) {
     std::cerr << "Memory Error ";
     switch (error_code) {
-        case 1: std::cerr << "1: Out of range.\n"; break;
-        case 2: std::cerr << "2: Cannot write file.\n"; break;
-        default: std::cerr << "X: An unknown error occurs.\n"; break;
+    case 1: std::cerr << "1: Out of range.\n"; break;
+    case 2: std::cerr << "2: Cannot write file.\n"; break;
+    default: std::cerr << "X: An unknown error occurs.\n"; break;
     }
     return true;
 }

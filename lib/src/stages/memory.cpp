@@ -74,12 +74,14 @@ bool Memory::NeedBubble() {
     return false;
 }
 
-bool Memory::NeedStall() { return false; }
+bool Memory::NeedStall() {
+    return false;
+}
 
 bool Memory::PrintErrorMessage(const int error_code) {
     std::cerr << "Memory Error ";
     switch (error_code) {
-        default: std::cerr << "X: An unknown error occurs.\n"; break;
+    default: std::cerr << "X: An unknown error occurs.\n"; break;
     }
     return true;
 }

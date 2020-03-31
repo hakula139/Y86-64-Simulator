@@ -52,8 +52,8 @@ bool File::PrintRawData() const {
     return true;
 }
 
-std::vector<uint8_t> File::GetInstruction(uint64_t address,
-                                          bool*    mem_error) const {
+std::vector<uint8_t> File::GetInstruction(
+    uint64_t address, bool* mem_error) const {
     if (!instructions_.count(address)) {
         *mem_error = true;
         return {};
@@ -61,7 +61,9 @@ std::vector<uint8_t> File::GetInstruction(uint64_t address,
     return instructions_.at(address);
 }
 
-bool File::ReachEOF(uint64_t address) const { return address > max_address_; }
+bool File::ReachEOF(uint64_t address) const {
+    return address > max_address_;
+}
 
 bool File::Load() const {
     bool mem_error = false;
@@ -100,10 +102,10 @@ bool File::PrintAllInstructions() const {
 bool File::PrintErrorMessage(const int error_code) const {
     std::cerr << "File Error ";
     switch (error_code) {
-        case 1: std::cerr << "1: Cannot open file.\n"; break;
-        case 2: std::cerr << "2: Invalid instruction.\n"; break;
-        case 3: std::cerr << "3: Instruction not found.\n"; break;
-        default: std::cerr << "X: An unknown error occurs.\n"; break;
+    case 1: std::cerr << "1: Cannot open file.\n"; break;
+    case 2: std::cerr << "2: Invalid instruction.\n"; break;
+    case 3: std::cerr << "3: Instruction not found.\n"; break;
+    default: std::cerr << "X: An unknown error occurs.\n"; break;
     }
     return true;
 }

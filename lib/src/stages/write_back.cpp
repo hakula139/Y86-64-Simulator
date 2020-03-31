@@ -37,7 +37,9 @@ uint8_t WriteBack::GetStat() {
     return w_stat;
 }
 
-bool WriteBack::NeedBubble() { return false; }
+bool WriteBack::NeedBubble() {
+    return false;
+}
 
 bool WriteBack::NeedStall() {
     auto w_stat = PipelineRegister::Get(WRITE_BACK, assets::STAT);
@@ -49,7 +51,7 @@ bool WriteBack::NeedStall() {
 bool WriteBack::PrintErrorMessage(const int error_code) {
     std::cerr << "Write Back Error ";
     switch (error_code) {
-        default: std::cerr << "X: An unknown error occurs.\n"; break;
+    default: std::cerr << "X: An unknown error occurs.\n"; break;
     }
     return true;
 }

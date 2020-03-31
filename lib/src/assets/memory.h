@@ -12,10 +12,8 @@ public:
     // Reads 'size' (<= 8) bytes from 'address'
     static uint64_t Get(uint64_t address, size_t size, bool* mem_error);
     // Writes 'value' ('size' bytes, 'size' <= 8) to 'address'
-    static bool Set(uint64_t address,
-                    uint64_t value,
-                    size_t   size,
-                    bool*    mem_error);
+    static bool Set(
+        uint64_t address, uint64_t value, size_t size, bool* mem_error);
     static bool Clear();
     static bool Dump();
 

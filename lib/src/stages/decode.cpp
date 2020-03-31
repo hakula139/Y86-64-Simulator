@@ -127,10 +127,10 @@ bool Decode::NeedBubble() {
     auto d_src_b = Decode::src_b();
     auto d_icode = PipelineRegister::Get(DECODE, assets::I_CODE);
     auto m_icode = PipelineRegister::Get(MEMORY, assets::I_CODE);
-    if (!(ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
-          ValueIsInArray(e_dst_m, {d_src_a, d_src_b})) &&
-        ValueIsInArray(static_cast<uint64_t>(IRET),
-                       {d_icode, e_icode, m_icode}))
+    if (!(ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ})
+          && ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
+        && ValueIsInArray(
+            static_cast<uint64_t>(IRET), {d_icode, e_icode, m_icode}))
         return true;
     return false;
 }
@@ -141,8 +141,8 @@ bool Decode::NeedStall() {
     auto e_dst_m = PipelineRegister::Get(EXECUTE, assets::DST_M);
     auto d_src_a = Decode::src_a();
     auto d_src_b = Decode::src_b();
-    if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ}) &&
-        ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
+    if (ValueIsInArray(e_icode, {IMRMOVQ, IPOPQ})
+        && ValueIsInArray(e_dst_m, {d_src_a, d_src_b}))
         return true;
     return false;
 }
@@ -150,7 +150,7 @@ bool Decode::NeedStall() {
 bool Decode::PrintErrorMessage(const int error_code) {
     std::cerr << "Decode Error ";
     switch (error_code) {
-        default: std::cerr << "X: An unknown error occurs.\n"; break;
+    default: std::cerr << "X: An unknown error occurs.\n"; break;
     }
     return true;
 }

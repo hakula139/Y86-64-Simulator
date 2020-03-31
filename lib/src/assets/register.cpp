@@ -26,9 +26,9 @@ using std::vector;
 namespace assets {
 
 vector<uint64_t>         Register::data_(kTotal_);
-vector<vector<uint64_t>> PipelineRegister::data_(kStageCount_,
-                                                 vector<uint64_t>(kTotal_));
-vector<bool>             ConditionCode::data_(kTotal_);
+vector<vector<uint64_t>> PipelineRegister::data_(
+    kStageCount_, vector<uint64_t>(kTotal_));
+vector<bool> ConditionCode::data_(kTotal_);
 
 map<uint64_t, vector<Change>>         Register::changes_;
 vector<map<uint64_t, vector<Change>>> PipelineRegister::changes_(kStageCount_);
@@ -38,12 +38,12 @@ static const vector<string> register_name{
     "RAX", "RCX", "RDX", "RBX", "RSP", "RBP", "RSI", "RDI",
     "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "RNONE"};
 
-static const vector<int> all_register_num{RAX, RCX, RDX, RBX,  RSP, RBP,
-                                          RSI, RDI, R8,  R9,   R10, R11,
-                                          R12, R13, R14, RNONE};
+static const vector<int> all_register_num{
+    RAX, RCX, RDX, RBX, RSP, RBP, RSI, RDI,
+    R8,  R9,  R10, R11, R12, R13, R14, RNONE};
 
-static const vector<string> stage_name{"FETCH", "DECODE", "EXECUTE", "MEMORY",
-                                       "WRITEBACK"};
+static const vector<string> stage_name{
+    "FETCH", "DECODE", "EXECUTE", "MEMORY", "WRITEBACK"};
 
 static const vector<string> stage_register_name{
     "PRED_PC", "STAT",  "I_CODE", "I_FUN", "R_A",   "R_B",
@@ -59,13 +59,11 @@ static const vector<uint64_t> all_stage_register_init{
     0, 0,    RNONE,        RNONE, RNONE, RNONE, 0};
 
 static const vector<vector<int>> stage_register_num{
-    {PRED_PC},                                      // Fetch Stage
-    {STAT, I_CODE, I_FUN, R_A, R_B, VAL_C, VAL_P},  // Decode Stage
-    {STAT, I_CODE, I_FUN, VAL_C, VAL_A, VAL_B, DST_E, DST_M, SRC_A,
-     SRC_B},                                          // Execute Stage
-    {STAT, I_CODE, CND, VAL_E, VAL_A, DST_E, DST_M},  // Memory Stage
-    {STAT, I_CODE, VAL_E, VAL_M, DST_E, DST_M}        // Write Back Stage
-};
+    {PRED_PC},
+    {STAT, I_CODE, I_FUN, R_A, R_B, VAL_C, VAL_P},
+    {STAT, I_CODE, I_FUN, VAL_C, VAL_A, VAL_B, DST_E, DST_M, SRC_A, SRC_B},
+    {STAT, I_CODE, CND, VAL_E, VAL_A, DST_E, DST_M},
+    {STAT, I_CODE, VAL_E, VAL_M, DST_E, DST_M}};
 
 static const vector<string> condition_code_name{"OF", "SF", "ZF"};
 
@@ -75,13 +73,12 @@ static const char* json_folder = "/";
 
 bool ChangesHandler::Set(const Change& change, int mode, int stage_num) {
     switch (mode) {
-        case REG: Register::changes_[cpu_clock].push_back(change); break;
-        case PIP:
-            PipelineRegister::changes_.at(stage_num)[cpu_clock].push_back(
-                change);
-            break;
-        case CC: ConditionCode::changes_[cpu_clock].push_back(change); break;
-        default: return false;
+    case REG: Register::changes_[cpu_clock].push_back(change); break;
+    case PIP:
+        PipelineRegister::changes_.at(stage_num)[cpu_clock].push_back(change);
+        break;
+    case CC: ConditionCode::changes_[cpu_clock].push_back(change); break;
+    default: return false;
     }
     return true;
 }
@@ -91,10 +88,10 @@ json ChangesHandler::GetAllInJson(
     json  all_changes_json;
     auto* p_name = &register_name;
     switch (mode) {
-        case REG: p_name = &register_name; break;
-        case PIP: p_name = &stage_register_name; break;
-        case CC: p_name = &condition_code_name; break;
-        default: return {};
+    case REG: p_name = &register_name; break;
+    case PIP: p_name = &stage_register_name; break;
+    case CC: p_name = &condition_code_name; break;
+    default: return {};
     }
     for (auto&& clock_changes : all_changes) {
         auto clock = std::to_string(clock_changes.first);
@@ -206,8 +203,8 @@ bool ChangesHandler::PrintEnd(const string& output_dir) {
 bool ChangesHandler::PrintErrorMessage(const int error_code) {
     std::cerr << "Changes Handler Error ";
     switch (error_code) {
-        case 1: std::cerr << "1: Cannot write file.\n"; break;
-        default: std::cerr << "X: An unknown error occurs.\n"; break;
+    case 1: std::cerr << "1: Cannot write file.\n"; break;
+    default: std::cerr << "X: An unknown error occurs.\n"; break;
     }
     return true;
 }

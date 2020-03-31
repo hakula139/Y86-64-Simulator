@@ -6,9 +6,10 @@ namespace assets {
 
 int64_t ArithmeticLogicUnit::Add(int64_t num1, int64_t num2) {
     int64_t result = num1 + num2;
-    SetConditionCode(!result, result < 0,
-                     (num1 > 0 && num2 > 0 && result < 0) ||
-                         (num1 < 0 && num2 < 0 && result >= 0));
+    SetConditionCode(
+        !result, result < 0,
+        (num1 > 0 && num2 > 0 && result < 0)
+            || (num1 < 0 && num2 < 0 && result >= 0));
     return result;
 }
 

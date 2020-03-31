@@ -49,10 +49,10 @@ bool Argument::PrintInfo() {
 bool Argument::PrintErrorMessage(const int error_code) {
     cerr << "Argument Error ";
     switch (error_code) {
-        case 1: cerr << "1: No argument provided.\n"; break;
-        case 2: cerr << "2: Invalid filename.\n"; break;
-        case 3: cerr << "3: The input file doesn't exist.\n"; break;
-        default: cerr << "X: An unknown error occurs.\n"; break;
+    case 1: cerr << "1: No argument provided.\n"; break;
+    case 2: cerr << "2: Invalid filename.\n"; break;
+    case 3: cerr << "3: The input file doesn't exist.\n"; break;
+    default: cerr << "X: An unknown error occurs.\n"; break;
     }
     PrintUsageMessage();
     return true;
