@@ -2,11 +2,29 @@
 
 A Y86-64 processor simulator written in JavaScript, Node.js and C++11.
 
-![Y86-64 Simulator](./screenshot.png)
+![Y86-64 Simulator](./assets/screenshot.png)
 
 Y86-64 Simulator is a well-designed coursework project attached to Chap. 4 of *Computer Systems: A Programmer's Perspective, Third Edition*. For more details, please refer to *[CS:APP3e Guide to Y86-64 Processor Simulators](http://csapp.cs.cmu.edu/3e/simguide.pdf)*.
 
 Here's a [Demo](https://sim.hakula.xyz).
+
+## Table of Contents
+
+- [Getting Started](#getting-started)
+  - [0. Prerequisites](#0-prerequisites)
+    - [0.1 Back-end](#01-back-end)
+    - [0.2 Front-end](#02-front-end)
+  - [1. Installation](#1-installation)
+    - [1.1 Back-end](#11-back-end)
+    - [1.2 Front-end](#12-front-end)
+  - [2. Usage](#2-usage)
+  - [3. Clean](#3-clean)
+    - [3.1 Back-end](#31-back-end)
+    - [3.2 Front-end](#32-front-end)
+  - [4. Test](#4-test)
+- [TODO](#todo)
+- [Contributors](#contributors)
+- [License](#license)
 
 ## Getting Started
 
@@ -34,20 +52,20 @@ For Windows, try [MinGW-w64](https://sourceforge.net/projects/mingw-w64).
 
 ```bash
 cd lib
-./install.ps1
+./scripts/install.ps1
 ```
 
 ##### 1.1.2 Linux
 
 ```bash
 cd lib
-./install.sh
+./scripts/install.sh
 ```
 
 You may need to grant yourself the execute permission using the command `chmod`.
 
 ```bash
-chmod +x install.sh
+chmod +x ./scripts/install.sh
 ```
 
 #### 1.2 Front-end
@@ -79,14 +97,14 @@ To use a command line version, see the document [here](./lib/README.md).
 
 ```bash
 cd lib
-./clean.ps1
+./scripts/clean.ps1
 ```
 
 ##### 3.1.2 Linux
 
 ```bash
 cd lib
-./clean.sh
+./scripts/clean.sh
 ```
 
 #### 3.2 Front-end
@@ -96,11 +114,16 @@ cd app
 rm -r dist/*
 ```
 
+### 4. Test
+
+Test files are located in `./test/object`. Currently only `.yo` files are accepted.
+
+Click the 'Upload' button to get started.
+
 ## TODO
 
-- [x] Add a clock at a **proper** position
-- [x] Implement a CPI monitor
 - [ ] Implement a memory status section
+- [ ] Compose a detailed document
 
 ## Contributors
 

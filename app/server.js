@@ -54,7 +54,7 @@ app.post('/upload', (req, res, next) => {
 
 app.post('/execute', (req, res, next) => {
   const execFile = childProcess.execFile;
-  const program = '../lib/sim';
+  const program = '../lib/bin/sim';
   const fileName = req.body.fileName;
   if (fileName === '') next();
   const oldInputPath = path.join(uploadPath, fileName);

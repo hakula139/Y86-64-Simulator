@@ -2,6 +2,21 @@
 
 A Y86-64 processor simulator written in C++11.
 
+## Table of Contents
+
+- [Getting Started](#getting-started)
+  - [0. Prerequisites](#0-prerequisites)
+  - [1. Installation](#1-installation)
+  - [2. Usage](#2-usage)
+    - [2.1 Arguments](#21-arguments)
+      - [2.1.1 input_file](#211-input-file)
+      - [2.1.2 output_dir](#212-output-dir)
+    - [2.2 Examples](#22-examples)
+    - [2.3 Manual](#23-manual)
+  - [3. Clean](#3-clean)
+- [Contributors](#contributors)
+- [License](#license)
+
 ## Getting Started
 
 To set up the environment, you need to have the following dependencies installed.
@@ -19,32 +34,32 @@ For Windows, try [MinGW-w64](https://sourceforge.net/projects/mingw-w64).
 #### 1.1 Windows
 
 ```bash
-./install.ps1
+./scripts/install.ps1
 ```
 
 #### 1.2 Linux
 
 ```bash
-./install.sh
+./scripts/install.sh
 ```
 
 You may need to grant yourself the execute permission using the command `chmod`.
 
 ```bash
-chmod +x install.sh
+chmod +x ./scripts/install.sh
 ```
 
 ### 2. Usage
 
 ```bash
-./sim input_file [output_dir]
+./bin/sim input_file [output_dir]
 ```
 
 #### 2.1 Arguments
 
 ##### 2.1.1 input_file
 
-`input_file` is the path to your input file. Currently only .yo files are accepted.
+`input_file` is the path to your input file. Currently only `.yo` files are accepted.
 
 ##### 2.1.2 output_dir
 
@@ -53,11 +68,11 @@ chmod +x install.sh
 #### 2.2 Examples
 
 ```bash
-./sim "../test/objects/prog1.yo"
+./bin/sim "../test/objects/prog1.yo"
 ```
 
 ```bash
-./sim "../test/objects/asum.yo" "./temp"
+./bin/sim "../test/objects/asum.yo" "./temp"
 ```
 
 #### 2.3 Manual
@@ -65,7 +80,7 @@ chmod +x install.sh
 Check the manual simply by passing no argument.
 
 ```bash
-./sim
+./bin/sim
 ```
 
 ### 3. Clean
@@ -73,13 +88,13 @@ Check the manual simply by passing no argument.
 #### 3.1 Windows
 
 ```bash
-./clean.ps1
+./scripts/clean.ps1
 ```
 
 #### 3.2 Linux
 
 ```bash
-./clean.sh
+./scripts/clean.sh
 ```
 
 ## Contributors
