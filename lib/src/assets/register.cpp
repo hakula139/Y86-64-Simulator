@@ -110,7 +110,7 @@ json ChangesHandler::GetAllInJson(
         if (changes_json.is_null()) continue;
         all_changes_json[clock] = move(changes_json);
     }
-    return move(all_changes_json);
+    return all_changes_json;
 }
 
 bool ChangesHandler::PrintAllInOneJson(const string& output_dir) {
