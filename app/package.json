@@ -1,13 +1,12 @@
 {
   "name": "sim_ui",
-  "version": "2.1.0",
+  "version": "2.1.2",
   "description": "An interface for Y86-64 Simulator written in JavaScript + Node.js",
   "dependencies": {
     "@babel/runtime": "^7.12.5",
     "compression": "^1.7.4",
     "express": "^4.17.1",
     "formidable": "^1.2.2",
-    "fsevents": "^2.2.1",
     "temp": "^0.9.4"
   },
   "devDependencies": {
@@ -40,8 +39,5 @@
     "type": "git",
     "url": "https://github.com/hakula139/Y86-64-Simulator.git"
   },
-  "license": "GPL-3.0",
-  "optionalDependencies": {
-    "fsevents": "^2.2.1"
-  }
+  "license": "GPL-3.0"
 }
