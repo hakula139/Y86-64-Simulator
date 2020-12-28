@@ -145,6 +145,7 @@ dist
 # Customized
 .vscode
 .vs
+bin
 build
 memory.txt
 *[Cc]hanges.json
