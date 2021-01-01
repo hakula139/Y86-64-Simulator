@@ -45,7 +45,6 @@ To deploy and run the project on a server continuously, try [pm2](https://www.np
 ### 3. Clean
 
 ```bash
-cd app
 rm -rf dist/*
 ```
 
