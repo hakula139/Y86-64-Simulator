@@ -4,18 +4,24 @@ A Y86-64 processor simulator written in C++11.
 
 ## Table of Contents
 
-- [Getting Started](#getting-started)
-  - [0. Prerequisites](#0-prerequisites)
-  - [1. Installation](#1-installation)
-  - [2. Usage](#2-usage)
-    - [2.1 Arguments](#21-arguments)
-      - [2.1.1 input_file](#211-input-file)
-      - [2.1.2 output_dir](#212-output-dir)
-    - [2.2 Examples](#22-examples)
-    - [2.3 Manual](#23-manual)
-  - [3. Clean](#3-clean)
-- [Contributors](#contributors)
-- [License](#license)
+- [Y86-64 Simulator CLI](#y86-64-simulator-cli)
+  - [Table of Contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+    - [0. Prerequisites](#0-prerequisites)
+    - [1. Installation](#1-installation)
+      - [1.1 Windows](#11-windows)
+      - [1.2 Linux](#12-linux)
+    - [2. Usage](#2-usage)
+      - [2.1 Arguments](#21-arguments)
+        - [2.1.1 input_file](#211-input_file)
+        - [2.1.2 output_dir](#212-output_dir)
+      - [2.2 Examples](#22-examples)
+      - [2.3 Manual](#23-manual)
+    - [3. Clean](#3-clean)
+      - [3.1 Windows](#31-windows)
+      - [3.2 Linux](#32-linux)
+  - [Contributors](#contributors)
+  - [License](#license)
 
 ## Getting Started
 
@@ -40,13 +46,7 @@ For Windows, try [MinGW-w64](https://sourceforge.net/projects/mingw-w64).
 #### 1.2 Linux
 
 ```bash
-./scripts/install.sh
-```
-
-You may need to grant yourself the execute permission using the command `chmod`.
-
-```bash
-chmod +x ./scripts/install.sh
+bash ./scripts/install.sh
 ```
 
 ### 2. Usage
@@ -94,7 +94,7 @@ Check the manual simply by passing no argument.
 #### 3.2 Linux
 
 ```bash
-./scripts/clean.sh
+bash ./scripts/clean.sh
 ```
 
 ## Contributors

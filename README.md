@@ -1,6 +1,6 @@
 # Y86-64 Simulator
 
-A Y86-64 processor simulator written in JavaScript, Node.js and C++11.
+A Y86-64 processor simulator written in JavaScript (Node.js) and C++11.
 
 ![Y86-64 Simulator](./assets/screenshot.png)
 
@@ -10,21 +10,27 @@ Here's a [Demo](https://sim.hakula.xyz).
 
 ## Table of Contents
 
-- [Getting Started](#getting-started)
-  - [0. Prerequisites](#0-prerequisites)
-    - [0.1 Back-end](#01-back-end)
-    - [0.2 Front-end](#02-front-end)
-  - [1. Installation](#1-installation)
-    - [1.1 Back-end](#11-back-end)
-    - [1.2 Front-end](#12-front-end)
-  - [2. Usage](#2-usage)
-  - [3. Clean](#3-clean)
-    - [3.1 Back-end](#31-back-end)
-    - [3.2 Front-end](#32-front-end)
-  - [4. Test](#4-test)
-- [TODO](#todo)
-- [Contributors](#contributors)
-- [License](#license)
+- [Y86-64 Simulator](#y86-64-simulator)
+  - [Table of Contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+    - [0. Prerequisites](#0-prerequisites)
+      - [0.1 Back-end](#01-back-end)
+      - [0.2 Front-end](#02-front-end)
+    - [1. Installation](#1-installation)
+      - [1.1 Back-end](#11-back-end)
+        - [1.1.1 Windows](#111-windows)
+        - [1.1.2 Linux](#112-linux)
+      - [1.2 Front-end](#12-front-end)
+    - [2. Usage](#2-usage)
+    - [3. Clean](#3-clean)
+      - [3.1 Back-end](#31-back-end)
+        - [3.1.1 Windows](#311-windows)
+        - [3.1.2 Linux](#312-linux)
+      - [3.2 Front-end](#32-front-end)
+    - [4. Test](#4-test)
+  - [TODO](#todo)
+  - [Contributors](#contributors)
+  - [License](#license)
 
 ## Getting Started
 
@@ -42,6 +48,7 @@ For Windows, try [MinGW-w64](https://sourceforge.net/projects/mingw-w64).
 
 #### 0.2 Front-end
 
+- [MDUI](https://www.mdui.org)
 - [Node.js](https://nodejs.org/en/download) 12 or above
 
 ### 1. Installation
@@ -59,13 +66,7 @@ cd lib
 
 ```bash
 cd lib
-./scripts/install.sh
-```
-
-You may need to grant yourself the execute permission using the command `chmod`.
-
-```bash
-chmod +x ./scripts/install.sh
+bash ./scripts/install.sh
 ```
 
 #### 1.2 Front-end
@@ -85,7 +86,7 @@ node server
 
 Then check the website at <http://localhost:7273>.
 
-To deploy and run the project on a server continuously, try [forever](https://www.npmjs.com/package/forever).
+To deploy and run the project on a server continuously, try [pm2](https://www.npmjs.com/package/pm2).
 
 To use a command line version, see the document [here](./lib/README.md).
 
@@ -104,14 +105,14 @@ cd lib
 
 ```bash
 cd lib
-./scripts/clean.sh
+bash ./scripts/clean.sh
 ```
 
 #### 3.2 Front-end
 
 ```bash
 cd app
-rm -r dist/*
+rm -rf dist/*
 ```
 
 ### 4. Test
