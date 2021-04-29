@@ -1,6 +1,6 @@
 version: 2
 updates:
-  - package-ecosystem: "yarn" # See documentation for possible values
-    directory: "/app/" # Location of package manifests
+  - package-ecosystem: "npm"
+    directory: "/app/"
     schedule:
       interval: "daily"
