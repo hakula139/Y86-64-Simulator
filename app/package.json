@@ -22,7 +22,7 @@
     "optimize-css-assets-webpack-plugin": "^5.0.4",
     "serve-favicon": "^2.5.0",
     "style-loader": "^2.0.0",
-    "terser-webpack-plugin": "^2.3.8",
+    "terser-webpack-plugin": "^4.2.3",
     "url-loader": "^4.1.1",
     "webpack": "^4.44.2",
     "webpack-cli": "^4.7.0",
