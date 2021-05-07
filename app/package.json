@@ -3,7 +3,7 @@
   "version": "2.1.2",
   "description": "An interface for Y86-64 Simulator",
   "dependencies": {
-    "@babel/runtime": "^7.12.5",
+    "@babel/runtime": "^7.14.0",
     "compression": "^1.7.4",
     "express": "^4.17.1",
     "formidable": "^1.2.2",
@@ -17,7 +17,7 @@
     "body-parser": "^1.19.0",
     "css-loader": "^5.2.4",
     "file-loader": "^6.2.0",
-    "html-webpack-plugin": "^3.2.0",
+    "html-webpack-plugin": "^4.5.2",
     "mini-css-extract-plugin": "^0.8.2",
     "optimize-css-assets-webpack-plugin": "^5.0.4",
     "serve-favicon": "^2.5.0",
@@ -26,7 +26,7 @@
     "url-loader": "^3.0.0",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0",
+    "webpack-dev-server": "^3.11.2",
     "webpack-node-externals": "^1.7.2"
   },
   "scripts": {
