@@ -19,7 +19,7 @@
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^4.5.2",
     "mini-css-extract-plugin": "^1.6.0",
-    "optimize-css-assets-webpack-plugin": "^5.0.4",
+    "optimize-css-assets-webpack-plugin": "^6.0.0",
     "serve-favicon": "^2.5.0",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^4.2.3",
