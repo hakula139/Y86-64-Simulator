@@ -6,8 +6,6 @@ A Y86-64 processor simulator written in JavaScript (Node.js) and C++11.
 
 Y86-64 Simulator is a well-designed coursework project attached to Chap. 4 of *Computer Systems: A Programmer's Perspective, Third Edition*. For more details, please refer to *[CS:APP3e Guide to Y86-64 Processor Simulators](http://csapp.cs.cmu.edu/3e/simguide.pdf)*.
 
-Here's a [Demo](https://sim.hakula.xyz).
-
 ## Table of Contents
 
 - [Y86-64 Simulator](#y86-64-simulator)
@@ -44,7 +42,7 @@ To set up the environment, you need to have the following dependencies installed
 - [GNU make](https://www.gnu.org/software/make) 4.0 or above
 - [GCC](https://gcc.gnu.org/releases.html) 4.8 or above
 
-For Windows, try [MinGW-w64](https://sourceforge.net/projects/mingw-w64).
+For Windows, try [MinGW-w64](http://mingw-w64.org/doku.php/download).
 
 #### 0.2 Front-end
 
